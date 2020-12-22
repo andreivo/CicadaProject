@@ -8,10 +8,7 @@
  *       SITE: https://github.com/andreivo/cicada
  */
 #include "DCPDht.h"
-#include <SimpleDHT.h>
-#include "../system/DCPSystem.h"
 
-#define DHT_PIN 27
 SimpleDHT22 dht;
 
 DCPDht::DCPDht() {

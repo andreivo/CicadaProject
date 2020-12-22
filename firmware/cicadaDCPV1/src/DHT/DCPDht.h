@@ -11,6 +11,9 @@
 #ifndef DCPDht_h
 #define DCPDht_h
 
+#include <SimpleDHT.h>
+#include "../system/DCPSystem.h"
+
 class DCPDht {
 public:
     DCPDht();

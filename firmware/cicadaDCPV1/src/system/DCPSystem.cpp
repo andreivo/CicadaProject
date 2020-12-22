@@ -8,27 +8,18 @@
  *       SITE: https://github.com/andreivo/cicada
  */
 
-#include <FS.h> // FS must be the first
 #include "DCPSystem.h"
-#include <CicadaWizard.h>
-#include <SPIFFSManager.h>
-#include "../DHT/DCPDht.h"
 
 /**
  * File system directories and variables
  */
 SPIFFSManager spiffsManager;
 
+#define CIC_DEBUG_ENABLED true
+#define CIC_SYSTEM_BAUDRATE 115200
+
 
 const String FIRMWARE_VERSION = "0.0.1.0";
-
-const String DIR_STATION_ID = "/stt/id";
-const String DIR_STATION_NAME = "/stt/name";
-const String DIR_STATION_LATITUDE = "/stt/lat";
-const String DIR_STATION_LONGITUDE = "/stt/lon";
-const String DIR_STATION_BUCKET_VOL = "/stt/bucketvol";
-
-const String DIR_FIRMWARE_VERSION = "/fmwver";
 
 String STATION_ID = "CicadaDCP";
 const String STATION_ID_PREFIX = "CicadaDCP-";
@@ -39,6 +30,14 @@ float CIC_STATION_BUCKET_VOLUME = 3.22; // Bucket Calibrated Volume in ml
 
 // Initialize CicadaWizard
 CicadaWizard cicadaWizard;
+hw_timer_t * timeoutWizard = NULL;
+
+// Initialize DCPWifi
+DCPwifi dcpWifi;
+// Initialize DCPSIM800
+DCPSIM800 dcpSIM800;
+
+DCPLeds cicadaLeds;
 
 /**
  * Sensor configurations
@@ -46,17 +45,78 @@ CicadaWizard cicadaWizard;
  */
 DCPDht dcpDHT;
 
+void IRAM_ATTR onTimeoutWizard() {
+    //If the Wizard is active and the timeout has been reached reboot the module.
+    //This causes an exception for access to global variables
+    //without a critical section and forces a reboot.
+    ESP.restart();
+}
+
 DCPSystem::DCPSystem() {
 
 }
 
-String DCPSystem::getFwmVersion() {
-    return FIRMWARE_VERSION;
+/**
+ * Initialize Station ID
+ */
+void DCPSystem::preInitSystem() {
+    pinMode(PIN_AP_WIZARD, INPUT);
+    pinMode(PIN_LED_RED, OUTPUT);
+    pinMode(PIN_LED_GREEN, OUTPUT);
+    pinMode(PIN_LED_BLUE, OUTPUT);
+    pinMode(PIN_MODEM_TURNON, OUTPUT);
+
+    dcpSIM800.turnOff();
+
+    cicadaLeds.redTurnOff();
+    cicadaLeds.greenTurnOff();
+    cicadaLeds.blueTurnOff();
+
+
+    // Init the Serial
+    CIC_DEBUG_SETUP(CIC_SYSTEM_BAUDRATE);
+    CIC_DEBUG_(F("\n\nCICADA DCP FIRMWARE (Version "));
+    CIC_DEBUG_(getFwmVersion());
+    CIC_DEBUG(F(")"));
+
+
+    // Initialize Station ID
+    initStationID();
+
+    // Initialize Station Name
+    initStationName();
+
+    // Register Firmware Version
+    initFirmwareVersion();
+
+    //Show all config
+    printConfiguration();
 }
 
-String DCPSystem::getSSIDAP() {
-    String __ssidAP = STATION_ID;
-    return __ssidAP;
+void DCPSystem::initCommunication() {
+    if (!dcpWifi.setupWiFiModule()) {
+        if (!dcpSIM800.setupSIM800Module()) {
+            setupWizard();
+        }
+    } else {
+        CIC_DEBUG(dcpWifi.getNetworkDate());
+    }
+}
+
+void DCPSystem::setupTimeoutWizard() {
+    /****
+     * Time interrupt for timeout to AP Wizard mode
+     */
+    // Configure Prescaler to 80, as our timer runs @ 80Mhz
+    // Giving an output of 80,000,000 / 80 = 1,000,000 ticks / second
+    timeoutWizard = timerBegin(0, 80, true);
+    timerAttachInterrupt(timeoutWizard, &onTimeoutWizard, true);
+    // Fire Interrupt every 1m ticks, so 1s
+    // ticks * (seconds * minutes)
+    uint64_t timeoutWiz = 1000000 * (60 * 10);
+    //uint64_t timeoutWiz = 1000000 * (10);
+    timerAlarmWrite(timeoutWizard, timeoutWiz, true);
+    timerAlarmEnable(timeoutWizard);
 }
 
 /**
@@ -64,9 +124,37 @@ String DCPSystem::getSSIDAP() {
  */
 void DCPSystem::setupWizard() {
     CIC_DEBUG_HEADER(F("SETUP CICADA DCP"));
+    cicadaLeds.blueTurnOn();
+
+    setupTimeoutWizard();
+
     cicadaWizard.setDebugOutput(true);
     String ssid = getSSIDAP();
     cicadaWizard.startWizardPortal(ssid.c_str());
+}
+
+/**
+ * Init all system configurations
+ */
+void DCPSystem::initSystem() {
+
+    // Get Station ID from file system or create the file with
+    initStationID();
+
+    // Get Station Name
+    initStationName();
+
+    // Register Firmware Version
+    initFirmwareVersion();
+
+    // Get Station Latitude and Longitude
+    initStationCoordinates();
+
+    // Get Station Calibrated Bucket Volume
+    initBucketVolume();
+
+    // Initialize DHT Sensor
+    dcpDHT.initDHTSensor();
 }
 
 /**
@@ -164,30 +252,15 @@ void DCPSystem::initBucketVolume() {
     CIC_DEBUG(CIC_STATION_BUCKET_VOLUME);
 }
 
-/**
- * Init all system configurations
- */
-void DCPSystem::initSystem() {
-
-    // Get Station ID from file system or create the file with
-    initStationID();
-
-    // Get Station Name
-    initStationName();
-
-    // Register Firmware Version
-    initFirmwareVersion();
-
-    // Get Station Latitude and Longitude
-    initStationCoordinates();
-
-    // Get Station Calibrated Bucket Volume
-    initBucketVolume();
-
-    // Initialize DHT Sensor
-    dcpDHT.initDHTSensor();
-}
-
 void DCPSystem::printConfiguration() {
     spiffsManager.FSPrintFileList();
+}
+
+String DCPSystem::getFwmVersion() {
+    return FIRMWARE_VERSION;
+}
+
+String DCPSystem::getSSIDAP() {
+    String __ssidAP = STATION_ID;
+    return __ssidAP;
 }

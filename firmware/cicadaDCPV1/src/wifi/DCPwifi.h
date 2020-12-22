@@ -10,12 +10,19 @@
 
 #ifndef DCPwifi_h
 #define DCPwifi_h
+#include <WiFi.h>
+#include <esp_wifi.h>
+#include <NTPClient.h> //Biblioteca NTPClient modificada
+#include <WiFiUdp.h> //Socket UDP
+#include "../system/DCPSystem.h"
 
 class DCPwifi {
 public:
     DCPwifi();
 
-    void setupWiFiModule(const char* stationID);
+    boolean setupWiFiModule();
+    void setupNTP();
+    char* getNetworkDate();
 };
 
 #endif

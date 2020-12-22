@@ -12,6 +12,7 @@
 #ifndef CicadaWizard_h
 #define CicadaWizard_h
 
+#include <FS.h> // FS must be the first
 #if defined(ESP8266)
 #include <ESP8266WiFi.h>
 #include <ESP8266WebServer.h>
@@ -21,6 +22,10 @@
 #endif
 #include <DNSServer.h>
 #include <memory>
+
+#include <SPIFFS.h>
+#include <SPIFFSManager.h>
+#include <CicadaSPIFFSFile.h>
 
 #if defined(ESP8266)
 extern "C" {
@@ -60,13 +65,13 @@ const char HTTP_SCRIPT_FORM_CONFIG_SIM[] PROGMEM = "";
 
 //Wifi
 const char HTTP_HEAD_CONFIG_WIFI[] PROGMEM = "{cicadalogo}<h1>Cicada DCP Wizard</h1><h2>4-4: WIFI Configuration</h2><h3>(If you don't use, leave in blank!)</h3><h3>(SIM card OR WIFI is required!)</h3><p id='msg' style='color:red'>{msg}</p>";
-const char HTTP_FORM_CONFIG_WIFI[] PROGMEM = "<form action='/wifi'><button>Configure WiFi</button></form><form action='/0wifi'><button>Configure WiFi (No Scan)</button></form><form action='/delwifi'><button>Delete WIFI credentials</button></form><form action='/info'><br><button type='submit'>Finish</button></form>";
+const char HTTP_FORM_CONFIG_WIFI[] PROGMEM = "<form action='/wifi'><button>Configure WiFi</button></form><form action='/0wifi'><button>Configure WiFi (No Scan)</button></form><form action='/delwifi'><button>Delete WIFI credentials</button></form><form action='/info'><br><button type='submit'>Next</button></form>";
 const char HTTP_SCRIPT_FORM_CONFIG_WIFI[] PROGMEM = "";
 const char HTTP_FORM_CONFIG_WIFI_END[] PROGMEM = "<br/><button type='submit'>Save and Next</button></form>";
 const char HTTP_SCAN_LINK_CONFIG_WIFI[] PROGMEM = "<br/><div class=\"c\"><a href=\"/wifi\">Scan</a></div>";
 const char HTTP_ITEM_CONFIG_WIFI[] PROGMEM = "<div><a href='#p' onclick='c(this)'>{v}</a>&nbsp;<span class='q {i}'>{r}%</span></div>";
 const char HTTP_FORM_PARAM_CONFIG_WIFI[] PROGMEM = "<br/><input id='{i}' name='{n}' length={l} placeholder='{p}' value='{v}' {c}>";
-const char HTTP_FORM_START_CONFIG_WIFI[] PROGMEM = "<form method='get' action='wifisave'><input id='s' name='s' length=32 placeholder='SSID'><br/><input id='p' name='p' length=64 type='password' placeholder='password'><br/>";
+const char HTTP_FORM_START_CONFIG_WIFI[] PROGMEM = "<form method='get' action='wifisave'><input id='s' name='s' length=32 placeholder='SSID' value='{ssid}'><br/><input id='p' name='p' length=64 placeholder='password' value='{pass}'><br/>";
 
 
 /***************/
@@ -201,11 +206,6 @@ private:
     void handleDelWifi();
     void handleConfirmFactoryReset();
     void handleFactoryReset();
-
-    String getSettings(String dsc, String DIR, boolean inContent);
-    void deleteSettings(String dsc, String DIR);
-    void saveSettings(String dsc, String DIR, String value);
-    void saveSettings(String dsc, String DIR, String value, String content);
 
     /***
      * END

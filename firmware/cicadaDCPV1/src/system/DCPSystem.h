@@ -11,6 +11,15 @@
 #ifndef DCPSystem_h
 #define DCPSystem_h
 
+#include <FS.h> // FS must be the first
+#include <CicadaWizard.h>
+#include <SPIFFSManager.h>
+#include "../DHT/DCPDht.h"
+#include "../wifi/DCPwifi.h"
+#include "../PINS_IO.h"
+#include "../LEDs/DCPLeds.h"
+#include "../SIM800/DCPSIM800.h"
+
 #define CIC_DEBUG_ENABLED true
 
 #if CIC_DEBUG_ENABLED
@@ -42,25 +51,22 @@ class DCPSystem {
 public:
     DCPSystem();
 
+    void preInitSystem();
+    void initCommunication();
     void setupWizard();
-
-    void initStationID();
-
-    void initStationName();
-
-    void initFirmwareVersion();
-
-    void initStationCoordinates();
-
-    void initBucketVolume();
-
     void initSystem();
 
+private:
+    void setupTimeoutWizard();
+    void initStationID();
+    void initStationName();
+    void initFirmwareVersion();
+    void initStationCoordinates();
+    void initBucketVolume();
     String getFwmVersion();
-
     String getSSIDAP();
-
     void printConfiguration();
+
 };
 
 #endif

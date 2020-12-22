@@ -1,37 +1,9 @@
-#include <FS.h> // FS must be the first
-#include <SPIFFS.h>
-#include <SPIFFSManager.h>
 #include "CicadaWizard.h"
 
 /**
  * File system directories and variables
  */
 SPIFFSManager spiffsMan;
-
-
-const String RESET_TIME = "7,0";
-
-const String DIR_STATION_ID = "/stt/id";
-const String DIR_STATION_BUCKET_VOL = "/stt/bucketvol";
-const String DIR_STATION_LATITUDE = "/stt/lat";
-const String DIR_STATION_LONGITUDE = "/stt/lon";
-const String DIR_STATION_SENDTIMEINTERVAL = "/stt/sti";
-const String DIR_STATION_TIME_TO_RESET = "/stt/ttr";
-const String DIR_STATION_NAME = "/stt/name";
-const String DIR_FIRMWARE_VERSION = "/fmwver";
-const String DIR_MQTT_SERVER = "/mqtt/host";
-const String FILE_MQTT_SERVER = "hostserver";
-const String DIR_MQTT_PORT = "/mqtt/port";
-const String DIR_MQTT_USER = "/mqtt/user";
-const String DIR_MQTT_PWD = "/mqtt/pwd";
-const String FILE_MQTT_PWD = "pwdserver";
-const String DIR_MQTT_TOPIC = "/mqtt/topic";
-const String DIR_SIMCARD_APN = "/simcard/apn";
-const String FILE_SIMCARD_APN = "apnhost";
-const String DIR_SIMCARD_USER = "/simcard/user";
-const String DIR_SIMCARD_PWD = "/simcard/pwd";
-const String FILE_SIMCARD_PWD = "pwdapn";
-
 
 String fmwver = "";
 String stationID = "";
@@ -170,9 +142,9 @@ void CicadaWizard::setupConfigPortal() {
     server->on("/factoryresetYES", std::bind(&CicadaWizard::handleFactoryReset, this));
 
     // Get the Station ID
-    stationID = getSettings("Station ID", DIR_STATION_ID, false);
+    stationID = spiffsMan.getSettings("Station ID", DIR_STATION_ID, false);
     // Get Firmware
-    fmwver = getSettings("Firmware", DIR_FIRMWARE_VERSION, false);
+    fmwver = spiffsMan.getSettings("Firmware", DIR_FIRMWARE_VERSION, false);
     // Get Station MAC Address
     macAddr = WiFi.softAPmacAddress();
 }
@@ -399,6 +371,9 @@ void CicadaWizard::deleteWifiCredentials() {
     //WiFi.disconnect(true);
     //delay(200);
 
+    spiffsMan.FSDeleteFiles(DIR_WIFI_SSID);
+    spiffsMan.FSDeleteFiles(DIR_WIFI_PWD);
+
     //Hack André ivo
     WiFi.disconnect(true); // still not erasing the ssid/pw. Will happily reconnect on next start
     WiFi.begin("0", "0"); // adding this effectively seems to erase the previous stored SSID/PW
@@ -497,19 +472,19 @@ void CicadaWizard::handleRoot() {
     page += FPSTR(HTTP_HEAD_END);
 
     // Get the previous bucket configuration
-    String vol = getSettings("Bucket calibration", DIR_STATION_BUCKET_VOL, false);
+    String vol = spiffsMan.getSettings("Bucket calibration", DIR_STATION_BUCKET_VOL, false);
 
     // Get the previous Station Name
-    String name = getSettings("Station Name", DIR_STATION_NAME, false);
+    String name = spiffsMan.getSettings("Station Name", DIR_STATION_NAME, false);
 
     // Get the previous Latitude
-    String lat = getSettings("Latitude", DIR_STATION_LATITUDE, false);
+    String lat = spiffsMan.getSettings("Latitude", DIR_STATION_LATITUDE, false);
 
     // Get the previous Longitude
-    String lon = getSettings("Longitude", DIR_STATION_LONGITUDE, false);
+    String lon = spiffsMan.getSettings("Longitude", DIR_STATION_LONGITUDE, false);
 
     // Get the previous Send Time Interval
-    String sti = getSettings("Send Time Interval", DIR_STATION_SENDTIMEINTERVAL, false);
+    String sti = spiffsMan.getSettings("Send Time Interval", DIR_STATION_SENDTIMEINTERVAL, false);
 
     // Setup the form
     String form = FPSTR(HTTP_FORM_CONFIG_STATION);
@@ -550,26 +525,26 @@ void CicadaWizard::handleSaveCicadaStation() {
 
     // Save location on file system
     String lat = server->arg("lat");
-    saveSettings("Latitude", DIR_STATION_LATITUDE, lat);
+    spiffsMan.saveSettings("Latitude", DIR_STATION_LATITUDE, lat);
     String lon = server->arg("lon");
-    saveSettings("Longitude", DIR_STATION_LONGITUDE, lon);
+    spiffsMan.saveSettings("Longitude", DIR_STATION_LONGITUDE, lon);
 
     // Save bucket volume on file system
     String bucketVolume = server->arg("vol");
     bucketVolume.replace(",", ".");
-    saveSettings("Bucket Calibration", DIR_STATION_BUCKET_VOL, bucketVolume);
+    spiffsMan.saveSettings("Bucket Calibration", DIR_STATION_BUCKET_VOL, bucketVolume);
 
     // Save time to next reset
     String ttr = server->arg("ttr");
-    saveSettings("Time to Reset", DIR_STATION_TIME_TO_RESET, ttr);
+    spiffsMan.saveSettings("Time to Reset", DIR_STATION_TIME_TO_RESET, ttr);
 
     // Save station name
     String stationName = server->arg("name");
-    saveSettings("Station Name", DIR_STATION_NAME, stationName);
+    spiffsMan.saveSettings("Station Name", DIR_STATION_NAME, stationName);
 
     // Send Time Interval
     String sti = server->arg("sti");
-    saveSettings("Send Time Interval", DIR_STATION_SENDTIMEINTERVAL, sti);
+    spiffsMan.saveSettings("Send Time Interval", DIR_STATION_SENDTIMEINTERVAL, sti);
 
     //Redirect Step 2
     handleMQTTSERVER();
@@ -585,15 +560,15 @@ void CicadaWizard::handleMQTTSERVER() {
     page += FPSTR(HTTP_HEAD_END);
 
     // Get MQTT Host
-    String host = getSettings("MQTT Host", DIR_MQTT_SERVER, true);
+    String host = spiffsMan.getSettings("MQTT Host", DIR_MQTT_SERVER, true);
     // Get MQTT Port
-    String port = getSettings("MQTT Port", DIR_MQTT_PORT, false);
+    String port = spiffsMan.getSettings("MQTT Port", DIR_MQTT_PORT, false);
     // Get MQTT User
-    String user = getSettings("MQTT User", DIR_MQTT_USER, false);
+    String user = spiffsMan.getSettings("MQTT User", DIR_MQTT_USER, false);
     // Get MQTT Password
-    String pass = getSettings("MQTT Password", DIR_MQTT_PWD, true);
+    String pass = spiffsMan.getSettings("MQTT Password", DIR_MQTT_PWD, true);
     // Get MQTT Topic
-    String topic = getSettings("MQTT Topic", DIR_MQTT_TOPIC, false);
+    String topic = spiffsMan.getSettings("MQTT Topic", DIR_MQTT_TOPIC, false);
 
     // Setup the form
     String form = FPSTR(HTTP_FORM_CONFIG_MQTT);
@@ -630,19 +605,19 @@ void CicadaWizard::handleSaveCicadaMQTT() {
 
     // Get MQTT Host
     String host = server->arg("host");
-    saveSettings("MQTT Host", DIR_MQTT_SERVER, FILE_MQTT_SERVER, host);
+    spiffsMan.saveSettings("MQTT Host", DIR_MQTT_SERVER, FILE_MQTT_SERVER, host);
     // Get MQTT Port
     String port = server->arg("port");
-    saveSettings("MQTT Port", DIR_MQTT_PORT, port);
+    spiffsMan.saveSettings("MQTT Port", DIR_MQTT_PORT, port);
     // Get MQTT User
     String user = server->arg("user");
-    saveSettings("MQTT User", DIR_MQTT_USER, user);
+    spiffsMan.saveSettings("MQTT User", DIR_MQTT_USER, user);
     // Get MQTT Password
     String pass = server->arg("pass");
-    saveSettings("MQTT Password", DIR_MQTT_PWD, FILE_MQTT_PWD, pass);
+    spiffsMan.saveSettings("MQTT Password", DIR_MQTT_PWD, FILE_MQTT_PWD, pass);
     // Get MQTT Topic
     String topic = server->arg("topic");
-    saveSettings("MQTT Topic", DIR_MQTT_TOPIC, topic);
+    spiffsMan.saveSettings("MQTT Topic", DIR_MQTT_TOPIC, topic);
 
     handleSIMCard();
 
@@ -657,11 +632,11 @@ void CicadaWizard::handleSIMCard() {
     page += FPSTR(HTTP_HEAD_END);
 
     // Get MQTT Host
-    String apn = getSettings("SIM Carrier APN", DIR_SIMCARD_APN, true);
+    String apn = spiffsMan.getSettings("SIM Carrier APN", DIR_SIMCARD_APN, true);
     // Get MQTT User
-    String user = getSettings("SIM Carrier APN User", DIR_SIMCARD_USER, false);
+    String user = spiffsMan.getSettings("SIM Carrier APN User", DIR_SIMCARD_USER, false);
     // Get MQTT Password
-    String pwd = getSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, true);
+    String pwd = spiffsMan.getSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, true);
 
     // Setup the form
     String form = FPSTR(HTTP_FORM_CONFIG_SIM);
@@ -696,13 +671,13 @@ void CicadaWizard::handleSaveCicadaSIMCard() {
 
     // Get SIM APN
     String apn = server->arg("apn");
-    saveSettings("SIM Carrier APN", DIR_SIMCARD_APN, FILE_SIMCARD_APN, apn);
+    spiffsMan.saveSettings("SIM Carrier APN", DIR_SIMCARD_APN, FILE_SIMCARD_APN, apn);
     // Get SIM User
     String user = server->arg("userapn");
-    saveSettings("SIM Carrier APN User", DIR_SIMCARD_USER, user);
+    spiffsMan.saveSettings("SIM Carrier APN User", DIR_SIMCARD_USER, user);
     // Get MQTT Password
     String pwd = server->arg("pwdapn");
-    saveSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, FILE_SIMCARD_PWD, pwd);
+    spiffsMan.saveSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, FILE_SIMCARD_PWD, pwd);
 
     handleWIFIConfig("");
 }
@@ -775,83 +750,6 @@ void CicadaWizard::handleFactoryReset() {
     handleRoot();
 }
 
-/**
- * Get Settings
- */
-String CicadaWizard::getSettings(String dsc, String DIR, boolean inContent) {
-
-    DEBUG_WM(F("\n\nGET "));
-    DEBUG_WM(dsc);
-    DEBUG_WM(F("===========================================\n"));
-    String settings = spiffsMan.FSReadString(DIR);
-    if (inContent) {
-        settings = spiffsMan.FSReadToFile(DIR, settings);
-    }
-
-    DEBUG_WM(F("Getting "));
-    DEBUG_WM(dsc);
-    DEBUG_WM("....\n");
-
-    if (settings != "") {
-        DEBUG_WM(dsc);
-        DEBUG_WM(settings);
-        DEBUG_WM("\n");
-    } else {
-
-        DEBUG_WM(F("ERROR during reading"));
-        DEBUG_WM(dsc);
-        DEBUG_WM("\n");
-    }
-    return settings;
-}
-
-/**
- * Remove settings
- */
-void CicadaWizard::deleteSettings(String dsc, String DIR) {
-
-    DEBUG_WM(F("\n\nDELETING:"));
-    DEBUG_WM(dsc);
-    DEBUG_WM(F("===========================================\n"));
-
-    spiffsMan.FSDeleteFiles(DIR);
-}
-
-/** Save next settings to File System */
-void CicadaWizard::saveSettings(String dsc, String DIR, String value) {
-
-    deleteSettings(dsc, DIR);
-
-    DEBUG_WM(F("\n\nSAVING:"));
-    DEBUG_WM(dsc);
-    DEBUG_WM(F("===========================================\n"));
-    DEBUG_WM(dsc);
-    DEBUG_WM(value);
-
-    DEBUG_WM(F("Saving..."));
-
-    if (spiffsMan.FSCreateFile(DIR, value)) {
-        DEBUG_WM(F("Saved success!"));
-    }
-}
-
-/** Save next settings to File System */
-void CicadaWizard::saveSettings(String dsc, String DIR, String value, String content) {
-
-    deleteSettings(dsc, DIR);
-
-    DEBUG_WM(F("\n\nSAVING:"));
-    DEBUG_WM(dsc);
-    DEBUG_WM(F("===========================================\n"));
-    DEBUG_WM(dsc);
-    DEBUG_WM(value);
-
-    DEBUG_WM(F("Saving..."));
-
-    if (spiffsMan.FSWriteToFile(DIR, value, content)) {
-        DEBUG_WM(F("Saved success!"));
-    }
-}
 
 /******************************************************************************
  * END
@@ -954,7 +852,17 @@ void CicadaWizard::handleWifi(boolean scan) {
         }
     }
 
-    page += FPSTR(HTTP_FORM_START_CONFIG_WIFI);
+    // Get MQTT Host
+    String tmpssid = spiffsMan.getSettings("SSID", DIR_WIFI_SSID, false);
+    // Get MQTT User
+    String tmppwd = spiffsMan.getSettings("Password", DIR_WIFI_PWD, false);
+
+
+    String formWifi = FPSTR(HTTP_FORM_START_CONFIG_WIFI);
+    formWifi.replace("{ssid}", tmpssid);
+    formWifi.replace("{pass}", tmppwd);
+    page += formWifi;
+
     char parLength[2];
     // add the extra parameters to the form
     for (int i = 0; i < _paramsCount; i++) {
@@ -1071,6 +979,11 @@ void CicadaWizard::handleWifiSave() {
         optionalIPFromString(&_sta_static_sn, sn.c_str());
     }
 
+    // SSID
+    spiffsMan.saveSettings("SSID", DIR_WIFI_SSID, _ssid);
+    // Password
+    spiffsMan.saveSettings("Password", DIR_WIFI_PWD, _pass);
+
     connect = true; //signal ready to connect/reset
     handleInfo();
 }
@@ -1093,15 +1006,15 @@ void CicadaWizard::handleInfo() {
 
     page += F("<h4>Station</h4>");
     // Get the previous Station Name
-    String name = getSettings("Station Name", DIR_STATION_NAME, false);
+    String name = spiffsMan.getSettings("Station Name", DIR_STATION_NAME, false);
     // Get the previous Latitude
-    String lat = getSettings("Latitude", DIR_STATION_LATITUDE, false);
+    String lat = spiffsMan.getSettings("Latitude", DIR_STATION_LATITUDE, false);
     // Get the previous Longitude
-    String lon = getSettings("Longitude", DIR_STATION_LONGITUDE, false);
+    String lon = spiffsMan.getSettings("Longitude", DIR_STATION_LONGITUDE, false);
     // Get the previous bucket configuration
-    String vol = getSettings("Bucket calibration", DIR_STATION_BUCKET_VOL, false);
+    String vol = spiffsMan.getSettings("Bucket calibration", DIR_STATION_BUCKET_VOL, false);
     // Get the previous Send time interval
-    String sti = getSettings("Send time interval", DIR_STATION_SENDTIMEINTERVAL, false);
+    String sti = spiffsMan.getSettings("Send time interval", DIR_STATION_SENDTIMEINTERVAL, false);
     page += F("<p style='font-size:0.8rem;'><b>Station Name:</b> ");
     page += name;
     page += F("</p>");
@@ -1120,15 +1033,15 @@ void CicadaWizard::handleInfo() {
 
     page += F("<h4>MQTT Server</h4>");
     // Get MQTT Host
-    String host = getSettings("MQTT Host", DIR_MQTT_SERVER, true);
+    String host = spiffsMan.getSettings("MQTT Host", DIR_MQTT_SERVER, true);
     // Get MQTT Port
-    String port = getSettings("MQTT Port", DIR_MQTT_PORT, false);
+    String port = spiffsMan.getSettings("MQTT Port", DIR_MQTT_PORT, false);
     // Get MQTT User
-    String user = getSettings("MQTT User", DIR_MQTT_USER, false);
+    String user = spiffsMan.getSettings("MQTT User", DIR_MQTT_USER, false);
     // Get MQTT Password
-    String pass = getSettings("MQTT Password", DIR_MQTT_PWD, true);
+    String pass = spiffsMan.getSettings("MQTT Password", DIR_MQTT_PWD, true);
     // Get MQTT Topic
-    String topic = getSettings("MQTT Topic", DIR_MQTT_TOPIC, false);
+    String topic = spiffsMan.getSettings("MQTT Topic", DIR_MQTT_TOPIC, false);
     page += F("<p style='font-size:0.8rem;'><b>Host Server:</b> ");
     page += host;
     page += F("</p>");
@@ -1148,11 +1061,11 @@ void CicadaWizard::handleInfo() {
 
     page += F("<h4>SIM Card Carrier APN</h4>");
     // Get MQTT Host
-    String apn = getSettings("SIM Carrier APN", DIR_SIMCARD_APN, true);
+    String apn = spiffsMan.getSettings("SIM Carrier APN", DIR_SIMCARD_APN, true);
     // Get MQTT User
-    String userapn = getSettings("SIM Carrier APN User", DIR_SIMCARD_USER, false);
+    String userapn = spiffsMan.getSettings("SIM Carrier APN User", DIR_SIMCARD_USER, false);
     // Get MQTT Password
-    String pwdapn = getSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, true);
+    String pwdapn = spiffsMan.getSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, true);
 
     page += F("<p style='font-size:0.8rem;'><b>APN</b> ");
     page += apn;
@@ -1172,7 +1085,7 @@ void CicadaWizard::handleInfo() {
     page += _pass;
     page += F("</p><br>");
 
-    page += F("<form action='/reboot' method='post'><button>Reboot Module</button></form>");
+    page += F("<form action='/reboot' method='post'><button>Finish and Reboot Module</button></form>");
     page += F("<form action='/factoryreset' method='post'><button>Factory Reset</button></form>");
 
     String footer = FPSTR(HTTP_END);
