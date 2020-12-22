@@ -113,11 +113,49 @@ boolean DCPSIM800::setupSIM800Module() {
 }
 
 char* DCPSIM800::getNetworkDate() {
-    modemGSM.getGSMDateTime(DATE_FULL)
-    if (WiFi.status() == WL_CONNECTED) {
-        //Recupera os dados de data e horário usando o client NTP
-        char* strDate = (char*) ntpClient.getFormattedDate().c_str();
-        return strDate;
+    if (modemGSM.isGprsConnected()) {
+        int year = 0;
+        int month = 0;
+        int day = 0;
+        int hour = 0;
+        int min = 0;
+        int sec = 0;
+        float timezone = 0;
+
+        simDCPLeds.redTurnOn();
+        simDCPLeds.greenTurnOff();
+
+        for (int8_t i = 10; i; i--) {
+            simDCPLeds.redBlink();
+            simDCPLeds.greenBlink();
+
+            if (modemGSM.getNetworkTime(&year, &month, &day, &hour, &min, &sec,
+                    &timezone)) {
+                CIC_DEBUG_(F("Year: "));
+                CIC_DEBUG_(year);
+                CIC_DEBUG_(F(" Month: "));
+                CIC_DEBUG_(month);
+                CIC_DEBUG_(F(" Day: "));
+                CIC_DEBUG_(day);
+                CIC_DEBUG_(F(" Hour: "));
+                CIC_DEBUG_(hour);
+                CIC_DEBUG_(F(" Minute: "));
+                CIC_DEBUG_(min);
+                CIC_DEBUG_(F(" Second: "));
+                CIC_DEBUG_(sec);
+                CIC_DEBUG_(F(" Timezone: "));
+                CIC_DEBUG(timezone);
+
+                String result = String(year) + "-" + String(month) + "-" + String(day) + "T" + String(hour) + ":" + String(min) + ":" + String(sec) + "Z";
+
+                return (char*) result.c_str();
+            } else {
+                CIC_DEBUG(F("Couldn't get network time, retrying in 1s."));
+                delay(1000L);
+            }
+        }
+
+        return "";
     }
     return "";
 }

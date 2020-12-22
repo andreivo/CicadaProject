@@ -19,6 +19,7 @@
 #include "../PINS_IO.h"
 #include "../LEDs/DCPLeds.h"
 #include "../SIM800/DCPSIM800.h"
+#include "../RTC/DCPRTC.h"
 
 #define CIC_DEBUG_ENABLED true
 

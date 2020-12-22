@@ -173,7 +173,7 @@ boolean SPIFFSManager::FSWriteToFile(String directory, String filename, String c
         CIC_DEBUG(F("SUCCESS: File created."));
 
         // Check if the content was saved successfully
-        if (f.println(content)) {
+        if (f.print(content)) {
             CIC_DEBUG(F("SUCCESS: Content saved to file."));
         } else {
             success = false;
@@ -205,7 +205,7 @@ String SPIFFSManager::FSReadToFile(String directory, String filename) {
     if (file) {
 
         CIC_DEBUG_(F("File located: "));
-        CIC_DEBUG_(file.name());
+        CIC_DEBUG(file.name());
 
         String line = file.readStringUntil('\n');
         CIC_DEBUG_("Content: ");

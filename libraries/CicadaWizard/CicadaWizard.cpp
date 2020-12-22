@@ -1078,11 +1078,17 @@ void CicadaWizard::handleInfo() {
     page += F("</p><br>");
 
     page += F("<h4>WIFI</h4>");
+
+    // Get MQTT Host
+    String tmpssid = spiffsMan.getSettings("SSID", DIR_WIFI_SSID, false);
+    // Get MQTT User
+    String tmppwd = spiffsMan.getSettings("Password", DIR_WIFI_PWD, false);
+
     page += F("<p style='font-size:0.8rem;'><b>SSID:</b> ");
-    page += _ssid;
+    page += tmpssid;
     page += F("</p>");
     page += F("<p style='font-size:0.8rem;'><b>Password:</b> ");
-    page += _pass;
+    page += tmppwd;
     page += F("</p><br>");
 
     page += F("<form action='/reboot' method='post'><button>Finish and Reboot Module</button></form>");

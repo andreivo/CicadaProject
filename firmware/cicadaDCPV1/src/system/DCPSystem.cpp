@@ -39,6 +39,8 @@ DCPSIM800 dcpSIM800;
 
 DCPLeds cicadaLeds;
 
+DCPRTC cicadaRTC;
+
 /**
  * Sensor configurations
  *
@@ -97,9 +99,25 @@ void DCPSystem::initCommunication() {
     if (!dcpWifi.setupWiFiModule()) {
         if (!dcpSIM800.setupSIM800Module()) {
             setupWizard();
+        } else {
+            cicadaRTC.setupRTCModule(dcpSIM800.getNetworkDate());
+            cicadaRTC.now();
+            delay(1000);
+            cicadaRTC.now();
+            delay(1000);
+            cicadaRTC.now();
+            delay(1000);
+            cicadaRTC.now();
         }
     } else {
-        CIC_DEBUG(dcpWifi.getNetworkDate());
+        cicadaRTC.setupRTCModule(dcpWifi.getNetworkDate());
+        cicadaRTC.now();
+        delay(1000);
+        cicadaRTC.now();
+        delay(1000);
+        cicadaRTC.now();
+        delay(1000);
+        cicadaRTC.now();
     }
 }
 

@@ -14,7 +14,6 @@
 #define TINY_GSM_MODEM_SIM800 //Tipo de modem que estamos usando
 #include "../system/DCPSystem.h"
 #include <TinyGsmClient.h>
-#include <PubSubClient.h>
 
 class DCPSIM800 {
 public:
@@ -22,6 +21,7 @@ public:
     void turnOn();
     void turnOff();
     boolean setupSIM800Module();
+    char* getNetworkDate();
 private:
 
 };
