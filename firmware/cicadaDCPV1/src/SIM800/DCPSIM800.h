@@ -21,7 +21,7 @@ public:
     void turnOn();
     void turnOff();
     boolean setupSIM800Module();
-    char* getNetworkDate();
+    String getNetworkDate();
 private:
 
 };

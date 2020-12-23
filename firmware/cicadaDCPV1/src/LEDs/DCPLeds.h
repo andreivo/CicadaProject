@@ -34,10 +34,12 @@ public:
     void blueBlink();
     void blueBlink(int times);
     void blueBlink(int times, int delaytime);
+    void blinkStatusOk();
 private:
     boolean redOn = false;
     boolean greenOn = false;
     boolean blueOn = false;
+    int32_t lastEpoch;
 
 };
 

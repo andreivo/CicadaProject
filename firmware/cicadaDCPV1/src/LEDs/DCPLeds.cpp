@@ -9,7 +9,12 @@
  */
 #include "DCPLeds.h"
 
+#define TIME_TO_STATUS_BLINK 20
+
+DCPRTC ledsRTC;
+
 DCPLeds::DCPLeds() {
+    lastEpoch = ledsRTC.nowEpoch();
 }
 
 void DCPLeds::redTurnOn() {
@@ -97,4 +102,18 @@ void DCPLeds::blueBlink(int times, int delaytime) {
         blueBlink();
         delay(delaytime);
     }
+}
+
+void DCPLeds::blinkStatusOk() {
+    int32_t actualEpoch = ledsRTC.nowEpoch();
+    int32_t periodEpoch = actualEpoch - lastEpoch;
+
+    if (periodEpoch >= TIME_TO_STATUS_BLINK) {
+        greenTurnOff();
+        greenTurnOn();
+        delay(200);
+        greenTurnOff();
+        lastEpoch = ledsRTC.nowEpoch();
+    }
+
 }

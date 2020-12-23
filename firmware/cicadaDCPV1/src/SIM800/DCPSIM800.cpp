@@ -112,7 +112,7 @@ boolean DCPSIM800::setupSIM800Module() {
     return false;
 }
 
-char* DCPSIM800::getNetworkDate() {
+String DCPSIM800::getNetworkDate() {
     if (modemGSM.isGprsConnected()) {
         int year = 0;
         int month = 0;
@@ -146,9 +146,13 @@ char* DCPSIM800::getNetworkDate() {
                 CIC_DEBUG_(F(" Timezone: "));
                 CIC_DEBUG(timezone);
 
-                String result = String(year) + "-" + String(month) + "-" + String(day) + "T" + String(hour) + ":" + String(min) + ":" + String(sec) + "Z";
+                //Setting to universal Time
+                hour = hour + ((-1) * timezone);
 
-                return (char*) result.c_str();
+                String result = String(year) + "-" + String(month) + "-" + String(day) + "T" + String(hour) + ":" + String(min) + ":" + String(sec) + "Z";
+                simDCPLeds.redTurnOff();
+                simDCPLeds.greenTurnOff();
+                return result;
             } else {
                 CIC_DEBUG(F("Couldn't get network time, retrying in 1s."));
                 delay(1000L);

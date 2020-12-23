@@ -22,7 +22,8 @@ public:
 
     boolean setupWiFiModule();
     void setupNTP();
-    char* getNetworkDate();
+    String getNetworkDate();
+    int32_t getNetworkEpoch();
 };
 
 #endif

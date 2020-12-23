@@ -41,6 +41,8 @@ DCPLeds cicadaLeds;
 
 DCPRTC cicadaRTC;
 
+DCPSDCard cicadaSDCard;
+
 /**
  * Sensor configurations
  *
@@ -91,6 +93,8 @@ void DCPSystem::preInitSystem() {
     // Register Firmware Version
     initFirmwareVersion();
 
+    initSensorsConfig();
+
     //Show all config
     printConfiguration();
 }
@@ -101,23 +105,9 @@ void DCPSystem::initCommunication() {
             setupWizard();
         } else {
             cicadaRTC.setupRTCModule(dcpSIM800.getNetworkDate());
-            cicadaRTC.now();
-            delay(1000);
-            cicadaRTC.now();
-            delay(1000);
-            cicadaRTC.now();
-            delay(1000);
-            cicadaRTC.now();
         }
     } else {
-        cicadaRTC.setupRTCModule(dcpWifi.getNetworkDate());
-        cicadaRTC.now();
-        delay(1000);
-        cicadaRTC.now();
-        delay(1000);
-        cicadaRTC.now();
-        delay(1000);
-        cicadaRTC.now();
+        cicadaRTC.setupRTCModule(dcpWifi.getNetworkEpoch());
     }
 }
 
@@ -171,8 +161,35 @@ void DCPSystem::initSystem() {
     // Get Station Calibrated Bucket Volume
     initBucketVolume();
 
-    // Initialize DHT Sensor
-    dcpDHT.initDHTSensor();
+    //inicia o SDCard
+    cicadaSDCard.setupSDCardModule();
+    cicadaSDCard.printDirectory("/", 0);
+
+    cicadaLeds.redTurnOff();
+    cicadaLeds.greenTurnOff();
+    cicadaLeds.blueTurnOff();
+
+    CIC_DEBUG_(F("Startup completed on: "));
+    CIC_DEBUG(cicadaRTC.now());
+
+}
+
+void DCPSystem::printNowDate() {
+    CIC_DEBUG(cicadaRTC.now("%Y-%m-%d %H%M%S"));
+}
+
+void DCPSystem::checkAPWizard() {
+    if (digitalRead(PIN_AP_WIZARD) == HIGH) {
+        setupWizard();
+    }
+}
+
+void DCPSystem::blinkStatus() {
+    cicadaLeds.blinkStatusOk();
+}
+
+void DCPSystem::readSensors() {
+    dcpDHT.readDHT();
 }
 
 /**
@@ -263,6 +280,7 @@ void DCPSystem::initBucketVolume() {
     if (vol) {
         CIC_STATION_BUCKET_VOLUME = vol;
     } else {
+
         CIC_DEBUG(F("STATION BUCKET VOLUME not found.\nUsing default value..."));
     }
 
@@ -270,11 +288,126 @@ void DCPSystem::initBucketVolume() {
     CIC_DEBUG(CIC_STATION_BUCKET_VOLUME);
 }
 
+/**
+ * Initialize Sensors
+ */
+void DCPSystem::initSensorsConfig() {
+
+    CIC_DEBUG_HEADER(F("INIT Sensor Config"));
+
+    String codetemp = spiffsManager.getSettings("Code temp", DIR_SENSOR_CODETEMP, false);
+    String codehum = spiffsManager.getSettings("Code hum", DIR_SENSOR_CODEHUM, false);
+    String codeplu = spiffsManager.getSettings("Code plu", DIR_SENSOR_CODEPLUV, false);
+    String codebtv = spiffsManager.getSettings("Code bat. vol.", DIR_SENSOR_CODEBATV, false);
+    String codebtc = spiffsManager.getSettings("Code bat. cur.", DIR_SENSOR_CODEBATC, false);
+
+    if (codetemp == "") {
+        codetemp = "10";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODETEMP);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODETEMP, codetemp);
+    }
+
+    if (codehum == "") {
+        codehum = "20";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEHUM);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEHUM, codehum);
+    }
+
+    if (codeplu == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEPLUV);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEPLUV, 30);
+    }
+
+    if (codebtv == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEBATV);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEBATV, 40);
+    }
+
+    if (codebtc == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEBATC);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEBATC, 50);
+    }
+
+    String dttemp = spiffsManager.getSettings("Data Type temp", DIR_SENSOR_DATATYPETEMP, false);
+    String dthum = spiffsManager.getSettings("Data Type hum", DIR_SENSOR_DATATYPEHUM, false);
+    String dtplu = spiffsManager.getSettings("Data Type plu", DIR_SENSOR_DATATYPEPLUV, false);
+    String dtbtv = spiffsManager.getSettings("Data Type bat. vol.", DIR_SENSOR_DATATYPEBATV, false);
+    String dtbtc = spiffsManager.getSettings("Data Type bat. cur.", DIR_SENSOR_DATATYPEBATC, false);
+
+    if (dttemp == "") {
+        dttemp = "temp";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPETEMP);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPETEMP, dttemp);
+    }
+
+    if (dthum == "") {
+        dthum = "hum";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEHUM);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEHUM, dthum);
+    }
+
+    if (dtplu == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEPLUV);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEPLUV, "pluvio");
+    }
+
+    if (dtbtv == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEBATV);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEBATV, "battery");
+    }
+
+    if (dtbtc == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEBATC);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEBATC, "current");
+    }
+
+    String colltemp = spiffsManager.getSettings("Coll. time interval temp", DIR_SENSOR_COLLTINTTEMP, false);
+    String collhum = spiffsManager.getSettings("Coll. time interval hum", DIR_SENSOR_COLLTINTHUM, false);
+    String collplu = spiffsManager.getSettings("Coll. time interval plu", DIR_SENSOR_COLLTINTPLUV, false);
+    String collbtv = spiffsManager.getSettings("Coll. time interval bat. vol.", DIR_SENSOR_COLLTINTBATV, false);
+    String collbtc = spiffsManager.getSettings("Coll. time interval bat. cur.", DIR_SENSOR_COLLTINTBATC, false);
+
+    if (colltemp == "") {
+        colltemp = "10";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTTEMP);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTTEMP, colltemp);
+    }
+
+    if (collhum == "") {
+        collhum = "10";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTHUM);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTHUM, collhum);
+    }
+
+    if (collplu == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTPLUV);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTPLUV, 10);
+    }
+
+    if (collbtv == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTBATV);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTBATV, 10);
+    }
+
+    if (collbtc == "") {
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTBATC);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTBATC, 10);
+    }
+
+    // Initialize DHT Sensor
+    dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, colltemp.toInt(), colltemp.toInt());
+
+    CIC_DEBUG(F("Finish sensor config"));
+
+}
+
 void DCPSystem::printConfiguration() {
+
     spiffsManager.FSPrintFileList();
 }
 
 String DCPSystem::getFwmVersion() {
+
     return FIRMWARE_VERSION;
 }
 

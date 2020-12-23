@@ -135,6 +135,8 @@ void CicadaWizard::setupConfigPortal() {
 
     // CICADA
     server->on("/saveCicadaStation", std::bind(&CicadaWizard::handleSaveCicadaStation, this));
+    server->on("/sensors", std::bind(&CicadaWizard::handleSensors, this));
+    server->on("/saveSensorsConfig", std::bind(&CicadaWizard::handleSaveSensorsConfig, this));
     server->on("/saveCicadaMQTT", std::bind(&CicadaWizard::handleSaveCicadaMQTT, this));
     server->on("/saveCicadaSIM", std::bind(&CicadaWizard::handleSaveCicadaSIMCard, this));
     server->on("/delwifi", std::bind(&CicadaWizard::handleDelWifi, this));
@@ -477,6 +479,9 @@ void CicadaWizard::handleRoot() {
     // Get the previous Station Name
     String name = spiffsMan.getSettings("Station Name", DIR_STATION_NAME, false);
 
+    // Get the previous Station Name
+    String pass = spiffsMan.getSettings("Station password", DIR_STATION_PASS, false);
+
     // Get the previous Latitude
     String lat = spiffsMan.getSettings("Latitude", DIR_STATION_LATITUDE, false);
 
@@ -490,6 +495,7 @@ void CicadaWizard::handleRoot() {
     String form = FPSTR(HTTP_FORM_CONFIG_STATION);
     form.replace("{vol}", vol);
     form.replace("{name}", name);
+    form.replace("{spass}", pass);
     form.replace("{lat}", lat);
     form.replace("{lon}", lon);
     form.replace("{sti}", sti);
@@ -509,6 +515,8 @@ void CicadaWizard::handleRoot() {
     footer.replace("{sttid}", stationID);
     footer.replace("{wifimac}", macAddr);
     page += footer;
+
+    //DEBUG_WM(page);
 
     server->sendHeader("Content-Length", String(page.length()));
     server->send(200, "text/html", page);
@@ -542,9 +550,123 @@ void CicadaWizard::handleSaveCicadaStation() {
     String stationName = server->arg("name");
     spiffsMan.saveSettings("Station Name", DIR_STATION_NAME, stationName);
 
+    // Save station name
+    String pass = server->arg("spass");
+    spiffsMan.saveSettings("Station Pass", DIR_STATION_PASS, pass);
+
     // Send Time Interval
     String sti = server->arg("sti");
     spiffsMan.saveSettings("Send Time Interval", DIR_STATION_SENDTIMEINTERVAL, sti);
+
+    //Redirect Step 2
+    handleMQTTSERVER();
+}
+
+void CicadaWizard::handleSensors() {
+
+    String page = FPSTR(HTTP_HEAD_HTML);
+    page.replace("{v}", "Cicada DCP Wizard");
+    page += FPSTR(HTTP_SCRIPT);
+    page += FPSTR(HTTP_STYLE);
+    page += _customHeadElement;
+    page += FPSTR(HTTP_HEAD_END);
+
+    // Get Temperature Sensor Code
+    String codetemp = spiffsMan.getSettings("Code temp", DIR_SENSOR_CODETEMP, false);
+    String codehum = spiffsMan.getSettings("Code hum", DIR_SENSOR_CODEHUM, false);
+    String codeplu = spiffsMan.getSettings("Code plu", DIR_SENSOR_CODEPLUV, false);
+    String codebtv = spiffsMan.getSettings("Code bat. vol.", DIR_SENSOR_CODEBATV, false);
+    String codebtc = spiffsMan.getSettings("Code bat. cur.", DIR_SENSOR_CODEBATC, false);
+
+    String dttemp = spiffsMan.getSettings("Data Type temp", DIR_SENSOR_DATATYPETEMP, false);
+    String dthum = spiffsMan.getSettings("Data Type hum", DIR_SENSOR_DATATYPEHUM, false);
+    String dtplu = spiffsMan.getSettings("Data Type plu", DIR_SENSOR_DATATYPEPLUV, false);
+    String dtbtv = spiffsMan.getSettings("Data Type bat. vol.", DIR_SENSOR_DATATYPEBATV, false);
+    String dtbtc = spiffsMan.getSettings("Data Type bat. cur.", DIR_SENSOR_DATATYPEBATC, false);
+
+    String colltemp = spiffsMan.getSettings("Coll. time interval temp", DIR_SENSOR_COLLTINTTEMP, false);
+    String collhum = spiffsMan.getSettings("Coll. time interval hum", DIR_SENSOR_COLLTINTHUM, false);
+    String collplu = spiffsMan.getSettings("Coll. time interval plu", DIR_SENSOR_COLLTINTPLUV, false);
+    String collbtv = spiffsMan.getSettings("Coll. time interval bat. vol.", DIR_SENSOR_COLLTINTBATV, false);
+    String collbtc = spiffsMan.getSettings("Coll. time interval bat. cur.", DIR_SENSOR_COLLTINTBATC, false);
+
+    // Setup the form
+    String form = FPSTR(HTTP_FORM_CONFIG_SENSORS);
+    form.replace("{codetemp}", codetemp);
+    form.replace("{codehum}", codehum);
+    form.replace("{codeplu}", codeplu);
+    form.replace("{codebtv}", codebtv);
+    form.replace("{codebtc}", codebtc);
+
+    form.replace("{dttemp}", dttemp);
+    form.replace("{dthum}", dthum);
+    form.replace("{dtplu}", dtplu);
+    form.replace("{dtbtv}", dtbtv);
+    form.replace("{dtbtc}", dtbtc);
+
+    form.replace("{colltemp}", colltemp);
+    form.replace("{collhum}", collhum);
+    form.replace("{collplu}", collplu);
+    form.replace("{collbtv}", collbtv);
+    form.replace("{collbtc}", collbtc);
+
+    form.replace("{cicadalogo}", HTTP_CICADALOGO);
+
+    page += form;
+
+    // Setup the script
+    String script = FPSTR(HTTP_SCRIPT_FORM_CONFIG_SENSORS);
+    page += script;
+
+    String footer = FPSTR(HTTP_END);
+    footer.replace("{fmwver}", fmwver);
+    footer.replace("{sttid}", stationID);
+    footer.replace("{wifimac}", macAddr);
+    page += footer;
+
+    server->sendHeader("Content-Length", String(page.length()));
+    server->send(200, "text/html", page);
+}
+
+/**
+ * Save CICADA Sensors
+ */
+void CicadaWizard::handleSaveSensorsConfig() {
+    DEBUG_WM(F("\n\nSAVE CICADA DCP Sensors"));
+    DEBUG_WM(F("===========================================\n"));
+
+    String codetemp = server->arg("codetemp");
+    spiffsMan.saveSettings("code temp", DIR_SENSOR_CODETEMP, codetemp);
+    String codehum = server->arg("codehum");
+    spiffsMan.saveSettings("code hum", DIR_SENSOR_CODEHUM, codehum);
+    String codeplu = server->arg("codeplu");
+    spiffsMan.saveSettings("code plu", DIR_SENSOR_CODEPLUV, codeplu);
+    String codebtv = server->arg("codebtv");
+    spiffsMan.saveSettings("code bat. vol.", DIR_SENSOR_CODEBATV, codebtv);
+    String codebtc = server->arg("codebtc");
+    spiffsMan.saveSettings("code bat. corr.", DIR_SENSOR_CODEBATC, codebtc);
+
+    String dttemp = server->arg("dttemp");
+    spiffsMan.saveSettings("dt temp", DIR_SENSOR_DATATYPETEMP, dttemp);
+    String dthum = server->arg("dthum");
+    spiffsMan.saveSettings("dt hum", DIR_SENSOR_DATATYPEHUM, dthum);
+    String dtplu = server->arg("dtplu");
+    spiffsMan.saveSettings("dt plu", DIR_SENSOR_DATATYPEPLUV, dtplu);
+    String dtbtv = server->arg("dtbtv");
+    spiffsMan.saveSettings("dt bat. vol.", DIR_SENSOR_DATATYPEBATV, dtbtv);
+    String dtbtc = server->arg("dtbtc");
+    spiffsMan.saveSettings("dt bat. corr.", DIR_SENSOR_DATATYPEBATC, dtbtc);
+
+    String colltemp = server->arg("colltemp");
+    spiffsMan.saveSettings("coll temp", DIR_SENSOR_COLLTINTTEMP, colltemp);
+    String collhum = server->arg("collhum");
+    spiffsMan.saveSettings("coll hum", DIR_SENSOR_COLLTINTHUM, collhum);
+    String collplu = server->arg("collplu");
+    spiffsMan.saveSettings("coll plu", DIR_SENSOR_COLLTINTPLUV, collplu);
+    String collbtv = server->arg("collbtv");
+    spiffsMan.saveSettings("coll bat. vol.", DIR_SENSOR_COLLTINTBATV, collbtv);
+    String collbtc = server->arg("collbtc");
+    spiffsMan.saveSettings("coll bat. corr.", DIR_SENSOR_COLLTINTBATC, collbtc);
 
     //Redirect Step 2
     handleMQTTSERVER();
@@ -1007,6 +1129,8 @@ void CicadaWizard::handleInfo() {
     page += F("<h4>Station</h4>");
     // Get the previous Station Name
     String name = spiffsMan.getSettings("Station Name", DIR_STATION_NAME, false);
+    // Get the previous Station pass
+    String spass = spiffsMan.getSettings("Station password", DIR_STATION_PASS, false);
     // Get the previous Latitude
     String lat = spiffsMan.getSettings("Latitude", DIR_STATION_LATITUDE, false);
     // Get the previous Longitude
@@ -1017,6 +1141,9 @@ void CicadaWizard::handleInfo() {
     String sti = spiffsMan.getSettings("Send time interval", DIR_STATION_SENDTIMEINTERVAL, false);
     page += F("<p style='font-size:0.8rem;'><b>Station Name:</b> ");
     page += name;
+    page += F("</p>");
+    page += F("<p style='font-size:0.8rem;'><b>Station Password:</b> ");
+    page += spass;
     page += F("</p>");
     page += F("<p style='font-size:0.8rem;'><b>Latitude:</b> ");
     page += lat;

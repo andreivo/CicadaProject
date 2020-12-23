@@ -12,10 +12,9 @@
 // Time to try
 #define WIFI_CONN_COUNTER 120
 // Delay to connect to WiFi (WIFI_CONN_DELAY X WIFI_CONN_COUNTER = time to access point mode)
-#define WIFI_CONN_DELAY 500
+#define WIFI_CONN_DELAY 1000
 
-//Fuso Horário, no caso horário de verão de Brasília
-#define timeZone -3
+#define timeZone 0
 
 //Socket UDP que a lib utiliza para recuperar dados sobre o horário
 WiFiUDP udp;
@@ -86,6 +85,9 @@ boolean DCPwifi::setupWiFiModule() {
 }
 
 void DCPwifi::setupNTP() {
+
+    CIC_DEBUG_HEADER(F("SETUP NTP Client"));
+
     //Inicializa o client NTP
     ntpClient.begin();
 
@@ -98,18 +100,26 @@ void DCPwifi::setupNTP() {
         wifiDCPLeds.greenBlink();
         CIC_DEBUG_(".");
         ntpClient.forceUpdate();
-        delay(500);
+        delay(2000);
     }
 
     CIC_DEBUG("");
-    CIC_DEBUG("First Update Complete");
+    CIC_DEBUG("NTP First Update Complete");
 }
 
-char* DCPwifi::getNetworkDate() {
+String DCPwifi::getNetworkDate() {
     if (WiFi.status() == WL_CONNECTED) {
         //Recupera os dados de data e horário usando o client NTP
-        char* strDate = (char*) ntpClient.getFormattedDate().c_str();
+        String strDate = ntpClient.getFormattedDate();
         return strDate;
     }
     return "";
+}
+
+int32_t DCPwifi::getNetworkEpoch() {
+    if (WiFi.status() == WL_CONNECTED) {
+        //Recupera os dados de data e horário usando o client NTP
+        return ntpClient.getEpochTime();
+    }
+    return 0;
 }

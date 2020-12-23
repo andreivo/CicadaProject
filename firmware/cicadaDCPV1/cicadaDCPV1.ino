@@ -17,7 +17,8 @@ void setup() {
 }
 
 void loop() {
-  if (digitalRead(PIN_AP_WIZARD) == HIGH ) {      
-      cicadaDcpSystem.setupWizard();      
-   }
+  cicadaDcpSystem.checkAPWizard();
+  cicadaDcpSystem.blinkStatus();
+  cicadaDcpSystem.readSensors();
+
 }

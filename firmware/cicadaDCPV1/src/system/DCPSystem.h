@@ -20,6 +20,7 @@
 #include "../LEDs/DCPLeds.h"
 #include "../SIM800/DCPSIM800.h"
 #include "../RTC/DCPRTC.h"
+#include "../SDCard/DCPSDCard.h"
 
 #define CIC_DEBUG_ENABLED true
 
@@ -56,6 +57,10 @@ public:
     void initCommunication();
     void setupWizard();
     void initSystem();
+    void checkAPWizard();
+    void blinkStatus();
+    void readSensors();
+    void printNowDate();
 
 private:
     void setupTimeoutWizard();
@@ -64,6 +69,7 @@ private:
     void initFirmwareVersion();
     void initStationCoordinates();
     void initBucketVolume();
+    void initSensorsConfig();
     String getFwmVersion();
     String getSSIDAP();
     void printConfiguration();

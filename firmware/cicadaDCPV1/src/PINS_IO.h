@@ -13,3 +13,9 @@
 #define PIN_MODEM_TURNON 23
 #define PIN_MODEM_RX 16
 #define PIN_MODEM_TX 17
+
+//SDCard
+#define PIN_SDCARD_CHIP_SELECT 21 // Pino serial
+#define PIN_SDCARD_MOSI 19 // Pino serial
+#define PIN_SDCARD_MISO 18 // Pino serial
+#define PIN_SDCARD_SCK 22 // Clock pin

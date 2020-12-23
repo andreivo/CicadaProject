@@ -19,7 +19,10 @@ class DCPRTC {
 public:
     DCPRTC();
     boolean setupRTCModule(String calTimestamp);
-    String now();
+    boolean setupRTCModule(int32_t tt);
+    String now(String format = "%Y-%m-%dT%H:%M:%SZ");
+    String printTime(time_t tt, String format = "%Y-%m-%dT%H:%M:%SZ");
+    int32_t nowEpoch();
 private:
     time_t stringToTime(String calTimestamp);
 
