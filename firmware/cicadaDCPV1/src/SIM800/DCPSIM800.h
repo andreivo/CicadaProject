@@ -29,6 +29,7 @@ public:
     String getSignalQuality();
     boolean takeModemMutex();
     void giveModemMutex();
+    boolean isConnected();
 
 };
 

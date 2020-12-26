@@ -281,3 +281,7 @@ String DCPSIM800::getSignalQuality() {
     return "";
 
 }
+
+boolean DCPSIM800::isConnected() {
+    return modemGSM.isGprsConnected();
+}

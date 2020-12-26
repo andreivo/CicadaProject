@@ -169,7 +169,7 @@ void DCPSystem::setupTimeoutWizard() {
     timeoutWizard = timerBegin(0, 80, true);
     timerAttachInterrupt(timeoutWizard, &onTimeoutWizard, true);
     // Fire Interrupt every 1m ticks, so 1s
-    // ticks * (seconds * minutes)
+    // ticks * (seconds * minutes) = 10 minutos
     uint64_t timeoutWiz = 1000000 * (60 * 10);
     //uint64_t timeoutWiz = 1000000 * (10);
     timerAlarmWrite(timeoutWizard, timeoutWiz, true);
@@ -289,7 +289,11 @@ void DCPSystem::transmiteData() {
     if (dcpWifi.isConnected()) {
         cicadaMQTT.sendAllMessagesData();
     } else {
-        cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
+        if (dcpSIM800.isConnected()) {
+            cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
+        } else {
+            initCommunication();
+        }
     }
     //            giveSendMSGMutex();
     //            break;
