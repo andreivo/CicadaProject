@@ -24,8 +24,8 @@
 #include <memory>
 
 #include <SPIFFS.h>
-#include <SPIFFSManager.h>
-#include <CicadaSPIFFSFile.h>
+#include "../SPIFFS/SPIFFSManager.h"
+#include "../SPIFFS/CicadaSPIFFSFile.h"
 
 #if defined(ESP8266)
 extern "C" {

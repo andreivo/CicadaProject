@@ -533,7 +533,7 @@ float SPIFFSManager::bytesConverter(float bytes, char prefix) {
 String SPIFFSManager::getSettings(String dsc, String DIR, boolean inContent) {
 
     CIC_DEBUG_(F("\n\nGET "));
-    CIC_DEBUG_(dsc);
+    CIC_DEBUG(dsc);
     CIC_DEBUG(F("==========================================="));
     String settings = FSReadString(DIR);
     if (inContent) {

@@ -12,32 +12,42 @@
 #define DCPSystem_h
 
 #include <FS.h> // FS must be the first
-#include <CicadaWizard.h>
-#include <SPIFFSManager.h>
+#include "../SDCard/DCPSDCard.h"
+#include "../CicadaWizard/CicadaWizard.h"
+#include "../SPIFFS/SPIFFSManager.h"
 #include "../DHT/DCPDht.h"
-#include "../wifi/DCPwifi.h"
+#include "../WIFI/DCPwifi.h"
 #include "../PINS_IO.h"
 #include "../LEDs/DCPLeds.h"
 #include "../SIM800/DCPSIM800.h"
 #include "../RTC/DCPRTC.h"
-#include "../SDCard/DCPSDCard.h"
+#include "../MQTT/DCPMQTT.h"
 
 #define CIC_DEBUG_ENABLED true
 
+#define SERIAL_ATTEMPTS 3
+#define SERIAL_ATTEMPTS_DELAY 100
+
+
+boolean takeSerialMutex();
+void giveSerialMutex();
+
 #if CIC_DEBUG_ENABLED
-#define CIC_DEBUG_(text) { Serial.print( (text) ); }
+#define CIC_DEBUG_(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) {Serial.print((text)); giveSerialMutex(); break;} attempts = attempts+1;delay(SERIAL_ATTEMPTS_DELAY);}}
 #else
 #define CIC_DEBUG_(text) {}
 #endif
 
 #if CIC_DEBUG_ENABLED
-#define CIC_DEBUG_HEADER(text) {  Serial.println(F("\n")); Serial.println((text)); Serial.println(F("===========================================")); }
+
+#define CIC_DEBUG_HEADER(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.println(F("\n")); Serial.println((text)); Serial.println(F("===========================================")); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY);}}
 #else
 #define CIC_DEBUG_HEADER(text) {}
 #endif
 
 #if CIC_DEBUG_ENABLED
-#define CIC_DEBUG(text) { Serial.println( (text) ); }
+
+#define CIC_DEBUG(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.print((text)); Serial.print(F(" (Core: ")); Serial.print(xPortGetCoreID()); Serial.println(F(")")); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY); }}
 #else
 #define CIC_DEBUG(text) {}
 #endif
@@ -57,12 +67,19 @@ public:
     void initCommunication();
     void setupWizard();
     void initSystem();
-    void checkAPWizard();
+    void checkAPWizard(xTaskHandle coreTask);
     void blinkStatus();
     void readSensors();
     void printNowDate();
+    void initMQTT();
+    void transmiteData();
+    void loopCore2();
+    String IpAddress2String(const IPAddress& ipAddress);
+    void updateCommunicationStatus();
+    void updateCommunicationSignal();
 
 private:
+    int32_t lastEpMetadados;
     void setupTimeoutWizard();
     void initStationID();
     void initStationName();
@@ -73,6 +90,7 @@ private:
     String getFwmVersion();
     String getSSIDAP();
     void printConfiguration();
+    void storeMetadados();
 
 };
 

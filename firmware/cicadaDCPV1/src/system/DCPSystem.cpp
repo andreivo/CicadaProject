@@ -18,6 +18,30 @@ SPIFFSManager spiffsManager;
 #define CIC_DEBUG_ENABLED true
 #define CIC_SYSTEM_BAUDRATE 115200
 
+//#define TIME_TO_GENERATE_METADADOS 60*60*12
+#define TIME_TO_GENERATE_METADADOS 60
+
+//Mutex
+SemaphoreHandle_t SerialMutex = xSemaphoreCreateMutex();
+
+boolean takeSerialMutex() {
+    return (xSemaphoreTake(SerialMutex, 1) == pdTRUE);
+}
+
+void giveSerialMutex() {
+    xSemaphoreGive(SerialMutex);
+}
+
+//Mutex
+SemaphoreHandle_t SendMSGMutex = xSemaphoreCreateMutex();
+
+boolean takeSendMSGMutex() {
+    return (xSemaphoreTake(SendMSGMutex, 1) == pdTRUE);
+}
+
+void giveSendMSGMutex() {
+    xSemaphoreGive(SendMSGMutex);
+}
 
 const String FIRMWARE_VERSION = "0.0.1.0";
 
@@ -27,6 +51,14 @@ String STATION_NAME = "CicadaDCP";
 String STATION_LONGITUDE = "";
 String STATION_LATITUDE = "";
 float CIC_STATION_BUCKET_VOLUME = 3.22; // Bucket Calibrated Volume in ml
+
+
+String SIM_ICCID = "";
+String SIM_OPERA = "";
+String COM_LOCAL_IP = "";
+String COM_SIGNAL_QUALITTY = "";
+String COM_TYPE = "WIFI";
+
 
 // Initialize CicadaWizard
 CicadaWizard cicadaWizard;
@@ -43,6 +75,8 @@ DCPRTC cicadaRTC;
 
 DCPSDCard cicadaSDCard;
 
+DCPMQTT cicadaMQTT;
+
 /**
  * Sensor configurations
  *
@@ -57,13 +91,14 @@ void IRAM_ATTR onTimeoutWizard() {
 }
 
 DCPSystem::DCPSystem() {
-
+    lastEpMetadados = cicadaRTC.nowEpoch();
 }
 
 /**
  * Initialize Station ID
  */
 void DCPSystem::preInitSystem() {
+
     pinMode(PIN_AP_WIZARD, INPUT);
     pinMode(PIN_LED_RED, OUTPUT);
     pinMode(PIN_LED_GREEN, OUTPUT);
@@ -77,23 +112,36 @@ void DCPSystem::preInitSystem() {
     cicadaLeds.blueTurnOff();
 
 
+
+
     // Init the Serial
     CIC_DEBUG_SETUP(CIC_SYSTEM_BAUDRATE);
     CIC_DEBUG_(F("\n\nCICADA DCP FIRMWARE (Version "));
     CIC_DEBUG_(getFwmVersion());
     CIC_DEBUG(F(")"));
 
+    //inicia o SDCard
+    cicadaSDCard.setupSDCardModule();
+    cicadaSDCard.printDirectory("/", 0);
 
-    // Initialize Station ID
+    // Get Station ID from file system or create the file with
     initStationID();
 
-    // Initialize Station Name
+    // Get Station Name
     initStationName();
 
     // Register Firmware Version
     initFirmwareVersion();
 
+    // Get Station Latitude and Longitude
+    initStationCoordinates();
+
+    // Get Station Calibrated Bucket Volume
+    initBucketVolume();
+
     initSensorsConfig();
+
+    initMQTT();
 
     //Show all config
     printConfiguration();
@@ -109,6 +157,7 @@ void DCPSystem::initCommunication() {
     } else {
         cicadaRTC.setupRTCModule(dcpWifi.getNetworkEpoch());
     }
+    updateCommunicationStatus();
 }
 
 void DCPSystem::setupTimeoutWizard() {
@@ -145,41 +194,82 @@ void DCPSystem::setupWizard() {
  * Init all system configurations
  */
 void DCPSystem::initSystem() {
-
-    // Get Station ID from file system or create the file with
-    initStationID();
-
-    // Get Station Name
-    initStationName();
-
-    // Register Firmware Version
-    initFirmwareVersion();
-
-    // Get Station Latitude and Longitude
-    initStationCoordinates();
-
-    // Get Station Calibrated Bucket Volume
-    initBucketVolume();
-
-    //inicia o SDCard
-    cicadaSDCard.setupSDCardModule();
-    cicadaSDCard.printDirectory("/", 0);
-
     cicadaLeds.redTurnOff();
     cicadaLeds.greenTurnOff();
     cicadaLeds.blueTurnOff();
 
     CIC_DEBUG_(F("Startup completed on: "));
-    CIC_DEBUG(cicadaRTC.now());
+    printNowDate();
+    storeMetadados();
+}
 
+void DCPSystem::storeMetadados() {
+    cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY);
+}
+
+void DCPSystem::updateCommunicationStatus() {
+    CIC_DEBUG_HEADER(F("UPDATE COMMUNICATION STATUS"));
+
+    if (dcpWifi.isConnected()) {
+        COM_TYPE = "WIFI";
+        CIC_DEBUG_(F("Conection Type:"));
+        CIC_DEBUG(COM_TYPE);
+
+        SIM_ICCID = "";
+        CIC_DEBUG_(F("CCID:"));
+        CIC_DEBUG(SIM_ICCID);
+
+        SIM_OPERA = "";
+        CIC_DEBUG(F("Operator:"));
+        CIC_DEBUG(SIM_OPERA);
+
+        IPAddress local = dcpWifi.getLocalIP();
+        COM_LOCAL_IP = IpAddress2String(local);
+        CIC_DEBUG_(F("Local IP:"));
+        CIC_DEBUG(COM_LOCAL_IP);
+
+        COM_SIGNAL_QUALITTY = dcpWifi.getSignalQuality();
+        CIC_DEBUG_(F("Signal quality:"));
+        CIC_DEBUG(COM_SIGNAL_QUALITTY);
+    } else {
+        COM_TYPE = "SIM";
+        CIC_DEBUG_(F("Conection Type:"));
+        CIC_DEBUG(COM_TYPE);
+
+        SIM_ICCID = dcpSIM800.getSimCCID();
+        CIC_DEBUG_(F("CCID:"));
+        CIC_DEBUG(SIM_ICCID);
+
+        SIM_OPERA = dcpSIM800.getOperator();
+        CIC_DEBUG_(F("Operator:"));
+        CIC_DEBUG(SIM_OPERA);
+
+        IPAddress local = dcpSIM800.getLocalIP();
+        COM_LOCAL_IP = IpAddress2String(local);
+        CIC_DEBUG_(F("Local IP:"));
+        CIC_DEBUG(COM_LOCAL_IP);
+
+        COM_SIGNAL_QUALITTY = dcpSIM800.getSignalQuality();
+        CIC_DEBUG_(F("Signal quality:"));
+        CIC_DEBUG(COM_SIGNAL_QUALITTY);
+    }
+}
+
+String DCPSystem::IpAddress2String(const IPAddress& ipAddress) {
+    return String(ipAddress[0]) + String(".") +\
+ String(ipAddress[1]) + String(".") +\
+ String(ipAddress[2]) + String(".") +\
+ String(ipAddress[3]);
 }
 
 void DCPSystem::printNowDate() {
-    CIC_DEBUG(cicadaRTC.now("%Y-%m-%d %H%M%S"));
+    CIC_DEBUG(cicadaRTC.now());
 }
 
-void DCPSystem::checkAPWizard() {
+void DCPSystem::checkAPWizard(xTaskHandle coreTask) {
     if (digitalRead(PIN_AP_WIZARD) == HIGH) {
+        vTaskDelete(coreTask);
+        delay(100);
         setupWizard();
     }
 }
@@ -190,6 +280,42 @@ void DCPSystem::blinkStatus() {
 
 void DCPSystem::readSensors() {
     dcpDHT.readDHT();
+}
+
+void DCPSystem::transmiteData() {
+    //    int attempts = 0;
+    //    while (attempts <= 3) {
+    //        if (takeSendMSGMutex()) {
+    if (dcpWifi.isConnected()) {
+        cicadaMQTT.sendAllMessagesData();
+    } else {
+        cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
+    }
+    //            giveSendMSGMutex();
+    //            break;
+    //        } else {
+    //            CIC_DEBUG("Waiting to transmiteData ...");
+    //        }
+    //        attempts = attempts + 1;
+    //        delay(100);
+    //    }
+}
+
+void DCPSystem::loopCore2() {
+    CIC_DEBUG_HEADER(F("INIT LOOP 2"));
+    String taskMessage = F("Task running on core ");
+    taskMessage = taskMessage + xPortGetCoreID();
+
+    CIC_DEBUG(taskMessage);
+    /* Inspect our own high water mark on entering the task. */
+    UBaseType_t uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+    CIC_DEBUG_("Allocated stack: ");
+    CIC_DEBUG(uxHighWaterMark);
+
+    while (true) {
+        transmiteData();
+        vTaskDelay(10);
+    }
 }
 
 /**
@@ -286,6 +412,34 @@ void DCPSystem::initBucketVolume() {
 
     CIC_DEBUG_(F("STATION BUCKET VOLUME: "));
     CIC_DEBUG(CIC_STATION_BUCKET_VOLUME);
+}
+
+/**
+ * Initialize MQTT
+ */
+void DCPSystem::initMQTT() {
+    CIC_DEBUG_HEADER(F("INIT MQTT Config"));
+
+    // Get MQTT Host
+    String host = spiffsManager.getSettings("MQTT Host", DIR_MQTT_SERVER, true);
+    // Get MQTT Port
+    String port = spiffsManager.getSettings("MQTT Port", DIR_MQTT_PORT, false);
+    // Get MQTT User
+    String user = spiffsManager.getSettings("MQTT User", DIR_MQTT_USER, false);
+    // Get MQTT Password
+    String pass = spiffsManager.getSettings("MQTT Password", DIR_MQTT_PWD, true);
+    // Get MQTT Topic
+    String topic = spiffsManager.getSettings("MQTT Topic", DIR_MQTT_TOPIC, false);
+
+    String sttPass = spiffsManager.FSReadString(DIR_STATION_PASS);
+    String timeToSend = spiffsManager.FSReadString(DIR_STATION_SENDTIMEINTERVAL);
+    if (timeToSend == "") {
+        timeToSend = "10";
+        spiffsManager.FSDeleteFiles(DIR_STATION_SENDTIMEINTERVAL);
+        spiffsManager.FSCreateFile(DIR_STATION_SENDTIMEINTERVAL, timeToSend);
+    }
+
+    cicadaMQTT.setupMQTTModule(timeToSend.toInt(), STATION_ID, host, port, user, pass, topic, STATION_NAME, sttPass, STATION_LATITUDE, STATION_LONGITUDE);
 }
 
 /**
@@ -395,7 +549,7 @@ void DCPSystem::initSensorsConfig() {
     }
 
     // Initialize DHT Sensor
-    dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, colltemp.toInt(), colltemp.toInt());
+    dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, colltemp.toInt(), collhum.toInt());
 
     CIC_DEBUG(F("Finish sensor config"));
 

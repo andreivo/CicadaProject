@@ -24,6 +24,10 @@ public:
     void setupNTP();
     String getNetworkDate();
     int32_t getNetworkEpoch();
+    boolean isConnected();
+    IPAddress getLocalIP();
+    String getSignalQuality();
+    int getRSSIasQuality(int RSSI);
 };
 
 #endif

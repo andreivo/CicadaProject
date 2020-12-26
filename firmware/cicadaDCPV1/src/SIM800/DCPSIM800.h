@@ -22,7 +22,13 @@ public:
     void turnOff();
     boolean setupSIM800Module();
     String getNetworkDate();
-private:
+    TinyGsmSim800 getModem();
+    String getSimCCID();
+    String getOperator();
+    IPAddress getLocalIP();
+    String getSignalQuality();
+    boolean takeModemMutex();
+    void giveModemMutex();
 
 };
 

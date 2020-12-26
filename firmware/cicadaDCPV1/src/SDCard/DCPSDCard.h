@@ -15,6 +15,9 @@
 #include <SPI.h>
 #include <mySD.h>
 
+#define SD_ATTEMPTS 3
+#define SD_ATTEMPTS_DELAY 100
+
 class DCPSDCard {
 public:
     DCPSDCard();
@@ -25,6 +28,11 @@ public:
     boolean deleteFile(String filename);
     String prepareData(String sensorCode, String dataType, String collectionDate, String value);
     boolean storeData(String sensor, String measures);
+    String getFirstFile(String path);
+    boolean storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ);
+private:
+    boolean takeSDMutex();
+    void giveSDMutex();
 };
 
 #endif

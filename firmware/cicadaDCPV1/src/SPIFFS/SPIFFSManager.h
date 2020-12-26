@@ -11,32 +11,7 @@
 #ifndef SPIFFSManager_h
 #define SPIFFSManager_h
 
-#define CIC_DEBUG_ENABLED true
-
-#if CIC_DEBUG_ENABLED
-#define CIC_DEBUG_(text) { Serial.print( (text) ); }
-#else
-#define CIC_DEBUG_(text) {}
-#endif
-
-#if CIC_DEBUG_ENABLED
-#define CIC_DEBUG_HEADER(text) {  Serial.println(F("\n")); Serial.println((text)); Serial.println(F("===========================================")); }
-#else
-#define CIC_DEBUG_HEADER(text) {}
-#endif
-
-#if CIC_DEBUG_ENABLED
-#define CIC_DEBUG(text) { Serial.println( (text) ); }
-#else
-#define CIC_DEBUG(text) {}
-#endif
-
-// Serial debug
-#if CIC_DEBUG_ENABLED
-#define CIC_DEBUG_SETUP(baudrate) { Serial.begin( (baudrate) );  delay(200);}
-#else
-#define CIC_DEBUG_SETUP(baudrate) {}
-#endif
+#include "../system/DCPSystem.h"
 
 class SPIFFSManager {
 public:

@@ -123,3 +123,30 @@ int32_t DCPwifi::getNetworkEpoch() {
     }
     return 0;
 }
+
+boolean DCPwifi::isConnected() {
+    return WiFi.status() == WL_CONNECTED;
+}
+
+IPAddress DCPwifi::getLocalIP() {
+    return WiFi.localIP();
+}
+
+String DCPwifi::getSignalQuality() {
+    int quality = getRSSIasQuality(WiFi.RSSI());
+    return String(quality);
+}
+
+int DCPwifi::getRSSIasQuality(int RSSI) {
+    int quality = 0;
+
+    if (RSSI <= -100) {
+        quality = 0;
+    } else if (RSSI >= -50) {
+        quality = 100;
+    } else {
+
+        quality = 2 * (RSSI + 100);
+    }
+    return quality;
+}
