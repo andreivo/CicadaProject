@@ -122,8 +122,6 @@ void DCPSystem::preInitSystem() {
     // Get Station Calibrated Bucket Volume
     initBucketVolume();
 
-    initSensorsConfig();
-
     initMQTT();
 
     //Show all config
@@ -176,6 +174,8 @@ void DCPSystem::setupWizard() {
  * Init all system configurations
  */
 void DCPSystem::initSystem() {
+    initSensorsConfig();
+
     cicadaLeds.redTurnOff();
     cicadaLeds.greenTurnOff();
     cicadaLeds.blueTurnOff();
@@ -202,6 +202,7 @@ void DCPSystem::blinkStatus() {
 
 void DCPSystem::readSensors() {
     dcpDHT.readDHT();
+    delay(1000);
 }
 
 /**

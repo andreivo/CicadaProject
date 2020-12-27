@@ -19,7 +19,7 @@ void setup() {
   xTaskCreatePinnedToCore(
                     loop2,   /* função que implementa a tarefa */
                     "coreTask", /* nome da tarefa */
-                    10000,      /* número de palavras a serem alocadas para uso com a pilha da tarefa */
+                    20000,      /* número de palavras a serem alocadas para uso com a pilha da tarefa */
                     NULL,       /* parâmetro de entrada para a tarefa (pode ser NULL) */
                     1,          /* prioridade da tarefa (0 a N) */
                     &coreTask,       /* referência para a tarefa (pode ser NULL) */

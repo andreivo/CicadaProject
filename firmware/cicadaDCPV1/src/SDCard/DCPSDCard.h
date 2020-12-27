@@ -14,6 +14,7 @@
 #include "../system/DCPSystem.h"
 #include <SPI.h>
 #include <mySD.h>
+#include <PubSubClient.h>
 
 #define SD_ATTEMPTS 3
 #define SD_ATTEMPTS_DELAY 100
@@ -25,6 +26,7 @@ public:
     void printDirectory(String path, int numTabs);
     boolean writeFile(String filename, String content);
     String readFile(String filename);
+    boolean readPublishFile(String filename, boolean(*callback)(String msg, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC), PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC);
     boolean deleteFile(String filename);
     String prepareData(String sensorCode, String dataType, String collectionDate, String value);
     boolean storeData(String sensor, String measures);

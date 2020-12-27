@@ -23,7 +23,6 @@ boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT
     CIC_DEBUG_HEADER(F("SETUP MQTT MODULE"));
 
     TIME_TO_SEND = (60 * timeToSend);
-    //TIME_TO_SEND = (120);
     CIC_DEBUG_(F("Send time interval: "));
     CIC_DEBUG_(TIME_TO_SEND);
     CIC_DEBUG(F(" sec."));
@@ -41,24 +40,19 @@ boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT
 }
 
 void DCPMQTT::sendAllMessagesData(TinyGsmSim800 modem) {
-
     if (onTimeToSend()) {
-        //if (clientPub == NULL) {
         TinyGsmClient _clientTransport(modem);
         PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
         clientPub = &_clientPub;
-        //}
         sendMessagesData();
     }
 }
 
 void DCPMQTT::sendAllMessagesData() {
     if (onTimeToSend()) {
-        //if (clientPub == NULL) {
         WiFiClient _clientTransport;
         PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
         clientPub = &_clientPub;
-        //}
         sendMessagesData();
     }
 }
@@ -77,44 +71,22 @@ void DCPMQTT::sendMessagesData() {
     CIC_DEBUG(xPortGetCoreID());
 
     if (connectMQTTServer()) {
-
         String fileData = mqttSdCard.getFirstFile("/");
         while (fileData != "") {
-            String sFileContent = mqttSdCard.readFile(fileData);
-            char fileContent[sFileContent.length() + 1];
-            sFileContent.toCharArray(fileContent, sFileContent.length() + 1);
-
-            String sendMessage = "";
-            for (int i = 0; i < sizeof (fileContent) - 1; i++) {
-                if (fileContent[i] == '\n') {
-                    String pkgMsg = prepareMessage(sendMessage);
-                    CIC_DEBUG(pkgMsg);
-                    int status = clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
-                    if (status == 1) {
-                        CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
-                    } else {
-                        CIC_DEBUG_(F("Error status: "));
-                        CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
-                    }
-                    sendMessage = "";
-                } else {
-                    sendMessage = sendMessage + fileContent[i];
-                }
+            if (mqttSdCard.readPublishFile(fileData, publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
+                mqttSdCard.deleteFile(fileData);
+                fileData = mqttSdCard.getFirstFile("/");
+            } else {
+                mqttSdCard.deleteFile(fileData);
+                fileData = mqttSdCard.getFirstFile("/");
+                CIC_DEBUG_(F("Error on sending: "));
+                CIC_DEBUG(fileData);
             }
-            mqttSdCard.deleteFile(fileData);
-            fileData = mqttSdCard.getFirstFile("/");
         }
         lastEp = mqttRTC.nowEpoch();
     }
     CIC_DEBUG(F("Finished send MQTT messages!"))
     delay(60000);
-}
-
-String DCPMQTT::prepareMessage(String payload) {
-    String sntDT = mqttRTC.now("%Y-%m-%d %H:%M:%SZ");
-    String result = "{\"tknDCP\":\"" + tknDCP + "\",\"pwdDCP\":\"" + pwdDCP + "\",\"sntDT\":\"" + sntDT + "\",";
-    result = result + payload + "}";
-    return result;
 }
 
 boolean DCPMQTT::connectMQTTServer() {
@@ -131,3 +103,29 @@ boolean DCPMQTT::connectMQTTServer() {
         return false;
     }
 }
+
+/******************************************************************************/
+/******************************************************************************/
+
+/******************************************************************************/
+
+String prepareMessage(String payload, String tknDCP, String pwdDCP) {
+    String sntDT = mqttRTC.now("%Y-%m-%d %H:%M:%SZ");
+    String result = "{\"tknDCP\":\"" + tknDCP + "\",\"pwdDCP\":\"" + pwdDCP + "\",\"sntDT\":\"" + sntDT + "\",";
+    result = result + payload + "}";
+    return result;
+}
+
+boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC) {
+    String pkgMsg = prepareMessage(sendMessage, tknDCP, pwdDCP);
+    int status = _clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
+    if (status == 1) {
+        CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
+        return true;
+    } else {
+        CIC_DEBUG_(F("Error status: "));
+        CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
+        return false;
+    }
+}
+

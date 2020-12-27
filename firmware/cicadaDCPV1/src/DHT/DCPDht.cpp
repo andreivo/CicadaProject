@@ -15,15 +15,12 @@ DCPRTC dhtRTC;
 DCPSDCard dhtSdCard;
 
 DCPDht::DCPDht() {
-    lastEpTemp = dhtRTC.nowEpoch();
-    lastEpHum = lastEpTemp;
+
 }
 
 /**
  * Initialize DHT Sensor
  */
-//void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int temp, int hum, DCPSDCard& dhtSDCard) {
-
 void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int temp, int hum) {
     CIC_DEBUG_HEADER(F("INIT DHT22"));
 
@@ -34,35 +31,76 @@ void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, 
 
     //TIME_TO_READ_TEMP = 30;
     //TIME_TO_READ_HUM = 30;
-    TIME_TO_READ_TEMP = 60 * temp;
-    TIME_TO_READ_HUM = 60 * hum;
+    //TIME_TO_READ_TEMP = 60 * temp;
+    //TIME_TO_READ_HUM = 60 * hum;
+    TIME_TO_READ_TEMP = temp;
+    TIME_TO_READ_HUM = hum;
 
-    CIC_DEBUG_(F("Time interval temp: "));
+    nextSlotTimeToReadTemp();
+    nextSlotTimeToReadHum();
+
+    CIC_DEBUG_(F("Slot Time temp: "));
     CIC_DEBUG_(TIME_TO_READ_TEMP);
-    CIC_DEBUG(F(" sec."));
-    CIC_DEBUG_(F("Time interval hum: "));
+    CIC_DEBUG(F(" min."));
+    CIC_DEBUG_(F("Slot Time hum: "));
     CIC_DEBUG_(TIME_TO_READ_HUM);
-    CIC_DEBUG(F(" sec."));
+    CIC_DEBUG(F(" min."));
+}
+
+int DCPDht::nextSlotTimeToRead(int TIME_TO_READ) {
+    int actualMinutes = dhtRTC.now("%M").toInt() + 1;
+
+    int rSlot = actualMinutes % TIME_TO_READ;
+    int iSlot = (int) (actualMinutes / TIME_TO_READ);
+
+    if (rSlot > 0) {
+        iSlot = iSlot + 1;
+    }
+
+    int nextSlot = iSlot*TIME_TO_READ;
+    if (nextSlot >= 60) {
+        nextSlot = nextSlot - 60;
+    }
+    return nextSlot;
+}
+
+void DCPDht::nextSlotTimeToReadTemp() {
+    nextSlotTemp = nextSlotTimeToRead(TIME_TO_READ_TEMP);
+    CIC_DEBUG_(F("Next slot to read temp: "));
+    CIC_DEBUG_(nextSlotTemp);
+    CIC_DEBUG(F("min."));
+}
+
+boolean DCPDht::timeToReadTemp() {
+    int actualMinutes = dhtRTC.now("%M").toInt();
+    return actualMinutes == nextSlotTemp;
+}
+
+void DCPDht::nextSlotTimeToReadHum() {
+    nextSlotHum = nextSlotTimeToRead(TIME_TO_READ_HUM);
+    CIC_DEBUG_(F("Next slot to read hum: "));
+    CIC_DEBUG_(nextSlotHum);
+    CIC_DEBUG(F("min."));
+}
+
+boolean DCPDht::timeToReadHum() {
+    int actualMinutes = dhtRTC.now("%M").toInt();
+    return actualMinutes == nextSlotHum;
 }
 
 void DCPDht::readDHT() {
-    int32_t actualEpoch = dhtRTC.nowEpoch();
-    int32_t periodEpochTemp = actualEpoch - lastEpTemp;
-    int32_t periodEpochHum = actualEpoch - lastEpHum;
-
-    if (periodEpochTemp >= TIME_TO_READ_TEMP) {
+    if (timeToReadTemp()) {
         CIC_DEBUG_HEADER(F("READ DHT22"));
         float t, h;
         if (dht.read2(PIN_DHT, &t, &h, NULL) == SimpleDHTErrSuccess) {
-
             CIC_DEBUG(F("Prepare DT Data!"));
             String collectionDate = dhtRTC.now("%Y-%m-%d %H:%M:%SZ");
             String dataContent = dhtSdCard.prepareData(codeTemp, typeTemp, collectionDate, String(t));
 
-            if (periodEpochHum >= TIME_TO_READ_HUM) {
+            if (timeToReadHum()) {
                 CIC_DEBUG(F("Prepare DH Data!"));
                 dataContent = dataContent + "," + dhtSdCard.prepareData(codeHum, typeHum, collectionDate, String(h));
-                lastEpHum = dhtRTC.nowEpoch();
+                nextSlotTimeToReadHum();
             }
 
             if (!dhtSdCard.storeData("dht", dataContent)) {
@@ -71,12 +109,9 @@ void DCPDht::readDHT() {
                 CIC_DEBUG(F("Store DHT Data!"));
             }
         }
-        lastEpTemp = dhtRTC.nowEpoch();
-        if (periodEpochHum >= TIME_TO_READ_HUM) {
-            lastEpHum = dhtRTC.nowEpoch();
-        }
+        nextSlotTimeToReadTemp();
     } else {
-        if (periodEpochHum >= TIME_TO_READ_HUM) {
+        if (timeToReadHum()) {
             CIC_DEBUG_HEADER(F("READ DHT22"));
             float t, h;
             if (dht.read2(PIN_DHT, &t, &h, NULL) == SimpleDHTErrSuccess) {
@@ -90,7 +125,7 @@ void DCPDht::readDHT() {
                     CIC_DEBUG(F("Store DH Data!"));
                 }
             }
-            lastEpHum = dhtRTC.nowEpoch();
+            nextSlotTimeToReadHum();
         }
     }
 }
