@@ -491,6 +491,9 @@ void CicadaWizard::handleRoot() {
     // Get the previous Send Time Interval
     String sti = spiffsMan.getSettings("Send Time Interval", DIR_STATION_SENDTIMEINTERVAL, false);
 
+    // Get the previous Store metadata interval
+    String smi = spiffsMan.getSettings("Store metadata interval", DIR_STATION_STOREMETADATA, false);
+
     // Setup the form
     String form = FPSTR(HTTP_FORM_CONFIG_STATION);
     form.replace("{vol}", vol);
@@ -499,6 +502,7 @@ void CicadaWizard::handleRoot() {
     form.replace("{lat}", lat);
     form.replace("{lon}", lon);
     form.replace("{sti}", sti);
+    form.replace("{smi}", smi);
 
     form.replace("{sttid}", stationID);
     form.replace("{cicadalogo}", HTTP_CICADALOGO);
@@ -557,6 +561,10 @@ void CicadaWizard::handleSaveCicadaStation() {
     // Send Time Interval
     String sti = server->arg("sti");
     spiffsMan.saveSettings("Send Time Interval", DIR_STATION_SENDTIMEINTERVAL, sti);
+
+    // Send Time Interval
+    String smi = server->arg("smi");
+    spiffsMan.saveSettings("Store metadata Interval", DIR_STATION_STOREMETADATA, smi);
 
     //Redirect Step 2
     handleMQTTSERVER();

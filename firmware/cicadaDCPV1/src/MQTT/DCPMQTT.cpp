@@ -13,7 +13,7 @@ DCPSDCard mqttSdCard;
 DCPRTC mqttRTC;
 
 DCPMQTT::DCPMQTT() {
-    lastEp = mqttRTC.nowEpoch();
+
 }
 
 /**
@@ -22,10 +22,12 @@ DCPMQTT::DCPMQTT() {
 boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT_SERVER, String _MQTT_PORT, String _MQTT_USER, String _MQTT_PWD, String _TOPIC, String _tknDCP, String _pwdDCP, String _LA, String _LO) {
     CIC_DEBUG_HEADER(F("SETUP MQTT MODULE"));
 
-    TIME_TO_SEND = (60 * timeToSend);
-    CIC_DEBUG_(F("Send time interval: "));
+    TIME_TO_SEND = timeToSend;
+    CIC_DEBUG_(F("Slot Time to send: "));
     CIC_DEBUG_(TIME_TO_SEND);
-    CIC_DEBUG(F(" sec."));
+    CIC_DEBUG(F(" min."));
+
+    nextSlotTimeToSend();
 
     DEVICE_ID = _DEVICE_ID;
     MQTT_SERVER = _MQTT_SERVER;
@@ -37,6 +39,32 @@ boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT
     pwdDCP = _pwdDCP;
     LA = _LA;
     LO = _LO;
+}
+
+void DCPMQTT::nextSlotTimeToSend() {
+    int actualMinutes = mqttRTC.now("%M").toInt() + 1;
+
+    int rSlot = actualMinutes % TIME_TO_SEND;
+    int iSlot = (int) (actualMinutes / TIME_TO_SEND);
+
+    if (rSlot > 0) {
+        iSlot = iSlot + 1;
+    }
+
+    int nextSlot = iSlot*TIME_TO_SEND;
+    if (nextSlot >= 60) {
+        nextSlot = nextSlot - 60;
+    }
+
+    nextSlotToSend = nextSlot;
+    CIC_DEBUG_(F("Next slot to send: "));
+    CIC_DEBUG_(nextSlotToSend);
+    CIC_DEBUG(F(" min."));
+}
+
+boolean DCPMQTT::onTimeToSend() {
+    int actualMinutes = mqttRTC.now("%M").toInt();
+    return actualMinutes == nextSlotToSend;
 }
 
 void DCPMQTT::sendAllMessagesData(TinyGsmSim800 modem) {
@@ -55,12 +83,6 @@ void DCPMQTT::sendAllMessagesData() {
         clientPub = &_clientPub;
         sendMessagesData();
     }
-}
-
-boolean DCPMQTT::onTimeToSend() {
-    int32_t actualEpoch = mqttRTC.nowEpoch();
-    int32_t periodEpoch = actualEpoch - lastEp;
-    return periodEpoch >= TIME_TO_SEND;
 }
 
 void DCPMQTT::sendMessagesData() {
@@ -83,7 +105,7 @@ void DCPMQTT::sendMessagesData() {
                 CIC_DEBUG(fileData);
             }
         }
-        lastEp = mqttRTC.nowEpoch();
+        nextSlotTimeToSend();
     }
     CIC_DEBUG(F("Finished send MQTT messages!"))
     delay(60000);

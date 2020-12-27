@@ -21,12 +21,12 @@
 SemaphoreHandle_t ModemMutex = xSemaphoreCreateMutex();
 
 boolean DCPSIM800::takeModemMutex() {
-    CIC_DEBUG("Get ModemMutex");
+    //CIC_DEBUG("Get ModemMutex");
     return (xSemaphoreTake(ModemMutex, 1) == pdTRUE);
 }
 
 void DCPSIM800::giveModemMutex() {
-    CIC_DEBUG("Give ModemMutex");
+    //CIC_DEBUG("Give ModemMutex");
     xSemaphoreGive(ModemMutex);
 }
 

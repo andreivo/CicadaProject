@@ -37,6 +37,7 @@ String STATION_NAME = "CicadaDCP";
 String STATION_LONGITUDE = "";
 String STATION_LATITUDE = "";
 float CIC_STATION_BUCKET_VOLUME = 3.22; // Bucket Calibrated Volume in ml
+int CIC_STATION_STOREMETADATA = 12;
 
 
 String SIM_ICCID = "";
@@ -77,7 +78,7 @@ void IRAM_ATTR onTimeoutWizard() {
 }
 
 DCPSystem::DCPSystem() {
-    lastEpMetadados = cicadaRTC.nowEpoch();
+
 }
 
 /**
@@ -122,7 +123,8 @@ void DCPSystem::preInitSystem() {
     // Get Station Calibrated Bucket Volume
     initBucketVolume();
 
-    initMQTT();
+    // Get Time slot to store metadata
+    initSlotStoreMetadata();
 
     //Show all config
     printConfiguration();
@@ -175,6 +177,8 @@ void DCPSystem::setupWizard() {
  */
 void DCPSystem::initSystem() {
     initSensorsConfig();
+    nextSlotToSaveMetadata();
+    initMQTT();
 
     cicadaLeds.redTurnOff();
     cicadaLeds.greenTurnOff();
@@ -297,6 +301,26 @@ void DCPSystem::initBucketVolume() {
 
     CIC_DEBUG_(F("STATION BUCKET VOLUME: "));
     CIC_DEBUG(CIC_STATION_BUCKET_VOLUME);
+}
+
+/**
+ * Initialize TIME SLOT TO STORE METADATA
+ */
+void DCPSystem::initSlotStoreMetadata() {
+    CIC_DEBUG_HEADER(F("INIT TIME SLOT TO STORE METADATA"));
+    int smi = spiffsManager.FSReadInt(DIR_STATION_STOREMETADATA);
+
+    if (smi) {
+        CIC_STATION_STOREMETADATA = smi;
+    } else {
+        CIC_STATION_STOREMETADATA = 12;
+        spiffsManager.FSCreateFile(DIR_STATION_STOREMETADATA, String(CIC_STATION_STOREMETADATA));
+        CIC_DEBUG(F("TIME SLOT TO STORE METADATA not found.\nUsing 12 hours as default value..."));
+    }
+
+    CIC_DEBUG_(F("TIME SLOT TO STORE METADATA: "));
+    CIC_DEBUG_(CIC_STATION_STOREMETADATA);
+    CIC_DEBUG(" hours");
 }
 
 /**
@@ -437,7 +461,8 @@ void DCPSystem::initSensorsConfig() {
     dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, colltemp.toInt(), collhum.toInt());
 
     CIC_DEBUG(F("Finish sensor config"));
-
+    CIC_DEBUG(F(""));
+    CIC_DEBUG(F(""));
 }
 
 void DCPSystem::printConfiguration() {
@@ -452,6 +477,7 @@ String DCPSystem::getSSIDAP() {
     String __ssidAP = STATION_ID;
     return __ssidAP;
 }
+
 
 /************************************************************************/
 /************************************************************************/
@@ -487,14 +513,37 @@ void DCPSystem::transmiteData() {
     }
 }
 
-void DCPSystem::storeMetadados() {
-    int actualHour = cicadaRTC.now("%H").toInt();
-    int actualMinutes = cicadaRTC.now("%M").toInt();
-    int actualSeconds = cicadaRTC.now("%S").toInt();
+void DCPSystem::nextSlotToSaveMetadata() {
+    int actualHour = cicadaRTC.now("%H").toInt() + 1;
 
-    if (((actualHour % 12) == 0) && (actualMinutes == 12) && (actualSeconds == 12)) {
+    int rSlot = actualHour % CIC_STATION_STOREMETADATA;
+    int iSlot = (int) (actualHour / CIC_STATION_STOREMETADATA);
+
+    if (rSlot > 0) {
+        iSlot = iSlot + 1;
+    }
+
+    int nextSlot = iSlot*CIC_STATION_STOREMETADATA;
+    if (nextSlot >= 24) {
+        nextSlot = nextSlot - 24;
+    }
+
+    nextTimeSlotToSaveMetadata = nextSlot;
+    CIC_DEBUG_(F("Next slot to Save Metadata: "));
+    CIC_DEBUG_(nextTimeSlotToSaveMetadata);
+    CIC_DEBUG(F(" hour."));
+}
+
+boolean DCPSystem::onTimeToSaveMetadata() {
+    int actualHour = cicadaRTC.now("%H").toInt();
+    return actualHour == nextTimeSlotToSaveMetadata;
+}
+
+void DCPSystem::storeMetadados() {
+    if (onTimeToSaveMetadata()) {
         updateCommunicationStatus();
         cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY);
+        nextSlotToSaveMetadata();
         vTaskDelay(1000);
     }
 }

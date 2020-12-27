@@ -9,6 +9,8 @@ const String DIR_STATION_SENDTIMEINTERVAL = "/stt/sti";
 const String DIR_STATION_TIME_TO_RESET = "/stt/ttr";
 const String DIR_STATION_NAME = "/stt/name";
 const String DIR_STATION_PASS = "/stt/pass";
+const String DIR_STATION_STOREMETADATA = "/stt/smi";
+
 
 const String DIR_SENSOR_CODETEMP = "/sen/codetemp";
 const String DIR_SENSOR_CODEHUM = "/sen/codehum";

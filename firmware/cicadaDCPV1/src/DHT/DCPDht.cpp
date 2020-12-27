@@ -29,15 +29,8 @@ void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, 
     codeHum = _codeHum;
     typeHum = _typeHum;
 
-    //TIME_TO_READ_TEMP = 30;
-    //TIME_TO_READ_HUM = 30;
-    //TIME_TO_READ_TEMP = 60 * temp;
-    //TIME_TO_READ_HUM = 60 * hum;
     TIME_TO_READ_TEMP = temp;
     TIME_TO_READ_HUM = hum;
-
-    nextSlotTimeToReadTemp();
-    nextSlotTimeToReadHum();
 
     CIC_DEBUG_(F("Slot Time temp: "));
     CIC_DEBUG_(TIME_TO_READ_TEMP);
@@ -45,6 +38,9 @@ void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, 
     CIC_DEBUG_(F("Slot Time hum: "));
     CIC_DEBUG_(TIME_TO_READ_HUM);
     CIC_DEBUG(F(" min."));
+
+    nextSlotTimeToReadTemp();
+    nextSlotTimeToReadHum();
 }
 
 int DCPDht::nextSlotTimeToRead(int TIME_TO_READ) {
@@ -68,7 +64,7 @@ void DCPDht::nextSlotTimeToReadTemp() {
     nextSlotTemp = nextSlotTimeToRead(TIME_TO_READ_TEMP);
     CIC_DEBUG_(F("Next slot to read temp: "));
     CIC_DEBUG_(nextSlotTemp);
-    CIC_DEBUG(F("min."));
+    CIC_DEBUG(F(" min."));
 }
 
 boolean DCPDht::timeToReadTemp() {
@@ -80,7 +76,7 @@ void DCPDht::nextSlotTimeToReadHum() {
     nextSlotHum = nextSlotTimeToRead(TIME_TO_READ_HUM);
     CIC_DEBUG_(F("Next slot to read hum: "));
     CIC_DEBUG_(nextSlotHum);
-    CIC_DEBUG(F("min."));
+    CIC_DEBUG(F(" min."));
 }
 
 boolean DCPDht::timeToReadHum() {

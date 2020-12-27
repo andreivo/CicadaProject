@@ -18,12 +18,12 @@ DCPSDCard::DCPSDCard() {
 }
 
 boolean DCPSDCard::takeSDMutex() {
-    CIC_DEBUG("Get SDMutex");
+    //CIC_DEBUG("Get SDMutex");
     return (xSemaphoreTake(SDMutex, 1) == pdTRUE);
 }
 
 void DCPSDCard::giveSDMutex() {
-    CIC_DEBUG("Give SDMutex");
+    //CIC_DEBUG("Give SDMutex");
     xSemaphoreGive(SDMutex);
 }
 

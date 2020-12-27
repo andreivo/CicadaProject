@@ -79,18 +79,21 @@ public:
     void updateCommunicationSignal();
 
 private:
-    int32_t lastEpMetadados;
     void setupTimeoutWizard();
     void initStationID();
     void initStationName();
     void initFirmwareVersion();
     void initStationCoordinates();
     void initBucketVolume();
+    void initSlotStoreMetadata();
     void initSensorsConfig();
     String getFwmVersion();
     String getSSIDAP();
     void printConfiguration();
     void storeMetadados();
+    int nextTimeSlotToSaveMetadata;
+    void nextSlotToSaveMetadata();
+    boolean onTimeToSaveMetadata();
 
 };
 
