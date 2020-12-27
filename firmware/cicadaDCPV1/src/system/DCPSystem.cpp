@@ -18,9 +18,6 @@ SPIFFSManager spiffsManager;
 #define CIC_DEBUG_ENABLED true
 #define CIC_SYSTEM_BAUDRATE 115200
 
-//#define TIME_TO_GENERATE_METADADOS 60*60*12
-#define TIME_TO_GENERATE_METADADOS 60
-
 //Mutex
 SemaphoreHandle_t SerialMutex = xSemaphoreCreateMutex();
 
@@ -30,17 +27,6 @@ boolean takeSerialMutex() {
 
 void giveSerialMutex() {
     xSemaphoreGive(SerialMutex);
-}
-
-//Mutex
-SemaphoreHandle_t SendMSGMutex = xSemaphoreCreateMutex();
-
-boolean takeSendMSGMutex() {
-    return (xSemaphoreTake(SendMSGMutex, 1) == pdTRUE);
-}
-
-void giveSendMSGMutex() {
-    xSemaphoreGive(SendMSGMutex);
 }
 
 const String FIRMWARE_VERSION = "0.0.1.0";
@@ -111,9 +97,6 @@ void DCPSystem::preInitSystem() {
     cicadaLeds.greenTurnOff();
     cicadaLeds.blueTurnOff();
 
-
-
-
     // Init the Serial
     CIC_DEBUG_SETUP(CIC_SYSTEM_BAUDRATE);
     CIC_DEBUG_(F("\n\nCICADA DCP FIRMWARE (Version "));
@@ -157,7 +140,6 @@ void DCPSystem::initCommunication() {
     } else {
         cicadaRTC.setupRTCModule(dcpWifi.getNetworkEpoch());
     }
-    updateCommunicationStatus();
 }
 
 void DCPSystem::setupTimeoutWizard() {
@@ -200,66 +182,6 @@ void DCPSystem::initSystem() {
 
     CIC_DEBUG_(F("Startup completed on: "));
     printNowDate();
-    storeMetadados();
-}
-
-void DCPSystem::storeMetadados() {
-    cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY);
-}
-
-void DCPSystem::updateCommunicationStatus() {
-    CIC_DEBUG_HEADER(F("UPDATE COMMUNICATION STATUS"));
-
-    if (dcpWifi.isConnected()) {
-        COM_TYPE = "WIFI";
-        CIC_DEBUG_(F("Conection Type:"));
-        CIC_DEBUG(COM_TYPE);
-
-        SIM_ICCID = "";
-        CIC_DEBUG_(F("CCID:"));
-        CIC_DEBUG(SIM_ICCID);
-
-        SIM_OPERA = "";
-        CIC_DEBUG(F("Operator:"));
-        CIC_DEBUG(SIM_OPERA);
-
-        IPAddress local = dcpWifi.getLocalIP();
-        COM_LOCAL_IP = IpAddress2String(local);
-        CIC_DEBUG_(F("Local IP:"));
-        CIC_DEBUG(COM_LOCAL_IP);
-
-        COM_SIGNAL_QUALITTY = dcpWifi.getSignalQuality();
-        CIC_DEBUG_(F("Signal quality:"));
-        CIC_DEBUG(COM_SIGNAL_QUALITTY);
-    } else {
-        COM_TYPE = "SIM";
-        CIC_DEBUG_(F("Conection Type:"));
-        CIC_DEBUG(COM_TYPE);
-
-        SIM_ICCID = dcpSIM800.getSimCCID();
-        CIC_DEBUG_(F("CCID:"));
-        CIC_DEBUG(SIM_ICCID);
-
-        SIM_OPERA = dcpSIM800.getOperator();
-        CIC_DEBUG_(F("Operator:"));
-        CIC_DEBUG(SIM_OPERA);
-
-        IPAddress local = dcpSIM800.getLocalIP();
-        COM_LOCAL_IP = IpAddress2String(local);
-        CIC_DEBUG_(F("Local IP:"));
-        CIC_DEBUG(COM_LOCAL_IP);
-
-        COM_SIGNAL_QUALITTY = dcpSIM800.getSignalQuality();
-        CIC_DEBUG_(F("Signal quality:"));
-        CIC_DEBUG(COM_SIGNAL_QUALITTY);
-    }
-}
-
-String DCPSystem::IpAddress2String(const IPAddress& ipAddress) {
-    return String(ipAddress[0]) + String(".") +\
- String(ipAddress[1]) + String(".") +\
- String(ipAddress[2]) + String(".") +\
- String(ipAddress[3]);
 }
 
 void DCPSystem::printNowDate() {
@@ -280,46 +202,6 @@ void DCPSystem::blinkStatus() {
 
 void DCPSystem::readSensors() {
     dcpDHT.readDHT();
-}
-
-void DCPSystem::transmiteData() {
-    //    int attempts = 0;
-    //    while (attempts <= 3) {
-    //        if (takeSendMSGMutex()) {
-    if (dcpWifi.isConnected()) {
-        cicadaMQTT.sendAllMessagesData();
-    } else {
-        if (dcpSIM800.isConnected()) {
-            cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
-        } else {
-            initCommunication();
-        }
-    }
-    //            giveSendMSGMutex();
-    //            break;
-    //        } else {
-    //            CIC_DEBUG("Waiting to transmiteData ...");
-    //        }
-    //        attempts = attempts + 1;
-    //        delay(100);
-    //    }
-}
-
-void DCPSystem::loopCore2() {
-    CIC_DEBUG_HEADER(F("INIT LOOP 2"));
-    String taskMessage = F("Task running on core ");
-    taskMessage = taskMessage + xPortGetCoreID();
-
-    CIC_DEBUG(taskMessage);
-    /* Inspect our own high water mark on entering the task. */
-    UBaseType_t uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
-    CIC_DEBUG_("Allocated stack: ");
-    CIC_DEBUG(uxHighWaterMark);
-
-    while (true) {
-        transmiteData();
-        vTaskDelay(10);
-    }
 }
 
 /**
@@ -402,9 +284,7 @@ void DCPSystem::initStationCoordinates() {
  * Initialize Station Bucket Volume
  */
 void DCPSystem::initBucketVolume() {
-
     CIC_DEBUG_HEADER(F("INIT BUCKET VOLUME"));
-
     float vol = spiffsManager.FSReadFloat(DIR_STATION_BUCKET_VOL);
 
     if (vol) {
@@ -560,16 +440,115 @@ void DCPSystem::initSensorsConfig() {
 }
 
 void DCPSystem::printConfiguration() {
-
     spiffsManager.FSPrintFileList();
 }
 
 String DCPSystem::getFwmVersion() {
-
     return FIRMWARE_VERSION;
 }
 
 String DCPSystem::getSSIDAP() {
     String __ssidAP = STATION_ID;
     return __ssidAP;
+}
+
+/************************************************************************/
+/************************************************************************/
+
+/************************************************************************/
+void DCPSystem::loopCore2() {
+    CIC_DEBUG_HEADER(F("INIT LOOP 2"));
+    String taskMessage = F("Task running on core ");
+    taskMessage = taskMessage + xPortGetCoreID();
+
+    CIC_DEBUG(taskMessage);
+    /* Inspect our own high water mark on entering the task. */
+    UBaseType_t uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
+    CIC_DEBUG_("Allocated stack: ");
+    CIC_DEBUG(uxHighWaterMark);
+
+    while (true) {
+        storeMetadados();
+        transmiteData();
+        vTaskDelay(10);
+    }
+}
+
+void DCPSystem::transmiteData() {
+    if (dcpWifi.isConnected()) {
+        cicadaMQTT.sendAllMessagesData();
+    } else {
+        if (dcpSIM800.isConnected()) {
+            cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
+        } else {
+            initCommunication();
+        }
+    }
+}
+
+void DCPSystem::storeMetadados() {
+    int actualHour = cicadaRTC.now("%H").toInt();
+    int actualMinutes = cicadaRTC.now("%M").toInt();
+    int actualSeconds = cicadaRTC.now("%S").toInt();
+
+    if (((actualHour % 12) == 0) && (actualMinutes == 12) && (actualSeconds == 12)) {
+        updateCommunicationStatus();
+        cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY);
+        vTaskDelay(1000);
+    }
+}
+
+void DCPSystem::updateCommunicationStatus() {
+    CIC_DEBUG_HEADER(F("UPDATE COMMUNICATION STATUS"));
+
+    if (dcpWifi.isConnected()) {
+        COM_TYPE = "WIFI";
+        CIC_DEBUG_(F("Conection Type:"));
+        CIC_DEBUG(COM_TYPE);
+
+        SIM_ICCID = "";
+        CIC_DEBUG_(F("CCID:"));
+        CIC_DEBUG(SIM_ICCID);
+
+        SIM_OPERA = "";
+        CIC_DEBUG(F("Operator:"));
+        CIC_DEBUG(SIM_OPERA);
+
+        IPAddress local = dcpWifi.getLocalIP();
+        COM_LOCAL_IP = IpAddress2String(local);
+        CIC_DEBUG_(F("Local IP:"));
+        CIC_DEBUG(COM_LOCAL_IP);
+
+        COM_SIGNAL_QUALITTY = dcpWifi.getSignalQuality();
+        CIC_DEBUG_(F("Signal quality:"));
+        CIC_DEBUG(COM_SIGNAL_QUALITTY);
+    } else {
+        COM_TYPE = "SIM";
+        CIC_DEBUG_(F("Conection Type:"));
+        CIC_DEBUG(COM_TYPE);
+
+        SIM_ICCID = dcpSIM800.getSimCCID();
+        CIC_DEBUG_(F("CCID:"));
+        CIC_DEBUG(SIM_ICCID);
+
+        SIM_OPERA = dcpSIM800.getOperator();
+        CIC_DEBUG_(F("Operator:"));
+        CIC_DEBUG(SIM_OPERA);
+
+        IPAddress local = dcpSIM800.getLocalIP();
+        COM_LOCAL_IP = IpAddress2String(local);
+        CIC_DEBUG_(F("Local IP:"));
+        CIC_DEBUG(COM_LOCAL_IP);
+
+        COM_SIGNAL_QUALITTY = dcpSIM800.getSignalQuality();
+        CIC_DEBUG_(F("Signal quality:"));
+        CIC_DEBUG(COM_SIGNAL_QUALITTY);
+    }
+}
+
+String DCPSystem::IpAddress2String(const IPAddress& ipAddress) {
+    return String(ipAddress[0]) + String(".") +\
+ String(ipAddress[1]) + String(".") +\
+ String(ipAddress[2]) + String(".") +\
+ String(ipAddress[3]);
 }

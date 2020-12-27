@@ -23,12 +23,12 @@ boolean DCPRTC::setupRTCModule(String calTimestamp) {
     time_t tt = stringToTime(calTimestamp);
     CIC_DEBUG_("Unix Time: ");
     CIC_DEBUG(int32_t(tt));
-    CIC_DEBUG_("Antes do RTC: ");
+    CIC_DEBUG_("Before RTC: ");
     CIC_DEBUG(printTime(tt));
     timeval tv; //Cria a estrutura temporaria para funcao abaixo.
     tv.tv_sec = int32_t(tt); //Atribui minha data atual. Voce pode usar o NTP para isso ou o site citado no artigo!
     settimeofday(&tv, NULL); //Configura o RTC para manter a data atribuida atualizada.
-    CIC_DEBUG_("depois do RTC: ");
+    CIC_DEBUG_("After RTC: ");
     tt = time(NULL); //Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
     CIC_DEBUG(printTime(tt));
 
@@ -70,7 +70,6 @@ time_t DCPRTC::stringToTime(String calTimestamp) {
     tm.tm_mday = day.toInt();
     tm.tm_hour = calTimestamp.substring(11, 13).toInt();
     tm.tm_min = calTimestamp.substring(14, 16).toInt();
-    CIC_DEBUG(calTimestamp.substring(14, 16));
     tm.tm_sec = calTimestamp.substring(17, 20).toInt();
     return mktime(&tm);
 }

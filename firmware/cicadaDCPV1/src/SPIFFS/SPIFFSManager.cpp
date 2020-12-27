@@ -562,7 +562,7 @@ String SPIFFSManager::getSettings(String dsc, String DIR, boolean inContent) {
 void SPIFFSManager::deleteSettings(String dsc, String DIR) {
 
     CIC_DEBUG_(F("\n\nDELETING: "));
-    CIC_DEBUG_(dsc);
+    CIC_DEBUG(dsc);
     CIC_DEBUG(F("==========================================="));
 
     FSDeleteFiles(DIR);
@@ -574,7 +574,7 @@ void SPIFFSManager::saveSettings(String dsc, String DIR, String value) {
     deleteSettings(dsc, DIR);
 
     CIC_DEBUG_(F("\n\nSAVING: "));
-    CIC_DEBUG_(dsc);
+    CIC_DEBUG(dsc);
     CIC_DEBUG(F("==========================================="));
 
     CIC_DEBUG(F("Saving..."));
@@ -590,7 +590,7 @@ void SPIFFSManager::saveSettings(String dsc, String DIR, String value, String co
     deleteSettings(dsc, DIR);
 
     CIC_DEBUG_(F("\n\nSAVING: "));
-    CIC_DEBUG_(dsc);
+    CIC_DEBUG(dsc);
     CIC_DEBUG(F("==========================================="));
 
     CIC_DEBUG(F("Saving..."));
