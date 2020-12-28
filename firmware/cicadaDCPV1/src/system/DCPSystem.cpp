@@ -95,6 +95,7 @@ DCPMQTT cicadaMQTT;
  *
  */
 DCPDht dcpDHT;
+DCPRainGauge dcpRainGauge;
 
 void IRAM_ATTR onTimeoutWizard() {
     //If the Wizard is active and the timeout has been reached reboot the module.
@@ -233,6 +234,7 @@ void DCPSystem::blinkStatus() {
 
 void DCPSystem::readSensors() {
     dcpDHT.readDHT();
+    dcpRainGauge.readRG();
 }
 
 /**
@@ -403,8 +405,9 @@ void DCPSystem::initSensorsConfig() {
     }
 
     if (codeplu == "") {
+        codehum = "30";
         spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEPLUV);
-        spiffsManager.FSCreateFile(DIR_SENSOR_CODEPLUV, 30);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEPLUV, codehum);
     }
 
     if (codebtv == "") {
@@ -436,8 +439,9 @@ void DCPSystem::initSensorsConfig() {
     }
 
     if (dtplu == "") {
+        dtplu = "pluvio";
         spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEPLUV);
-        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEPLUV, "pluvio");
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEPLUV, dtplu);
     }
 
     if (dtbtv == "") {
@@ -462,8 +466,9 @@ void DCPSystem::initSensorsConfig() {
     }
 
     if (collplu == "") {
+        collplu = "10";
         spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTPLUV);
-        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTPLUV, 10);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTPLUV, collplu);
     }
 
     if (collbtv == "") {
@@ -478,6 +483,11 @@ void DCPSystem::initSensorsConfig() {
 
     // Initialize DHT Sensor
     dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, collDHT.toInt());
+
+    //Setup Rain Gauge Sensor
+    dcpRainGauge.setupRGSensor();
+    // Initialize Rain Gauge Sensor
+    dcpRainGauge.initRGSensor(codeplu, dtplu, collplu.toInt());
 
     CIC_DEBUG(F("Finish sensor config"));
     CIC_DEBUG_(F("\n\n"));

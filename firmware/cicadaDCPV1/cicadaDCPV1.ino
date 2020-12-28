@@ -26,7 +26,9 @@ void setup() {
                     &coreTask,       /* referência para a tarefa (pode ser NULL) */
                     0);         /* Núcleo que executará a tarefa */
 
-  //Habilita o watchdog configurando o timeout para 60 segundos
+/* Internet connection may take seconds to complete. This delay can block the main loop.
+   In the case of the PubSubClient library, the default connection timeout is 15 seconds.
+   To prevent the Task Watchdog from being triggered (default 5 seconds) it is necessary to change the trigger time to 60 seconds.*/
   esp_task_wdt_init(60, true);
   esp_task_wdt_add(NULL);
 }
@@ -36,7 +38,7 @@ void loop() {
   cicadaDcpSystem.blinkStatus();
   cicadaDcpSystem.readSensors();
 
-  //Reseta o temporizador do watchdog
+  //Update Task Watchdog timer
   esp_task_wdt_reset();
 }
 

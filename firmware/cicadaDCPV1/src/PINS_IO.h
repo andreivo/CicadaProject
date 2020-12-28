@@ -8,6 +8,9 @@
 
 //DHT SENSOR
 #define PIN_DHT 27
+//RAIN GAUGE SENSOR
+#define PIN_RG 4
+
 
 //Modem SIM800
 #define PIN_MODEM_TURNON 23

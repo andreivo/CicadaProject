@@ -12,6 +12,7 @@
 #define DCPSystem_h
 
 #include <FS.h> // FS must be the first
+#include <esp_task_wdt.h>
 #include "../SDCard/DCPSDCard.h"
 #include "../CicadaWizard/CicadaWizard.h"
 #include "../SPIFFS/SPIFFSManager.h"
@@ -22,7 +23,8 @@
 #include "../SIM800/DCPSIM800.h"
 #include "../RTC/DCPRTC.h"
 #include "../MQTT/DCPMQTT.h"
-#include <esp_task_wdt.h>
+#include "../RAINGauge/DCPRainGauge.h"
+
 
 #define CIC_DEBUG_ENABLED true
 
