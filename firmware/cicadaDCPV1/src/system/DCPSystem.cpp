@@ -511,8 +511,8 @@ String DCPSystem::getSSIDAP() {
 /************************************************************************/
 
 /************************************************************************/
-void DCPSystem::transmitFunctionsLoop() {
-    CIC_DEBUG_HEADER(F("INIT LOOP 2"));
+void DCPSystem::taskTransmitLoop() {
+    CIC_DEBUG_HEADER(F("INIT TASK DATA TRANSMIT"));
     String taskMessage = F("Task running on core ");
     taskMessage = taskMessage + xPortGetCoreID();
 

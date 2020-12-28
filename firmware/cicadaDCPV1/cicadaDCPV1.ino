@@ -8,27 +8,30 @@ DCPSystem cicadaDcpSystem;
 xTaskHandle coreTask;
 
 void setup() {
-  //PreInitialization
+  // PreInitialization
   cicadaDcpSystem.preInitSystem();
   
-  //Start comunication
+  // Start comunication
   cicadaDcpSystem.initCommunication();
    
   // Init all system configurations
   cicadaDcpSystem.initSystem();
   
-  xTaskCreatePinnedToCore(
-                    loop2,   /* função que implementa a tarefa */
-                    "transmitFunctionsLoop", /* nome da tarefa */
-                    20000,      /* número de palavras a serem alocadas para uso com a pilha da tarefa */
-                    NULL,       /* parâmetro de entrada para a tarefa (pode ser NULL) */
-                    1,          /* prioridade da tarefa (0 a N) */
-                    &coreTask,       /* referência para a tarefa (pode ser NULL) */
-                    0);         /* Núcleo que executará a tarefa */
+  // Create a new parallel task on core 0
+  // The task that is running in parallel transmit data to server MQTT
+  xTaskCreatePinnedToCore (
+                     taskTransmitLoop,   /* function that implements the task */
+                     "taskTransmitLoop", /* task name */
+                     20000,              /* number of words to be allocated for use with the task stack */
+                     NULL,               /* input parameter for the task (can be NULL) */
+                     1,                  /* task priority (0 to N) */
+                     &coreTask,          /* reference to the task (can be NULL) */
+                     0);                 /* Core that will perform the task */
 
-/* Internet connection may take seconds to complete. This delay can block the main loop.
-   In the case of the PubSubClient library, the default connection timeout is 15 seconds.
-   To prevent the Task Watchdog from being triggered (default 5 seconds) it is necessary to change the trigger time to 60 seconds.*/
+  /* Internet connection may take seconds to complete. This delay can block the main loop.
+     In the case of the PubSubClient library, the default connection timeout is 15 seconds.
+     To prevent the Task Watchdog from being triggered (default 5 seconds) it is necessary to 
+     change the trigger time to 60 seconds.*/
   esp_task_wdt_init(60, true);
   esp_task_wdt_add(NULL);
 }
@@ -42,6 +45,6 @@ void loop() {
   esp_task_wdt_reset();
 }
 
-void loop2(void * pvParameters ){
-  cicadaDcpSystem.transmitFunctionsLoop(); 
+void taskTransmitLoop(void * pvParameters ){
+  cicadaDcpSystem.taskTransmitLoop(); 
 }

@@ -87,7 +87,7 @@ public:
     void printNowDate();
     void initMQTT();
     void transmiteData();
-    void transmitFunctionsLoop();
+    void taskTransmitLoop();
     String IpAddress2String(const IPAddress& ipAddress);
     void updateCommunicationStatus();
     void updateCommunicationSignal();

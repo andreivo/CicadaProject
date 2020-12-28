@@ -49,8 +49,7 @@ void DCPRainGauge::initRGSensor(String _codeRG, String _typeRG, int timeSlotRG) 
     codeRG = _codeRG;
     typeRG = _typeRG;
 
-    //TIME_TO_READ_RG = timeSlotRG;
-    TIME_TO_READ_RG = 1;
+    TIME_TO_READ_RG = timeSlotRG;
 
     CIC_DEBUG_(F("Slot Time Rain Gauge: "));
     CIC_DEBUG_(TIME_TO_READ_RG);
