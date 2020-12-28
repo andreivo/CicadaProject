@@ -104,6 +104,8 @@ void DCPRainGauge::readRG() {
             portENTER_CRITICAL_ISR(&rgMux);
             tipBucketCounter = 0;
             portEXIT_CRITICAL_ISR(&rgMux);
+        } else {
+            CIC_DEBUG(F("No RAIN GAUGE Data to be read!"));
         }
 
         nextSlotTimeToRead();

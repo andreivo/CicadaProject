@@ -13,7 +13,7 @@
 
 #include "../system/DCPSystem.h"
 
-#define RG_DEBOUNCETIME 10
+#define RG_DEBOUNCETIME 200
 
 void IRAM_ATTR handleBucketInterrupt();
 
