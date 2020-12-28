@@ -592,8 +592,7 @@ void CicadaWizard::handleSensors() {
     String dtbtv = spiffsMan.getSettings("Data Type bat. vol.", DIR_SENSOR_DATATYPEBATV, false);
     String dtbtc = spiffsMan.getSettings("Data Type bat. cur.", DIR_SENSOR_DATATYPEBATC, false);
 
-    String colltemp = spiffsMan.getSettings("Coll. time interval temp", DIR_SENSOR_COLLTINTTEMP, false);
-    String collhum = spiffsMan.getSettings("Coll. time interval hum", DIR_SENSOR_COLLTINTHUM, false);
+    String collDHT = spiffsMan.getSettings("Coll. time interval DHT", DIR_SENSOR_COLLTINTDHT, false);
     String collplu = spiffsMan.getSettings("Coll. time interval plu", DIR_SENSOR_COLLTINTPLUV, false);
     String collbtv = spiffsMan.getSettings("Coll. time interval bat. vol.", DIR_SENSOR_COLLTINTBATV, false);
     String collbtc = spiffsMan.getSettings("Coll. time interval bat. cur.", DIR_SENSOR_COLLTINTBATC, false);
@@ -612,8 +611,7 @@ void CicadaWizard::handleSensors() {
     form.replace("{dtbtv}", dtbtv);
     form.replace("{dtbtc}", dtbtc);
 
-    form.replace("{colltemp}", colltemp);
-    form.replace("{collhum}", collhum);
+    form.replace("{collDHT}", collDHT);
     form.replace("{collplu}", collplu);
     form.replace("{collbtv}", collbtv);
     form.replace("{collbtc}", collbtc);
@@ -665,10 +663,8 @@ void CicadaWizard::handleSaveSensorsConfig() {
     String dtbtc = server->arg("dtbtc");
     spiffsMan.saveSettings("dt bat. corr.", DIR_SENSOR_DATATYPEBATC, dtbtc);
 
-    String colltemp = server->arg("colltemp");
-    spiffsMan.saveSettings("coll temp", DIR_SENSOR_COLLTINTTEMP, colltemp);
-    String collhum = server->arg("collhum");
-    spiffsMan.saveSettings("coll hum", DIR_SENSOR_COLLTINTHUM, collhum);
+    String collDHT = server->arg("collDHT");
+    spiffsMan.saveSettings("coll DHT", DIR_SENSOR_COLLTINTDHT, collDHT);
     String collplu = server->arg("collplu");
     spiffsMan.saveSettings("coll plu", DIR_SENSOR_COLLTINTPLUV, collplu);
     String collbtv = server->arg("collbtv");

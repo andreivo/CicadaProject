@@ -17,7 +17,8 @@ SPIFFSManager spiffsManager;
 
 #define CIC_DEBUG_ENABLED true
 #define CIC_SYSTEM_BAUDRATE 115200
-
+/******************************************************************************/
+/******************************************************************************/
 //Mutex
 SemaphoreHandle_t SerialMutex = xSemaphoreCreateMutex();
 
@@ -28,6 +29,21 @@ boolean takeSerialMutex() {
 void giveSerialMutex() {
     xSemaphoreGive(SerialMutex);
 }
+
+//Mutex
+SemaphoreHandle_t CommunicationMutex = xSemaphoreCreateMutex();
+
+boolean takeCommunicationMutex() {
+    CIC_DEBUG("Get CommunicationMutex");
+    return (xSemaphoreTake(CommunicationMutex, 1) == pdTRUE);
+}
+
+void giveCommunicationMutex() {
+    CIC_DEBUG("Give CommunicationMutex");
+    xSemaphoreGive(CommunicationMutex);
+}
+/******************************************************************************/
+/******************************************************************************/
 
 const String FIRMWARE_VERSION = "0.0.1.0";
 
@@ -206,7 +222,6 @@ void DCPSystem::blinkStatus() {
 
 void DCPSystem::readSensors() {
     dcpDHT.readDHT();
-    delay(1000);
 }
 
 /**
@@ -424,22 +439,15 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEBATC, "current");
     }
 
-    String colltemp = spiffsManager.getSettings("Coll. time interval temp", DIR_SENSOR_COLLTINTTEMP, false);
-    String collhum = spiffsManager.getSettings("Coll. time interval hum", DIR_SENSOR_COLLTINTHUM, false);
+    String collDHT = spiffsManager.getSettings("Coll. time interval DHT", DIR_SENSOR_COLLTINTDHT, false);
     String collplu = spiffsManager.getSettings("Coll. time interval plu", DIR_SENSOR_COLLTINTPLUV, false);
     String collbtv = spiffsManager.getSettings("Coll. time interval bat. vol.", DIR_SENSOR_COLLTINTBATV, false);
     String collbtc = spiffsManager.getSettings("Coll. time interval bat. cur.", DIR_SENSOR_COLLTINTBATC, false);
 
-    if (colltemp == "") {
-        colltemp = "10";
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTTEMP);
-        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTTEMP, colltemp);
-    }
-
-    if (collhum == "") {
-        collhum = "10";
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTHUM);
-        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTHUM, collhum);
+    if (collDHT == "") {
+        collDHT = "10";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTDHT);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTDHT, collDHT);
     }
 
     if (collplu == "") {
@@ -458,11 +466,10 @@ void DCPSystem::initSensorsConfig() {
     }
 
     // Initialize DHT Sensor
-    dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, colltemp.toInt(), collhum.toInt());
+    dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, collDHT.toInt());
 
     CIC_DEBUG(F("Finish sensor config"));
-    CIC_DEBUG(F(""));
-    CIC_DEBUG(F(""));
+    CIC_DEBUG_(F("\n\n"));
 }
 
 void DCPSystem::printConfiguration() {
@@ -496,6 +503,7 @@ void DCPSystem::loopCore2() {
 
     while (true) {
         storeMetadados();
+        vTaskDelay(10);
         transmiteData();
         vTaskDelay(10);
     }

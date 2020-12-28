@@ -15,6 +15,7 @@
 #include <SPI.h>
 #include <mySD.h>
 #include <PubSubClient.h>
+#include "../SIM800/DCPSIM800.h"
 
 #define SD_ATTEMPTS 3
 #define SD_ATTEMPTS_DELAY 100

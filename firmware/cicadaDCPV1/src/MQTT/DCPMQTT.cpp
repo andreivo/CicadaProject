@@ -23,6 +23,7 @@ boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT
     CIC_DEBUG_HEADER(F("SETUP MQTT MODULE"));
 
     TIME_TO_SEND = timeToSend;
+    //TIME_TO_SEND = 5;
     CIC_DEBUG_(F("Slot Time to send: "));
     CIC_DEBUG_(TIME_TO_SEND);
     CIC_DEBUG(F(" min."));
@@ -92,44 +93,67 @@ void DCPMQTT::sendMessagesData() {
     CIC_DEBUG_("On core: ");
     CIC_DEBUG(xPortGetCoreID());
 
-    if (connectMQTTServer()) {
-        String fileData = mqttSdCard.getFirstFile("/");
-        while (fileData != "") {
-            if (mqttSdCard.readPublishFile(fileData, publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
-                mqttSdCard.deleteFile(fileData);
-                fileData = mqttSdCard.getFirstFile("/");
-            } else {
-                mqttSdCard.deleteFile(fileData);
-                fileData = mqttSdCard.getFirstFile("/");
-                CIC_DEBUG_(F("Error on sending: "));
-                CIC_DEBUG(fileData);
+    CIC_DEBUG("------------- (0)--------------");
+    String fileData = mqttSdCard.getFirstFile("/");
+    CIC_DEBUG("------------- (1)--------------");
+    if (fileData != "") {
+        if (connectMQTTServer()) {
+            CIC_DEBUG("------------- (2)--------------");
+            while (fileData != "") {
+                CIC_DEBUG("------------- (3)--------------");
+                if (mqttSdCard.readPublishFile(fileData, publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
+                    CIC_DEBUG("------------- (4)--------------");
+                    mqttSdCard.deleteFile(fileData);
+                    CIC_DEBUG("------------- (5)--------------");
+                    fileData = mqttSdCard.getFirstFile("/");
+                    CIC_DEBUG("------------- (6)--------------");
+                } else {
+                    mqttSdCard.deleteFile(fileData);
+                    CIC_DEBUG("------------- (7)--------------");
+                    fileData = mqttSdCard.getFirstFile("/");
+                    CIC_DEBUG("------------- (8)--------------");
+                    CIC_DEBUG_(F("Error on sending: "));
+                    CIC_DEBUG("------------- (9)--------------");
+                    CIC_DEBUG(fileData);
+                }
             }
+            CIC_DEBUG("------------- (10)--------------");
         }
-        nextSlotTimeToSend();
+    } else {
+        CIC_DEBUG(F("No messages to send!"))
     }
+    nextSlotTimeToSend();
     CIC_DEBUG(F("Finished send MQTT messages!"))
     delay(60000);
 }
 
 boolean DCPMQTT::connectMQTTServer() {
     CIC_DEBUG("Connecting to MQTT Server...");
-    //Se conecta ao device que definimos
-    if (clientPub->connect(DEVICE_ID.c_str(), MQTT_USER.c_str(), MQTT_PWD.c_str())) {
-        //Se a conexão foi bem sucedida
+    if (!clientPub->connected()) {
+        //Se conecta ao device que definimos
+        CIC_DEBUG("------------- (0.1)--------------");
+        vTaskDelay(100);
+        if (clientPub->connect(DEVICE_ID.c_str(), MQTT_USER.c_str(), MQTT_PWD.c_str())) {
+            CIC_DEBUG("------------- (0.2)--------------");
+            //Se a conexão foi bem sucedida
+            CIC_DEBUG("Connected!");
+            CIC_DEBUG("------------- (0.3)--------------");
+            return true;
+        } else {
+            //Se ocorreu algum erro
+            CIC_DEBUG_("Error: ");
+            CIC_DEBUG(clientPub->state());
+            return false;
+        }
+    } else {//Se a conexão foi bem sucedida
         CIC_DEBUG("Connected!");
+        CIC_DEBUG("------------- (0.3)--------------");
         return true;
-    } else {
-        //Se ocorreu algum erro
-        CIC_DEBUG_("Error: ");
-        CIC_DEBUG(clientPub->state());
-        return false;
     }
 }
 
-/******************************************************************************/
-/******************************************************************************/
-
-/******************************************************************************/
+/******************************************************************************
+ ******************************************************************************/
 
 String prepareMessage(String payload, String tknDCP, String pwdDCP) {
     String sntDT = mqttRTC.now("%Y-%m-%d %H:%M:%SZ");
@@ -140,14 +164,28 @@ String prepareMessage(String payload, String tknDCP, String pwdDCP) {
 
 boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC) {
     String pkgMsg = prepareMessage(sendMessage, tknDCP, pwdDCP);
-    int status = _clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
-    if (status == 1) {
-        CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
-        return true;
-    } else {
-        CIC_DEBUG_(F("Error status: "));
-        CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
-        return false;
+    int attempts = 0;
+    while (attempts <= SIM_ATTEMPTS) {
+        if (takeCommunicationMutex()) {
+            vTaskDelay(100);
+            int status = _clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
+            if (status == 1) {
+                CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
+                giveCommunicationMutex();
+                vTaskDelay(100);
+                return true;
+            } else {
+                CIC_DEBUG_(F("Error status: "));
+                CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
+                giveCommunicationMutex();
+                vTaskDelay(100);
+                return false;
+            }
+        } else {
+            CIC_DEBUG("Waiting modem to publishMessage ...");
+        }
+        attempts = attempts + 1;
+        vTaskDelay(SIM_ATTEMPTS_DELAY);
     }
 }
 

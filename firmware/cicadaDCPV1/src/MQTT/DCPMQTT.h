@@ -15,6 +15,7 @@
 #include <TinyGsmClient.h>
 #include <PubSubClient.h>
 #include "../SDCard/DCPSDCard.h"
+#include "../SIM800/DCPSIM800.h"
 
 String prepareMessage(String payload, String tknDCP, String pwdDCP);
 boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC);

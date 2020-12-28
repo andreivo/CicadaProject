@@ -18,22 +18,17 @@
 class DCPDht {
 public:
     DCPDht();
-    void initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int temp, int hum);
+    void initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int timeSlotDHT);
     void readDHT();
 private:
     String codeTemp;
     String typeTemp;
     String codeHum;
     String typeHum;
-    int TIME_TO_READ_TEMP = (10);
-    int TIME_TO_READ_HUM = (10);
-    int nextSlotTimeToRead(int TIME_TO_READ);
-    int nextSlotTemp;
-    boolean timeToReadTemp();
-    void nextSlotTimeToReadTemp();
-    int nextSlotHum;
-    boolean timeToReadHum();
-    void nextSlotTimeToReadHum();
+    int TIME_TO_READ_DHT = (10);
+    void nextSlotTimeToRead();
+    int nextSlotDHT;
+    boolean timeToReadDHT();
 };
 
 #endif

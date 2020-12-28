@@ -21,7 +21,7 @@ DCPDht::DCPDht() {
 /**
  * Initialize DHT Sensor
  */
-void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int temp, int hum) {
+void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int timeSlotDHT) {
     CIC_DEBUG_HEADER(F("INIT DHT22"));
 
     codeTemp = _codeTemp;
@@ -29,63 +29,42 @@ void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, 
     codeHum = _codeHum;
     typeHum = _typeHum;
 
-    TIME_TO_READ_TEMP = temp;
-    TIME_TO_READ_HUM = hum;
+    TIME_TO_READ_DHT = timeSlotDHT;
 
-    CIC_DEBUG_(F("Slot Time temp: "));
-    CIC_DEBUG_(TIME_TO_READ_TEMP);
-    CIC_DEBUG(F(" min."));
-    CIC_DEBUG_(F("Slot Time hum: "));
-    CIC_DEBUG_(TIME_TO_READ_HUM);
+    CIC_DEBUG_(F("Slot Time DHT: "));
+    CIC_DEBUG_(TIME_TO_READ_DHT);
     CIC_DEBUG(F(" min."));
 
-    nextSlotTimeToReadTemp();
-    nextSlotTimeToReadHum();
+    nextSlotTimeToRead();
 }
 
-int DCPDht::nextSlotTimeToRead(int TIME_TO_READ) {
+void DCPDht::nextSlotTimeToRead() {
     int actualMinutes = dhtRTC.now("%M").toInt() + 1;
 
-    int rSlot = actualMinutes % TIME_TO_READ;
-    int iSlot = (int) (actualMinutes / TIME_TO_READ);
+    int rSlot = actualMinutes % TIME_TO_READ_DHT;
+    int iSlot = (int) (actualMinutes / TIME_TO_READ_DHT);
 
     if (rSlot > 0) {
         iSlot = iSlot + 1;
     }
 
-    int nextSlot = iSlot*TIME_TO_READ;
+    int nextSlot = iSlot*TIME_TO_READ_DHT;
     if (nextSlot >= 60) {
         nextSlot = nextSlot - 60;
     }
-    return nextSlot;
-}
-
-void DCPDht::nextSlotTimeToReadTemp() {
-    nextSlotTemp = nextSlotTimeToRead(TIME_TO_READ_TEMP);
-    CIC_DEBUG_(F("Next slot to read temp: "));
-    CIC_DEBUG_(nextSlotTemp);
+    nextSlotDHT = nextSlot;
+    CIC_DEBUG_(F("Next slot to read DHT: "));
+    CIC_DEBUG_(nextSlotDHT);
     CIC_DEBUG(F(" min."));
 }
 
-boolean DCPDht::timeToReadTemp() {
+boolean DCPDht::timeToReadDHT() {
     int actualMinutes = dhtRTC.now("%M").toInt();
-    return actualMinutes == nextSlotTemp;
-}
-
-void DCPDht::nextSlotTimeToReadHum() {
-    nextSlotHum = nextSlotTimeToRead(TIME_TO_READ_HUM);
-    CIC_DEBUG_(F("Next slot to read hum: "));
-    CIC_DEBUG_(nextSlotHum);
-    CIC_DEBUG(F(" min."));
-}
-
-boolean DCPDht::timeToReadHum() {
-    int actualMinutes = dhtRTC.now("%M").toInt();
-    return actualMinutes == nextSlotHum;
+    return actualMinutes == nextSlotDHT;
 }
 
 void DCPDht::readDHT() {
-    if (timeToReadTemp()) {
+    if (timeToReadDHT()) {
         CIC_DEBUG_HEADER(F("READ DHT22"));
         float t, h;
         if (dht.read2(PIN_DHT, &t, &h, NULL) == SimpleDHTErrSuccess) {
@@ -93,11 +72,8 @@ void DCPDht::readDHT() {
             String collectionDate = dhtRTC.now("%Y-%m-%d %H:%M:%SZ");
             String dataContent = dhtSdCard.prepareData(codeTemp, typeTemp, collectionDate, String(t));
 
-            if (timeToReadHum()) {
-                CIC_DEBUG(F("Prepare DH Data!"));
-                dataContent = dataContent + "," + dhtSdCard.prepareData(codeHum, typeHum, collectionDate, String(h));
-                nextSlotTimeToReadHum();
-            }
+            CIC_DEBUG(F("Prepare DH Data!"));
+            dataContent = dataContent + "," + dhtSdCard.prepareData(codeHum, typeHum, collectionDate, String(h));
 
             if (!dhtSdCard.storeData("dht", dataContent)) {
                 CIC_DEBUG(F("Error store DHT Data!"));
@@ -105,23 +81,6 @@ void DCPDht::readDHT() {
                 CIC_DEBUG(F("Store DHT Data!"));
             }
         }
-        nextSlotTimeToReadTemp();
-    } else {
-        if (timeToReadHum()) {
-            CIC_DEBUG_HEADER(F("READ DHT22"));
-            float t, h;
-            if (dht.read2(PIN_DHT, &t, &h, NULL) == SimpleDHTErrSuccess) {
-                CIC_DEBUG(F("Prepare DH Data!"));
-                String collectionDate = dhtRTC.now("%Y-%m-%d %H:%M:%SZ");
-                String dataContent = dataContent + dhtSdCard.prepareData(codeHum, typeHum, collectionDate, String(h));
-
-                if (!dhtSdCard.storeData("dht", dataContent)) {
-                    CIC_DEBUG(F("Error store DHT Data!"));
-                } else {
-                    CIC_DEBUG(F("Store DH Data!"));
-                }
-            }
-            nextSlotTimeToReadHum();
-        }
+        nextSlotTimeToRead();
     }
 }

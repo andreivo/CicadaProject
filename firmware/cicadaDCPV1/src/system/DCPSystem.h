@@ -25,12 +25,21 @@
 
 #define CIC_DEBUG_ENABLED true
 
+/******************************************************************************/
+/******************************************************************************/
 #define SERIAL_ATTEMPTS 3
 #define SERIAL_ATTEMPTS_DELAY 100
 
-
 boolean takeSerialMutex();
 void giveSerialMutex();
+
+#define SIM_ATTEMPTS 3
+#define SIM_ATTEMPTS_DELAY 100
+
+boolean takeCommunicationMutex();
+void giveCommunicationMutex();
+/******************************************************************************/
+/******************************************************************************/
 
 #if CIC_DEBUG_ENABLED
 #define CIC_DEBUG_(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) {Serial.print((text)); giveSerialMutex(); break;} attempts = attempts+1;delay(SERIAL_ATTEMPTS_DELAY);}}

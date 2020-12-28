@@ -14,22 +14,6 @@
 // Delay to connect to WiFi (WIFI_CONN_DELAY X WIFI_CONN_COUNTER = time to access point mode)
 #define SIM_CONN_DELAY 500
 
-#define SIM_ATTEMPTS 3
-#define SIM_ATTEMPTS_DELAY 100
-
-//Mutex
-SemaphoreHandle_t ModemMutex = xSemaphoreCreateMutex();
-
-boolean DCPSIM800::takeModemMutex() {
-    //CIC_DEBUG("Get ModemMutex");
-    return (xSemaphoreTake(ModemMutex, 1) == pdTRUE);
-}
-
-void DCPSIM800::giveModemMutex() {
-    //CIC_DEBUG("Give ModemMutex");
-    xSemaphoreGive(ModemMutex);
-}
-
 /**
  * File system directories and variables
  */
@@ -47,10 +31,10 @@ DCPSIM800::DCPSIM800() {
 void DCPSIM800::turnOn() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeModemMutex()) {
+        if (takeCommunicationMutex()) {
             digitalWrite(PIN_MODEM_TURNON, HIGH);
             simDCPLeds.redBlink(40, 500);
-            giveModemMutex();
+            giveCommunicationMutex();
             break;
         } else {
             CIC_DEBUG("Waiting to modem turnOn ...");
@@ -63,9 +47,9 @@ void DCPSIM800::turnOn() {
 void DCPSIM800::turnOff() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeModemMutex()) {
+        if (takeCommunicationMutex()) {
             digitalWrite(PIN_MODEM_TURNON, LOW);
-            giveModemMutex();
+            giveCommunicationMutex();
             break;
         } else {
             CIC_DEBUG("Waiting to modem turnOff ...");
@@ -152,7 +136,7 @@ boolean DCPSIM800::setupSIM800Module() {
 String DCPSIM800::getNetworkDate() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeModemMutex()) {
+        if (takeCommunicationMutex()) {
             if (modemGSM.isGprsConnected()) {
                 int year = 0;
                 int month = 0;
@@ -192,17 +176,17 @@ String DCPSIM800::getNetworkDate() {
                         String result = String(year) + "-" + String(month) + "-" + String(day) + "T" + String(hour) + ":" + String(min) + ":" + String(sec) + "Z";
                         simDCPLeds.redTurnOff();
                         simDCPLeds.greenTurnOff();
-                        giveModemMutex();
+                        giveCommunicationMutex();
                         return result;
                     } else {
                         CIC_DEBUG(F("Couldn't get network time, retrying in 1s."));
                         delay(1000L);
                     }
                 }
-                giveModemMutex();
+                giveCommunicationMutex();
                 return "";
             }
-            giveModemMutex();
+            giveCommunicationMutex();
             return "";
         } else {
             CIC_DEBUG("Waiting to modem getNetworkDate ...");
@@ -220,9 +204,9 @@ TinyGsmSim800 DCPSIM800::getModem() {
 String DCPSIM800::getSimCCID() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeModemMutex()) {
+        if (takeCommunicationMutex()) {
             String result = modemGSM.getSimCCID();
-            giveModemMutex();
+            giveCommunicationMutex();
             return result;
         } else {
             CIC_DEBUG("Waiting to modem getSimCCID ...");
@@ -236,9 +220,9 @@ String DCPSIM800::getSimCCID() {
 String DCPSIM800::getOperator() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeModemMutex()) {
+        if (takeCommunicationMutex()) {
             String result = modemGSM.getOperator();
-            giveModemMutex();
+            giveCommunicationMutex();
             return result;
         } else {
             CIC_DEBUG("Waiting to modem getOperator ...");
@@ -252,9 +236,9 @@ String DCPSIM800::getOperator() {
 IPAddress DCPSIM800::getLocalIP() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeModemMutex()) {
+        if (takeCommunicationMutex()) {
             IPAddress result = modemGSM.localIP();
-            giveModemMutex();
+            giveCommunicationMutex();
             return result;
         } else {
             CIC_DEBUG("Waiting to modem getLocalIP ...");
@@ -268,9 +252,9 @@ IPAddress DCPSIM800::getLocalIP() {
 String DCPSIM800::getSignalQuality() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeModemMutex()) {
+        if (takeCommunicationMutex()) {
             String result = String(modemGSM.getSignalQuality());
-            giveModemMutex();
+            giveCommunicationMutex();
             return result;
         } else {
             CIC_DEBUG("Waiting to modem getSignalQuality ...");

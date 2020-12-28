@@ -24,8 +24,7 @@ const String DIR_SENSOR_DATATYPEPLUV = "/sen/dtplu";
 const String DIR_SENSOR_DATATYPEBATV = "/sen/dtbtv";
 const String DIR_SENSOR_DATATYPEBATC = "/sen/dtbtc";
 
-const String DIR_SENSOR_COLLTINTTEMP = "/sen/colltemp";
-const String DIR_SENSOR_COLLTINTHUM = "/sen/collhum";
+const String DIR_SENSOR_COLLTINTDHT = "/sen/colldht";
 const String DIR_SENSOR_COLLTINTPLUV = "/sen/collplu";
 const String DIR_SENSOR_COLLTINTBATV = "/sen/collbtv";
 const String DIR_SENSOR_COLLTINTBATC = "/sen/collbtc";

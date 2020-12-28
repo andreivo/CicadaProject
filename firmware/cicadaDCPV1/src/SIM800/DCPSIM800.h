@@ -27,8 +27,6 @@ public:
     String getOperator();
     IPAddress getLocalIP();
     String getSignalQuality();
-    boolean takeModemMutex();
-    void giveModemMutex();
     boolean isConnected();
 
 };

@@ -18,12 +18,12 @@ DCPSDCard::DCPSDCard() {
 }
 
 boolean DCPSDCard::takeSDMutex() {
-    //CIC_DEBUG("Get SDMutex");
+    CIC_DEBUG("Get SDMutex");
     return (xSemaphoreTake(SDMutex, 1) == pdTRUE);
 }
 
 void DCPSDCard::giveSDMutex() {
-    //CIC_DEBUG("Give SDMutex");
+    CIC_DEBUG("Give SDMutex");
     xSemaphoreGive(SDMutex);
 }
 
@@ -111,7 +111,7 @@ String DCPSDCard::getFirstFile(String path) {
             CIC_DEBUG("Waiting to getting first file...");
         }
         attempts = attempts + 1;
-        delay(SD_ATTEMPTS_DELAY);
+        vTaskDelay(SD_ATTEMPTS_DELAY);
     }
 }
 
@@ -160,19 +160,25 @@ boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String ms
             if (myFile) {
                 // read from the file until there's nothing else in it:
                 String msg = "";
+                CIC_DEBUG("------------- (3.1)--------------");
                 while (myFile.available()) {
                     char cMsg = (char) myFile.read();
                     if (cMsg == '\n') {
+                        CIC_DEBUG("------------- (3.1.1)--------------");
                         CIC_DEBUG(msg);
                         (*callback)(msg, _clientPub, tknDCP, pwdDCP, TOPIC);
+                        CIC_DEBUG("------------- (3.1.2)--------------");
                         msg = "";
                     } else {
                         msg = msg + cMsg;
                     }
                 }
+                CIC_DEBUG("------------- (3.2--------------");
                 // close the file:
                 myFile.close();
+                CIC_DEBUG("------------- (3.3--------------");
                 giveSDMutex();
+                CIC_DEBUG("------------- (3.4--------------");
                 return true;
             } else {
                 // if the file didn't open, print an error:
@@ -186,7 +192,7 @@ boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String ms
             CIC_DEBUG("Waiting to read File...");
         }
         attempts = attempts + 1;
-        delay(SD_ATTEMPTS_DELAY);
+        vTaskDelay(SD_ATTEMPTS_DELAY);
     }
 }
 
