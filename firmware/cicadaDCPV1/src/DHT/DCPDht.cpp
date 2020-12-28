@@ -80,6 +80,8 @@ void DCPDht::readDHT() {
             } else {
                 CIC_DEBUG(F("Store DHT Data!"));
             }
+        } else {
+            CIC_DEBUG(F("Error reading DHT Sensor!"));
         }
         nextSlotTimeToRead();
     }

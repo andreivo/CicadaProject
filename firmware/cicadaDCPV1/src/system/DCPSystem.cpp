@@ -45,7 +45,7 @@ void giveCommunicationMutex() {
 /******************************************************************************/
 /******************************************************************************/
 
-const String FIRMWARE_VERSION = "0.0.1.0";
+const String FIRMWARE_VERSION = "0.0.1-alpha";
 
 String STATION_ID = "CicadaDCP";
 const String STATION_ID_PREFIX = "CicadaDCP-";
