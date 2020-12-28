@@ -23,7 +23,7 @@ SPIFFSManager spiffsManager;
 SemaphoreHandle_t SerialMutex = xSemaphoreCreateMutex();
 
 boolean takeSerialMutex() {
-    return (xSemaphoreTake(SerialMutex, 1) == pdTRUE);
+    return (xSemaphoreTake(SerialMutex, (TickType_t) 1) == pdTRUE);
 }
 
 void giveSerialMutex() {
@@ -34,12 +34,22 @@ void giveSerialMutex() {
 SemaphoreHandle_t CommunicationMutex = xSemaphoreCreateMutex();
 
 boolean takeCommunicationMutex() {
-    CIC_DEBUG("Get CommunicationMutex");
-    return (xSemaphoreTake(CommunicationMutex, 1) == pdTRUE);
+    //CIC_DEBUG("Get CommunicationMutex");
+    return (xSemaphoreTake(CommunicationMutex, (TickType_t) 1) == pdTRUE);
+}
+
+boolean takeCommunicationMutexWait() {
+    //CIC_DEBUG("Get CommunicationMutex");
+    return (xSemaphoreTake(CommunicationMutex, portMAX_DELAY) == pdTRUE);
 }
 
 void giveCommunicationMutex() {
-    CIC_DEBUG("Give CommunicationMutex");
+    //CIC_DEBUG("Give CommunicationMutex");
+    xSemaphoreGive(CommunicationMutex);
+}
+
+void giveCommunicationMutexWait() {
+    //CIC_DEBUG("Give CommunicationMutex");
     xSemaphoreGive(CommunicationMutex);
 }
 /******************************************************************************/
@@ -210,6 +220,7 @@ void DCPSystem::printNowDate() {
 
 void DCPSystem::checkAPWizard(xTaskHandle coreTask) {
     if (digitalRead(PIN_AP_WIZARD) == HIGH) {
+        esp_task_wdt_delete(NULL);
         vTaskDelete(coreTask);
         delay(100);
         setupWizard();
@@ -490,7 +501,7 @@ String DCPSystem::getSSIDAP() {
 /************************************************************************/
 
 /************************************************************************/
-void DCPSystem::loopCore2() {
+void DCPSystem::transmitFunctionsLoop() {
     CIC_DEBUG_HEADER(F("INIT LOOP 2"));
     String taskMessage = F("Task running on core ");
     taskMessage = taskMessage + xPortGetCoreID();
@@ -549,10 +560,11 @@ boolean DCPSystem::onTimeToSaveMetadata() {
 
 void DCPSystem::storeMetadados() {
     if (onTimeToSaveMetadata()) {
+        cicadaLeds.redTurnOn();
         updateCommunicationStatus();
         cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY);
         nextSlotToSaveMetadata();
-        vTaskDelay(1000);
+        cicadaLeds.redTurnOff();
     }
 }
 

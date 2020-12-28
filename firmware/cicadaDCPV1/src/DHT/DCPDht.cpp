@@ -67,21 +67,27 @@ void DCPDht::readDHT() {
     if (timeToReadDHT()) {
         CIC_DEBUG_HEADER(F("READ DHT22"));
         float t, h;
-        if (dht.read2(PIN_DHT, &t, &h, NULL) == SimpleDHTErrSuccess) {
-            CIC_DEBUG(F("Prepare DT Data!"));
-            String collectionDate = dhtRTC.now("%Y-%m-%d %H:%M:%SZ");
-            String dataContent = dhtSdCard.prepareData(codeTemp, typeTemp, collectionDate, String(t));
+        int attempts = 0;
+        while (attempts <= 5) {
+            if (dht.read2(PIN_DHT, &t, &h, NULL) == SimpleDHTErrSuccess) {
+                CIC_DEBUG(F("Prepare DT Data!"));
+                String collectionDate = dhtRTC.now("%Y-%m-%d %H:%M:%SZ");
+                String dataContent = dhtSdCard.prepareData(codeTemp, typeTemp, collectionDate, String(t));
 
-            CIC_DEBUG(F("Prepare DH Data!"));
-            dataContent = dataContent + "," + dhtSdCard.prepareData(codeHum, typeHum, collectionDate, String(h));
+                CIC_DEBUG(F("Prepare DH Data!"));
+                dataContent = dataContent + "," + dhtSdCard.prepareData(codeHum, typeHum, collectionDate, String(h));
 
-            if (!dhtSdCard.storeData("dht", dataContent)) {
-                CIC_DEBUG(F("Error store DHT Data!"));
+                if (!dhtSdCard.storeData("dht", dataContent)) {
+                    CIC_DEBUG(F("Error store DHT Data!"));
+                } else {
+                    CIC_DEBUG(F("Store DHT Data!"));
+                }
+                break;
             } else {
-                CIC_DEBUG(F("Store DHT Data!"));
+                CIC_DEBUG(F("Error reading DHT Sensor!"));
+                delay(10);
             }
-        } else {
-            CIC_DEBUG(F("Error reading DHT Sensor!"));
+            attempts = attempts + 1;
         }
         nextSlotTimeToRead();
     }

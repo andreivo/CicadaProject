@@ -11,6 +11,7 @@
 
 DCPSDCard mqttSdCard;
 DCPRTC mqttRTC;
+DCPLeds mqttLeds;
 
 DCPMQTT::DCPMQTT() {
 
@@ -70,10 +71,13 @@ boolean DCPMQTT::onTimeToSend() {
 
 void DCPMQTT::sendAllMessagesData(TinyGsmSim800 modem) {
     if (onTimeToSend()) {
+        mqttLeds.redTurnOn();
         TinyGsmClient _clientTransport(modem);
         PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
         clientPub = &_clientPub;
+        clientPub->setSocketTimeout(10);
         sendMessagesData();
+        mqttLeds.redTurnOff();
     }
 }
 
@@ -82,6 +86,7 @@ void DCPMQTT::sendAllMessagesData() {
         WiFiClient _clientTransport;
         PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
         clientPub = &_clientPub;
+        clientPub->setSocketTimeout(10);
         sendMessagesData();
     }
 }
@@ -93,61 +98,40 @@ void DCPMQTT::sendMessagesData() {
     CIC_DEBUG_("On core: ");
     CIC_DEBUG(xPortGetCoreID());
 
-    CIC_DEBUG("------------- (0)--------------");
     String fileData = mqttSdCard.getFirstFile("/");
-    CIC_DEBUG("------------- (1)--------------");
     if (fileData != "") {
         if (connectMQTTServer()) {
-            CIC_DEBUG("------------- (2)--------------");
             while (fileData != "") {
-                CIC_DEBUG("------------- (3)--------------");
                 if (mqttSdCard.readPublishFile(fileData, publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
-                    CIC_DEBUG("------------- (4)--------------");
                     mqttSdCard.deleteFile(fileData);
-                    CIC_DEBUG("------------- (5)--------------");
                     fileData = mqttSdCard.getFirstFile("/");
-                    CIC_DEBUG("------------- (6)--------------");
                 } else {
-                    mqttSdCard.deleteFile(fileData);
-                    CIC_DEBUG("------------- (7)--------------");
                     fileData = mqttSdCard.getFirstFile("/");
-                    CIC_DEBUG("------------- (8)--------------");
                     CIC_DEBUG_(F("Error on sending: "));
-                    CIC_DEBUG("------------- (9)--------------");
                     CIC_DEBUG(fileData);
                 }
             }
-            CIC_DEBUG("------------- (10)--------------");
         }
     } else {
         CIC_DEBUG(F("No messages to send!"))
     }
     nextSlotTimeToSend();
-    CIC_DEBUG(F("Finished send MQTT messages!"))
-    delay(60000);
+    CIC_DEBUG(F("Finished send MQTT messages!"));
 }
 
 boolean DCPMQTT::connectMQTTServer() {
     CIC_DEBUG("Connecting to MQTT Server...");
     if (!clientPub->connected()) {
-        //Se conecta ao device que definimos
-        CIC_DEBUG("------------- (0.1)--------------");
-        vTaskDelay(100);
         if (clientPub->connect(DEVICE_ID.c_str(), MQTT_USER.c_str(), MQTT_PWD.c_str())) {
-            CIC_DEBUG("------------- (0.2)--------------");
-            //Se a conexão foi bem sucedida
             CIC_DEBUG("Connected!");
-            CIC_DEBUG("------------- (0.3)--------------");
             return true;
         } else {
-            //Se ocorreu algum erro
             CIC_DEBUG_("Error: ");
             CIC_DEBUG(clientPub->state());
             return false;
         }
-    } else {//Se a conexão foi bem sucedida
+    } else {
         CIC_DEBUG("Connected!");
-        CIC_DEBUG("------------- (0.3)--------------");
         return true;
     }
 }
@@ -167,18 +151,15 @@ boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknD
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
         if (takeCommunicationMutex()) {
-            vTaskDelay(100);
             int status = _clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
             if (status == 1) {
                 CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
                 giveCommunicationMutex();
-                vTaskDelay(100);
                 return true;
             } else {
                 CIC_DEBUG_(F("Error status: "));
                 CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
                 giveCommunicationMutex();
-                vTaskDelay(100);
                 return false;
             }
         } else {
@@ -187,5 +168,7 @@ boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknD
         attempts = attempts + 1;
         vTaskDelay(SIM_ATTEMPTS_DELAY);
     }
+    CIC_DEBUG("Published unsuccessful!");
+    return false;
 }
 

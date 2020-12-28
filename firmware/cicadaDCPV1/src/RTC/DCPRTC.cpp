@@ -22,11 +22,12 @@ boolean DCPRTC::setupRTCModule(String calTimestamp) {
 
     time_t tt = stringToTime(calTimestamp);
     CIC_DEBUG_("Unix Time: ");
-    CIC_DEBUG(int32_t(tt));
+    CIC_DEBUG(tt);
     CIC_DEBUG_("Before RTC: ");
     CIC_DEBUG(printTime(tt));
+
     timeval tv; //Cria a estrutura temporaria para funcao abaixo.
-    tv.tv_sec = int32_t(tt); //Atribui minha data atual. Voce pode usar o NTP para isso ou o site citado no artigo!
+    tv.tv_sec = tt; //Atribui minha data atual. Voce pode usar o NTP para isso ou o site citado no artigo!
     settimeofday(&tv, NULL); //Configura o RTC para manter a data atribuida atualizada.
     CIC_DEBUG_("After RTC: ");
     tt = time(NULL); //Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
@@ -38,14 +39,14 @@ boolean DCPRTC::setupRTCModule(String calTimestamp) {
 /**
  * Setup RTC module
  */
-boolean DCPRTC::setupRTCModule(int32_t tt) {
+boolean DCPRTC::setupRTCModule(time_t tt) {
     CIC_DEBUG_HEADER(F("SETUP RTC MODULE"));
     CIC_DEBUG_("Unix Time: ");
-    CIC_DEBUG(int32_t(tt));
+    CIC_DEBUG(tt);
     CIC_DEBUG_("Before RTC: ");
     CIC_DEBUG(printTime(tt));
     timeval tv; //Cria a estrutura temporaria para funcao abaixo.
-    tv.tv_sec = int32_t(tt); //Atribui minha data atual. Voce pode usar o NTP para isso ou o site citado no artigo!
+    tv.tv_sec = tt; //Atribui minha data atual. Voce pode usar o NTP para isso ou o site citado no artigo!
     settimeofday(&tv, NULL); //Configura o RTC para manter a data atribuida atualizada.
     CIC_DEBUG_("After RTC: ");
     tt = time(NULL); //Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
@@ -86,7 +87,7 @@ String DCPRTC::now(String format) {
     return printTime(tt, format);
 }
 
-int32_t DCPRTC::nowEpoch() {
+time_t DCPRTC::nowEpoch() {
     time_t tt = time(NULL); //Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
-    return int32_t(tt);
+    return tt;
 }

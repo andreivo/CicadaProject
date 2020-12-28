@@ -18,12 +18,12 @@ DCPSDCard::DCPSDCard() {
 }
 
 boolean DCPSDCard::takeSDMutex() {
-    CIC_DEBUG("Get SDMutex");
+    //CIC_DEBUG("Get SDMutex");
     return (xSemaphoreTake(SDMutex, 1) == pdTRUE);
 }
 
 void DCPSDCard::giveSDMutex() {
-    CIC_DEBUG("Give SDMutex");
+    //CIC_DEBUG("Give SDMutex");
     xSemaphoreGive(SDMutex);
 }
 
@@ -160,25 +160,19 @@ boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String ms
             if (myFile) {
                 // read from the file until there's nothing else in it:
                 String msg = "";
-                CIC_DEBUG("------------- (3.1)--------------");
                 while (myFile.available()) {
                     char cMsg = (char) myFile.read();
                     if (cMsg == '\n') {
-                        CIC_DEBUG("------------- (3.1.1)--------------");
                         CIC_DEBUG(msg);
                         (*callback)(msg, _clientPub, tknDCP, pwdDCP, TOPIC);
-                        CIC_DEBUG("------------- (3.1.2)--------------");
                         msg = "";
                     } else {
                         msg = msg + cMsg;
                     }
                 }
-                CIC_DEBUG("------------- (3.2--------------");
                 // close the file:
                 myFile.close();
-                CIC_DEBUG("------------- (3.3--------------");
                 giveSDMutex();
-                CIC_DEBUG("------------- (3.4--------------");
                 return true;
             } else {
                 // if the file didn't open, print an error:
@@ -201,32 +195,23 @@ String DCPSDCard::readFile(String filename) {
     while (attempts <= SD_ATTEMPTS) {
         if (takeSDMutex()) {
             // re-open the file for reading:
-            CIC_DEBUG("1.1");
             FileSD myFile = SD.open(filename.c_str());
-            CIC_DEBUG_("1.2: ");
-            CIC_DEBUG(filename.c_str());
             String result = "";
-            CIC_DEBUG("1.3");
             if (myFile) {
-                CIC_DEBUG("1.4");
                 // read from the file until there's nothing else in it:
                 while (myFile.available()) {
                     result = result + (char) myFile.read();
 
                 }
-                CIC_DEBUG("1.5");
                 // close the file:
                 myFile.close();
-                CIC_DEBUG("1.6");
 
             } else {
                 // if the file didn't open, print an error:
                 CIC_DEBUG_(F("Error opening "));
                 CIC_DEBUG(filename);
             }
-            CIC_DEBUG("1.7");
             giveSDMutex();
-            CIC_DEBUG("1.8");
             return result;
         } else {
             CIC_DEBUG("Waiting to read File...");

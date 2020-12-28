@@ -22,6 +22,7 @@
 #include "../SIM800/DCPSIM800.h"
 #include "../RTC/DCPRTC.h"
 #include "../MQTT/DCPMQTT.h"
+#include <esp_task_wdt.h>
 
 #define CIC_DEBUG_ENABLED true
 
@@ -33,11 +34,13 @@
 boolean takeSerialMutex();
 void giveSerialMutex();
 
-#define SIM_ATTEMPTS 3
+#define SIM_ATTEMPTS 5
 #define SIM_ATTEMPTS_DELAY 100
 
 boolean takeCommunicationMutex();
+boolean takeCommunicationMutexWait();
 void giveCommunicationMutex();
+void giveCommunicationMutexWait();
 /******************************************************************************/
 /******************************************************************************/
 
@@ -82,7 +85,7 @@ public:
     void printNowDate();
     void initMQTT();
     void transmiteData();
-    void loopCore2();
+    void transmitFunctionsLoop();
     String IpAddress2String(const IPAddress& ipAddress);
     void updateCommunicationStatus();
     void updateCommunicationSignal();
