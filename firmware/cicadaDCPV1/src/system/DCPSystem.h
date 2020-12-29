@@ -96,6 +96,7 @@ private:
     void setupTimeoutWizard();
     void initStationID();
     void initStationName();
+    void initStationPWD();
     void initFirmwareVersion();
     void initStationCoordinates();
     void initBucketVolume();

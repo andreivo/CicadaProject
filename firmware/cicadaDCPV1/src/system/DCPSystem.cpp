@@ -60,6 +60,7 @@ const String FIRMWARE_VERSION = "0.0.1-alpha";
 String STATION_ID = "CicadaDCP";
 const String STATION_ID_PREFIX = "CicadaDCP-";
 String STATION_NAME = "CicadaDCP";
+String STATION_PWD = "";
 String STATION_LONGITUDE = "";
 String STATION_LATITUDE = "";
 float CIC_STATION_BUCKET_VOLUME = 3.22; // Bucket Calibrated Volume in ml
@@ -141,6 +142,9 @@ void DCPSystem::preInitSystem() {
     // Get Station Name
     initStationName();
 
+    // Get Station PWD
+    initStationPWD();
+
     // Register Firmware Version
     initFirmwareVersion();
 
@@ -196,7 +200,7 @@ void DCPSystem::setupWizard() {
 
     cicadaWizard.setDebugOutput(true);
     String ssid = getSSIDAP();
-    cicadaWizard.startWizardPortal(ssid.c_str());
+    cicadaWizard.startWizardPortal(ssid.c_str(), STATION_PWD.c_str());
 }
 
 /**
@@ -258,6 +262,30 @@ void DCPSystem::initStationID() {
 
     CIC_DEBUG_(F("STATION ID: "));
     CIC_DEBUG(STATION_ID);
+}
+
+/**
+ * Initialize Station PWD
+ */
+void DCPSystem::initStationPWD() {
+
+    CIC_DEBUG_HEADER(F("INIT STATION PWD"));
+
+    STATION_PWD = spiffsManager.FSReadString(DIR_STATION_PASS);
+
+    if (!STATION_PWD.length()) {
+
+        CIC_DEBUG_(F("STATION PWD not found.\nSetting STATION PWD: '"));
+        CIC_DEBUG_(STATION_ID);
+        CIC_DEBUG(F("'"));
+
+        STATION_PWD = STATION_ID;
+
+        spiffsManager.FSCreateFile(DIR_STATION_PASS, STATION_PWD);
+    }
+
+    CIC_DEBUG_(F("STATION PWD: "));
+    CIC_DEBUG(STATION_PWD);
 }
 
 /**

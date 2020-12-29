@@ -127,6 +127,7 @@ boolean DCPMQTT::connectMQTTServer() {
     while (attempts <= SIM_ATTEMPTS) {
         if (takeCommunicationMutex()) {
             if (!clientPub->connected()) {
+
                 if (clientPub->connect(DEVICE_ID.c_str(), MQTT_USER.c_str(), MQTT_PWD.c_str())) {
                     CIC_DEBUG("Connected!");
                     giveCommunicationMutex();
@@ -137,6 +138,7 @@ boolean DCPMQTT::connectMQTTServer() {
                     giveCommunicationMutex();
                     return false;
                 }
+
             } else {
                 CIC_DEBUG("Connected!");
                 giveCommunicationMutex();
