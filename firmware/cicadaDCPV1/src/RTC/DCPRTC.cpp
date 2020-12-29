@@ -15,64 +15,73 @@ DCPRTC::DCPRTC() {
 /**
  * Setup RTC module
  */
-boolean DCPRTC::setupRTCModule(String calTimestamp) {
+void DCPRTC::setupRTCModule(String calTimestamp) {
     CIC_DEBUG_HEADER(F("SETUP RTC MODULE"));
     CIC_DEBUG_(F("Time: "));
     CIC_DEBUG(calTimestamp);
 
     time_t tt = stringToTime(calTimestamp);
+    setupRTCModule(tt);
+
     CIC_DEBUG_("Unix Time: ");
     CIC_DEBUG(tt);
     CIC_DEBUG_("Before RTC: ");
     CIC_DEBUG(printTime(tt));
 
-    timeval tv; //Cria a estrutura temporaria para funcao abaixo.
-    tv.tv_sec = tt; //Atribui minha data atual. Voce pode usar o NTP para isso ou o site citado no artigo!
-    settimeofday(&tv, NULL); //Configura o RTC para manter a data atribuida atualizada.
-    CIC_DEBUG_("After RTC: ");
+    CIC_DEBUG_("After  RTC: ");
     tt = time(NULL); //Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
     CIC_DEBUG(printTime(tt));
-
-    return true;
 }
 
 /**
  * Setup RTC module
  */
-boolean DCPRTC::setupRTCModule(time_t tt) {
-    CIC_DEBUG_HEADER(F("SETUP RTC MODULE"));
-    CIC_DEBUG_("Unix Time: ");
-    CIC_DEBUG(tt);
-    CIC_DEBUG_("Before RTC: ");
-    CIC_DEBUG(printTime(tt));
-    timeval tv; //Cria a estrutura temporaria para funcao abaixo.
-    tv.tv_sec = tt; //Atribui minha data atual. Voce pode usar o NTP para isso ou o site citado no artigo!
-    settimeofday(&tv, NULL); //Configura o RTC para manter a data atribuida atualizada.
-    CIC_DEBUG_("After RTC: ");
-    tt = time(NULL); //Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
-    CIC_DEBUG(printTime(tt));
-
-    return true;
+void DCPRTC::setupRTCModule(time_t tt) {
+    timeval epoch = {tt, 0};
+    const timeval *tv = &epoch;
+    timezone utc = {0, 0};
+    const timezone *tz = &utc;
+    settimeofday(tv, tz);
 }
 
 time_t DCPRTC::stringToTime(String calTimestamp) {
     struct tm tm;
-    String year = calTimestamp.substring(0, 4);
-    String month = calTimestamp.substring(5, 7);
-    if (month.startsWith("0")) {
-        month = month.substring(1);
-    }
-    String day = calTimestamp.substring(8, 10);
-    if (day.startsWith("0")) {
-        month = day.substring(1);
-    }
-    tm.tm_year = year.toInt() - 1900;
-    tm.tm_mon = month.toInt() - 1;
-    tm.tm_mday = day.toInt();
-    tm.tm_hour = calTimestamp.substring(11, 13).toInt();
-    tm.tm_min = calTimestamp.substring(14, 16).toInt();
-    tm.tm_sec = calTimestamp.substring(17, 20).toInt();
+
+    String datat = getPartOfSplit(calTimestamp, 'T', 0);
+    String yeart = getPartOfSplit(datat, '-', 0);
+    String montht = getPartOfSplit(datat, '-', 1);
+    String dayt = getPartOfSplit(datat, '-', 2);
+
+    String timet = getPartOfSplit(calTimestamp, 'T', 1);
+    int indexof = timet.indexOf('Z');
+    timet = timet.substring(0, indexof);
+
+    String hourt = getPartOfSplit(timet, ':', 0);
+    String mint = getPartOfSplit(timet, ':', 1);
+    String sect = getPartOfSplit(timet, ':', 2);
+
+    tm.tm_year = yeart.toInt() - 1900;
+    tm.tm_mon = montht.toInt() - 1;
+    tm.tm_mday = dayt.toInt();
+    tm.tm_hour = hourt.toInt();
+    tm.tm_min = mint.toInt();
+    tm.tm_sec = sect.toInt();
     return mktime(&tm);
+}
+
+String DCPRTC::getPartOfSplit(String data, char separator, int index) {
+    int found = 0;
+    int strIndex[] = {0, -1};
+    int maxIndex = data.length() - 1;
+
+    for (int i = 0; i <= maxIndex && found <= index; i++) {
+        if (data.charAt(i) == separator || i == maxIndex) {
+            found++;
+            strIndex[0] = strIndex[1] + 1;
+            strIndex[1] = (i == maxIndex) ? i + 1 : i;
+        }
+    }
+    return found > index ? data.substring(strIndex[0], strIndex[1]) : "";
 }
 
 String DCPRTC::printTime(time_t tt, String format) {

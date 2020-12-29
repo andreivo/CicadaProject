@@ -18,13 +18,14 @@
 class DCPRTC {
 public:
     DCPRTC();
-    boolean setupRTCModule(String calTimestamp);
-    boolean setupRTCModule(time_t tt);
+    void setupRTCModule(String calTimestamp);
     String now(String format = "%Y-%m-%dT%H:%M:%SZ");
     String printTime(time_t tt, String format = "%Y-%m-%dT%H:%M:%SZ");
     time_t nowEpoch();
 private:
+    void setupRTCModule(time_t tt);
     time_t stringToTime(String calTimestamp);
+    String getPartOfSplit(String data, char separator, int index);
 
 };
 

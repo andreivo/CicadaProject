@@ -165,7 +165,7 @@ void DCPSystem::initCommunication() {
             cicadaRTC.setupRTCModule(dcpSIM800.getNetworkDate());
         }
     } else {
-        cicadaRTC.setupRTCModule(dcpWifi.getNetworkEpoch());
+        cicadaRTC.setupRTCModule(dcpWifi.getNetworkDate());
     }
 }
 

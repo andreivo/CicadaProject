@@ -111,6 +111,8 @@ void DCPMQTT::sendMessagesData() {
                     CIC_DEBUG(fileData);
                 }
             }
+        } else {
+            CIC_DEBUG(F("MQTT Server connection failure!"))
         }
     } else {
         CIC_DEBUG(F("No messages to send!"))
@@ -121,19 +123,32 @@ void DCPMQTT::sendMessagesData() {
 
 boolean DCPMQTT::connectMQTTServer() {
     CIC_DEBUG("Connecting to MQTT Server...");
-    if (!clientPub->connected()) {
-        if (clientPub->connect(DEVICE_ID.c_str(), MQTT_USER.c_str(), MQTT_PWD.c_str())) {
-            CIC_DEBUG("Connected!");
-            return true;
+    int attempts = 0;
+    while (attempts <= SIM_ATTEMPTS) {
+        if (takeCommunicationMutex()) {
+            if (!clientPub->connected()) {
+                if (clientPub->connect(DEVICE_ID.c_str(), MQTT_USER.c_str(), MQTT_PWD.c_str())) {
+                    CIC_DEBUG("Connected!");
+                    giveCommunicationMutex();
+                    return true;
+                } else {
+                    CIC_DEBUG_("Error: ");
+                    CIC_DEBUG(clientPub->state());
+                    giveCommunicationMutex();
+                    return false;
+                }
+            } else {
+                CIC_DEBUG("Connected!");
+                giveCommunicationMutex();
+                return true;
+            }
         } else {
-            CIC_DEBUG_("Error: ");
-            CIC_DEBUG(clientPub->state());
-            return false;
+            CIC_DEBUG("Waiting modem to connectMQTTServer ...");
         }
-    } else {
-        CIC_DEBUG("Connected!");
-        return true;
+        attempts = attempts + 1;
+        vTaskDelay(SIM_ATTEMPTS_DELAY);
     }
+    return false;
 }
 
 /******************************************************************************

@@ -111,6 +111,8 @@ String DCPwifi::getNetworkDate() {
     if (WiFi.status() == WL_CONNECTED) {
         //Recupera os dados de data e horário usando o client NTP
         String strDate = ntpClient.getFormattedDate();
+        CIC_DEBUG_(F("NTP DateTime: "));
+        CIC_DEBUG(strDate);
         return strDate;
     }
     return "";
