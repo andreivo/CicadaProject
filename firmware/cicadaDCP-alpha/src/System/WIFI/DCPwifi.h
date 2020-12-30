@@ -12,8 +12,8 @@
 #define DCPwifi_h
 #include <WiFi.h>
 #include <esp_wifi.h>
-#include <NTPClient.h> //Biblioteca NTPClient modificada
-#include <WiFiUdp.h> //Socket UDP
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 #include "../DCPSystem.h"
 
 class DCPwifi {
