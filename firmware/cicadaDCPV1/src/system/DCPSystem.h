@@ -24,6 +24,7 @@
 #include "../RTC/DCPRTC.h"
 #include "../MQTT/DCPMQTT.h"
 #include "../RAINGauge/DCPRainGauge.h"
+#include "../VOLTAGE/DCPVoltage.h"
 
 
 #define CIC_DEBUG_ENABLED true

@@ -10,7 +10,9 @@
 #define PIN_DHT 27
 //RAIN GAUGE SENSOR
 #define PIN_RG 4
-
+//VOLTAGE
+#define PIN_ADC_VCC_IN 34
+#define PIN_ADC_VCC_SO 35
 
 //Modem SIM800
 #define PIN_MODEM_TURNON 23

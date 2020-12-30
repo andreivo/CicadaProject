@@ -97,6 +97,7 @@ DCPMQTT cicadaMQTT;
  */
 DCPDht dcpDHT;
 DCPRainGauge dcpRainGauge;
+DCPVoltage dcpVoltage;
 
 void IRAM_ATTR onTimeoutWizard() {
     //If the Wizard is active and the timeout has been reached reboot the module.
@@ -239,6 +240,8 @@ void DCPSystem::blinkStatus() {
 void DCPSystem::readSensors() {
     dcpDHT.readDHT();
     dcpRainGauge.readRG();
+    dcpVoltage.readVccIn();
+    dcpVoltage.readVccSol();
 }
 
 /**
@@ -417,8 +420,8 @@ void DCPSystem::initSensorsConfig() {
     String codetemp = spiffsManager.getSettings("Code temp", DIR_SENSOR_CODETEMP, false);
     String codehum = spiffsManager.getSettings("Code hum", DIR_SENSOR_CODEHUM, false);
     String codeplu = spiffsManager.getSettings("Code plu", DIR_SENSOR_CODEPLUV, false);
-    String codebtv = spiffsManager.getSettings("Code bat. vol.", DIR_SENSOR_CODEBATV, false);
-    String codebtc = spiffsManager.getSettings("Code bat. cur.", DIR_SENSOR_CODEBATC, false);
+    String codevin = spiffsManager.getSettings("Code vcc in", DIR_SENSOR_CODEVIN, false);
+    String codevso = spiffsManager.getSettings("Code vcc sol", DIR_SENSOR_CODEVSO, false);
 
     if (codetemp == "") {
         codetemp = "10";
@@ -438,21 +441,23 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_CODEPLUV, codehum);
     }
 
-    if (codebtv == "") {
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEBATV);
-        spiffsManager.FSCreateFile(DIR_SENSOR_CODEBATV, 40);
+    if (codevin == "") {
+        codevin = "40";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEVIN);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEVIN, codevin);
     }
 
-    if (codebtc == "") {
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEBATC);
-        spiffsManager.FSCreateFile(DIR_SENSOR_CODEBATC, 50);
+    if (codevso == "") {
+        codevso = "50";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEVSO);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEVSO, codevso);
     }
 
     String dttemp = spiffsManager.getSettings("Data Type temp", DIR_SENSOR_DATATYPETEMP, false);
     String dthum = spiffsManager.getSettings("Data Type hum", DIR_SENSOR_DATATYPEHUM, false);
     String dtplu = spiffsManager.getSettings("Data Type plu", DIR_SENSOR_DATATYPEPLUV, false);
-    String dtbtv = spiffsManager.getSettings("Data Type bat. vol.", DIR_SENSOR_DATATYPEBATV, false);
-    String dtbtc = spiffsManager.getSettings("Data Type bat. cur.", DIR_SENSOR_DATATYPEBATC, false);
+    String dtvin = spiffsManager.getSettings("Data Type vcc in", DIR_SENSOR_DATATYPEVIN, false);
+    String dtvso = spiffsManager.getSettings("Data Type vcc sol", DIR_SENSOR_DATATYPEVSO, false);
 
     if (dttemp == "") {
         dttemp = "temp";
@@ -472,20 +477,22 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEPLUV, dtplu);
     }
 
-    if (dtbtv == "") {
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEBATV);
-        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEBATV, "battery");
+    if (dtvin == "") {
+        dtvin = "vccin";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEVIN);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEVIN, dtvin);
     }
 
-    if (dtbtc == "") {
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEBATC);
-        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEBATC, "current");
+    if (dtvso == "") {
+        dtvso = "vccso";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEVSO);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEVSO, dtvso);
     }
 
     String collDHT = spiffsManager.getSettings("Coll. time interval DHT", DIR_SENSOR_COLLTINTDHT, false);
     String collplu = spiffsManager.getSettings("Coll. time interval plu", DIR_SENSOR_COLLTINTPLUV, false);
-    String collbtv = spiffsManager.getSettings("Coll. time interval bat. vol.", DIR_SENSOR_COLLTINTBATV, false);
-    String collbtc = spiffsManager.getSettings("Coll. time interval bat. cur.", DIR_SENSOR_COLLTINTBATC, false);
+    String collvin = spiffsManager.getSettings("Coll. time interval vcc in", DIR_SENSOR_COLLTINTVIN, false);
+    String collvso = spiffsManager.getSettings("Coll. time interval vcc sol", DIR_SENSOR_COLLTINTVSO, false);
 
     if (collDHT == "") {
         collDHT = "10";
@@ -499,14 +506,16 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTPLUV, collplu);
     }
 
-    if (collbtv == "") {
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTBATV);
-        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTBATV, 10);
+    if (collvin == "") {
+        collvin = "10";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTVIN);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTVIN, collvin);
     }
 
-    if (collbtc == "") {
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTBATC);
-        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTBATC, 10);
+    if (collvso == "") {
+        collvso = "10";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTVSO);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTVSO, collvso);
     }
 
     // Initialize DHT Sensor
@@ -516,6 +525,9 @@ void DCPSystem::initSensorsConfig() {
     dcpRainGauge.setupRGSensor();
     // Initialize Rain Gauge Sensor
     dcpRainGauge.initRGSensor(codeplu, dtplu, collplu.toInt());
+
+    // Initialize VCC Sensor
+    dcpVoltage.initVccSensor(codevin, dtvin, collvin.toInt(), codevso, dtvso, collvso.toInt());
 
     CIC_DEBUG(F("Finish sensor config"));
     CIC_DEBUG_(F("\n\n"));

@@ -583,38 +583,38 @@ void CicadaWizard::handleSensors() {
     String codetemp = spiffsMan.getSettings("Code temp", DIR_SENSOR_CODETEMP, false);
     String codehum = spiffsMan.getSettings("Code hum", DIR_SENSOR_CODEHUM, false);
     String codeplu = spiffsMan.getSettings("Code plu", DIR_SENSOR_CODEPLUV, false);
-    String codebtv = spiffsMan.getSettings("Code bat. vol.", DIR_SENSOR_CODEBATV, false);
-    String codebtc = spiffsMan.getSettings("Code bat. cur.", DIR_SENSOR_CODEBATC, false);
+    String codevin = spiffsMan.getSettings("Code vcc in", DIR_SENSOR_CODEVIN, false);
+    String codevso = spiffsMan.getSettings("Code vcc so", DIR_SENSOR_CODEVSO, false);
 
     String dttemp = spiffsMan.getSettings("Data Type temp", DIR_SENSOR_DATATYPETEMP, false);
     String dthum = spiffsMan.getSettings("Data Type hum", DIR_SENSOR_DATATYPEHUM, false);
     String dtplu = spiffsMan.getSettings("Data Type plu", DIR_SENSOR_DATATYPEPLUV, false);
-    String dtbtv = spiffsMan.getSettings("Data Type bat. vol.", DIR_SENSOR_DATATYPEBATV, false);
-    String dtbtc = spiffsMan.getSettings("Data Type bat. cur.", DIR_SENSOR_DATATYPEBATC, false);
+    String dtvin = spiffsMan.getSettings("Data Type vcc in", DIR_SENSOR_DATATYPEVIN, false);
+    String dtvso = spiffsMan.getSettings("Data Type vcc so", DIR_SENSOR_DATATYPEVSO, false);
 
     String collDHT = spiffsMan.getSettings("Coll. time interval DHT", DIR_SENSOR_COLLTINTDHT, false);
     String collplu = spiffsMan.getSettings("Coll. time interval plu", DIR_SENSOR_COLLTINTPLUV, false);
-    String collbtv = spiffsMan.getSettings("Coll. time interval bat. vol.", DIR_SENSOR_COLLTINTBATV, false);
-    String collbtc = spiffsMan.getSettings("Coll. time interval bat. cur.", DIR_SENSOR_COLLTINTBATC, false);
+    String collvin = spiffsMan.getSettings("Coll. time interval vcc in", DIR_SENSOR_COLLTINTVIN, false);
+    String collvso = spiffsMan.getSettings("Coll. time interval vcc so", DIR_SENSOR_COLLTINTVSO, false);
 
     // Setup the form
     String form = FPSTR(HTTP_FORM_CONFIG_SENSORS);
     form.replace("{codetemp}", codetemp);
     form.replace("{codehum}", codehum);
     form.replace("{codeplu}", codeplu);
-    form.replace("{codebtv}", codebtv);
-    form.replace("{codebtc}", codebtc);
+    form.replace("{codevin}", codevin);
+    form.replace("{codevso}", codevso);
 
     form.replace("{dttemp}", dttemp);
     form.replace("{dthum}", dthum);
     form.replace("{dtplu}", dtplu);
-    form.replace("{dtbtv}", dtbtv);
-    form.replace("{dtbtc}", dtbtc);
+    form.replace("{dtvin}", dtvin);
+    form.replace("{dtvso}", dtvso);
 
     form.replace("{collDHT}", collDHT);
     form.replace("{collplu}", collplu);
-    form.replace("{collbtv}", collbtv);
-    form.replace("{collbtc}", collbtc);
+    form.replace("{collvin}", collvin);
+    form.replace("{collvso}", collvso);
 
     form.replace("{cicadalogo}", HTTP_CICADALOGO);
 
@@ -647,10 +647,10 @@ void CicadaWizard::handleSaveSensorsConfig() {
     spiffsMan.saveSettings("code hum", DIR_SENSOR_CODEHUM, codehum);
     String codeplu = server->arg("codeplu");
     spiffsMan.saveSettings("code plu", DIR_SENSOR_CODEPLUV, codeplu);
-    String codebtv = server->arg("codebtv");
-    spiffsMan.saveSettings("code bat. vol.", DIR_SENSOR_CODEBATV, codebtv);
-    String codebtc = server->arg("codebtc");
-    spiffsMan.saveSettings("code bat. corr.", DIR_SENSOR_CODEBATC, codebtc);
+    String codevin = server->arg("codevin");
+    spiffsMan.saveSettings("code vcc in", DIR_SENSOR_CODEVIN, codevin);
+    String codevso = server->arg("codevso");
+    spiffsMan.saveSettings("code vcc sol", DIR_SENSOR_CODEVSO, codevso);
 
     String dttemp = server->arg("dttemp");
     spiffsMan.saveSettings("dt temp", DIR_SENSOR_DATATYPETEMP, dttemp);
@@ -658,19 +658,19 @@ void CicadaWizard::handleSaveSensorsConfig() {
     spiffsMan.saveSettings("dt hum", DIR_SENSOR_DATATYPEHUM, dthum);
     String dtplu = server->arg("dtplu");
     spiffsMan.saveSettings("dt plu", DIR_SENSOR_DATATYPEPLUV, dtplu);
-    String dtbtv = server->arg("dtbtv");
-    spiffsMan.saveSettings("dt bat. vol.", DIR_SENSOR_DATATYPEBATV, dtbtv);
-    String dtbtc = server->arg("dtbtc");
-    spiffsMan.saveSettings("dt bat. corr.", DIR_SENSOR_DATATYPEBATC, dtbtc);
+    String dtvin = server->arg("dtvin");
+    spiffsMan.saveSettings("dt vcc in", DIR_SENSOR_DATATYPEVIN, dtvin);
+    String dtvso = server->arg("dtvso");
+    spiffsMan.saveSettings("dt vcc so", DIR_SENSOR_DATATYPEVSO, dtvso);
 
     String collDHT = server->arg("collDHT");
     spiffsMan.saveSettings("coll DHT", DIR_SENSOR_COLLTINTDHT, collDHT);
     String collplu = server->arg("collplu");
     spiffsMan.saveSettings("coll plu", DIR_SENSOR_COLLTINTPLUV, collplu);
-    String collbtv = server->arg("collbtv");
-    spiffsMan.saveSettings("coll bat. vol.", DIR_SENSOR_COLLTINTBATV, collbtv);
-    String collbtc = server->arg("collbtc");
-    spiffsMan.saveSettings("coll bat. corr.", DIR_SENSOR_COLLTINTBATC, collbtc);
+    String collvin = server->arg("collvin");
+    spiffsMan.saveSettings("coll vcc in", DIR_SENSOR_COLLTINTVIN, collvin);
+    String collvso = server->arg("collvso");
+    spiffsMan.saveSettings("coll vcc so", DIR_SENSOR_COLLTINTVSO, collvso);
 
     //Redirect Step 2
     handleMQTTSERVER();

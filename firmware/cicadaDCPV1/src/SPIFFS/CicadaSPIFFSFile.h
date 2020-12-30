@@ -15,19 +15,19 @@ const String DIR_STATION_STOREMETADATA = "/stt/smi";
 const String DIR_SENSOR_CODETEMP = "/sen/codetemp";
 const String DIR_SENSOR_CODEHUM = "/sen/codehum";
 const String DIR_SENSOR_CODEPLUV = "/sen/codeplu";
-const String DIR_SENSOR_CODEBATV = "/sen/codebtv";
-const String DIR_SENSOR_CODEBATC = "/sen/codebtc";
+const String DIR_SENSOR_CODEVIN = "/sen/codevin";
+const String DIR_SENSOR_CODEVSO = "/sen/codevso";
 
 const String DIR_SENSOR_DATATYPETEMP = "/sen/dttemp";
 const String DIR_SENSOR_DATATYPEHUM = "/sen/dthum";
 const String DIR_SENSOR_DATATYPEPLUV = "/sen/dtplu";
-const String DIR_SENSOR_DATATYPEBATV = "/sen/dtbtv";
-const String DIR_SENSOR_DATATYPEBATC = "/sen/dtbtc";
+const String DIR_SENSOR_DATATYPEVIN = "/sen/dtvin";
+const String DIR_SENSOR_DATATYPEVSO = "/sen/dtvso";
 
 const String DIR_SENSOR_COLLTINTDHT = "/sen/colldht";
 const String DIR_SENSOR_COLLTINTPLUV = "/sen/collplu";
-const String DIR_SENSOR_COLLTINTBATV = "/sen/collbtv";
-const String DIR_SENSOR_COLLTINTBATC = "/sen/collbtc";
+const String DIR_SENSOR_COLLTINTVIN = "/sen/collvin";
+const String DIR_SENSOR_COLLTINTVSO = "/sen/collvso";
 
 const String DIR_FIRMWARE_VERSION = "/fmwver";
 const String DIR_MQTT_SERVER = "/mqtt/host";
