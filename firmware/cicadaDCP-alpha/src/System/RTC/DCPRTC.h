@@ -22,6 +22,8 @@ public:
     String now(String format = "%Y-%m-%dT%H:%M:%SZ");
     String printTime(time_t tt, String format = "%Y-%m-%dT%H:%M:%SZ");
     time_t nowEpoch();
+    struct tm *convEpoch(time_t in_time);
+    boolean checkFormat(String calTimestamp);
 private:
     void setupRTCModule(time_t tt);
     time_t stringToTime(String calTimestamp);

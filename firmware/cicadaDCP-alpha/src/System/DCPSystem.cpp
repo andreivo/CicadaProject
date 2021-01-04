@@ -74,6 +74,8 @@ String COM_SIGNAL_QUALITTY = "";
 String COM_TYPE = "WIFI";
 
 
+DCPSerialCommands DCPCommands;
+
 // Initialize CicadaWizard
 CicadaWizard cicadaWizard;
 hw_timer_t * timeoutWizard = NULL;
@@ -111,6 +113,13 @@ DCPSystem::DCPSystem() {
 }
 
 /**
+ * Read Serial Commands
+ */
+void DCPSystem::readSerialCommands() {
+    DCPCommands.readSerialCommands();
+}
+
+/**
  * Initialize Station ID
  */
 void DCPSystem::preInitSystem() {
@@ -126,6 +135,8 @@ void DCPSystem::preInitSystem() {
     cicadaLeds.redTurnOff();
     cicadaLeds.greenTurnOff();
     cicadaLeds.blueTurnOff();
+
+    DCPCommands.initSerialCommands(FIRMWARE_VERSION);
 
     // Init the Serial
     CIC_DEBUG_SETUP(CIC_SYSTEM_BAUDRATE);
@@ -571,13 +582,21 @@ void DCPSystem::taskTransmitLoop() {
     }
 }
 
+//void DCPSystem::transmiteData() {
+//    if (dcpWifi.isConnected()) {
+//        cicadaMQTT.sendAllMessagesData();
+//    } else {
+//        if (dcpSIM800.isConnected()) {
+//            cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
+//        } else {
+//            initCommunication();
+//        }
+//    }
+//}
+
 void DCPSystem::transmiteData() {
-    if (dcpWifi.isConnected()) {
-        cicadaMQTT.sendAllMessagesData();
-    } else {
-        if (dcpSIM800.isConnected()) {
-            cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
-        } else {
+    if (!cicadaMQTT.sendAllMessagesDataWifi()) {
+        if (!cicadaMQTT.sendAllMessagesDataSim(dcpSIM800.getModem())) {
             initCommunication();
         }
     }

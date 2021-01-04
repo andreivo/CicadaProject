@@ -24,11 +24,11 @@ SPIFFSManager::SPIFFSManager() {
  */
 boolean SPIFFSManager::FSCreateFile(String directory, String filename) {
 
-    CIC_DEBUG_(F("Creating file: \""));
-    CIC_DEBUG_(directory);
-    CIC_DEBUG_(F("/"));
-    CIC_DEBUG_(filename);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Creating file: \""));
+    //    CIC_DEBUG_(directory);
+    //    CIC_DEBUG_(F("/"));
+    //    CIC_DEBUG_(filename);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -45,11 +45,11 @@ boolean SPIFFSManager::FSCreateFile(String directory, String filename) {
     // Open/Create file
     File f = SPIFFS.open(filepath, "w");
     if (f) {
-        CIC_DEBUG(F("SUCCESS: File created."));
+        //CIC_DEBUG(F("SUCCESS: File created."));
         f.close();
     } else {
         success = false;
-        CIC_DEBUG(F("ERROR: Fail creating file."));
+        //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
 
     return success;
@@ -64,11 +64,11 @@ boolean SPIFFSManager::FSCreateFile(String directory, String filename) {
  */
 boolean SPIFFSManager::FSCreateFile(String directory, int filename) {
 
-    CIC_DEBUG_(F("Creating file: \""));
-    CIC_DEBUG_(directory);
-    CIC_DEBUG_(F("/"));
-    CIC_DEBUG_(filename);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Creating file: \""));
+    //    CIC_DEBUG_(directory);
+    //    CIC_DEBUG_(F("/"));
+    //    CIC_DEBUG_(filename);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -85,11 +85,11 @@ boolean SPIFFSManager::FSCreateFile(String directory, int filename) {
     // Open/Create file
     File f = SPIFFS.open(filepath, "w");
     if (f) {
-        CIC_DEBUG(F("SUCCESS: File created."));
+        //CIC_DEBUG(F("SUCCESS: File created."));
         f.close();
     } else {
         success = false;
-        CIC_DEBUG(F("ERROR: Fail creating file."));
+        //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
 
     return success;
@@ -104,11 +104,11 @@ boolean SPIFFSManager::FSCreateFile(String directory, int filename) {
  */
 boolean SPIFFSManager::FSCreateFile(String directory, unsigned long filename) {
 
-    CIC_DEBUG_(F("Creating file: \""));
-    CIC_DEBUG_(directory);
-    CIC_DEBUG_(F("/"));
-    CIC_DEBUG_(filename);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Creating file: \""));
+    //    CIC_DEBUG_(directory);
+    //    CIC_DEBUG_(F("/"));
+    //    CIC_DEBUG_(filename);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -125,11 +125,11 @@ boolean SPIFFSManager::FSCreateFile(String directory, unsigned long filename) {
     // Open/Create file
     File f = SPIFFS.open(filepath, "w");
     if (f) {
-        CIC_DEBUG(F("SUCCESS: File created."));
+        //CIC_DEBUG(F("SUCCESS: File created."));
         f.close();
     } else {
         success = false;
-        CIC_DEBUG(F("ERROR: Fail creating file."));
+        //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
 
     return success;
@@ -145,15 +145,15 @@ boolean SPIFFSManager::FSCreateFile(String directory, unsigned long filename) {
  */
 boolean SPIFFSManager::FSWriteToFile(String directory, String filename, String content) {
 
-    CIC_DEBUG_(F("Creating file: \""));
-    CIC_DEBUG_(directory);
-    CIC_DEBUG_(F("/"));
-    CIC_DEBUG_(filename);
-    CIC_DEBUG(F("\""));
-
-    CIC_DEBUG_(F("Content to write: \""));
-    CIC_DEBUG_(content);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Creating file: \""));
+    //    CIC_DEBUG_(directory);
+    //    CIC_DEBUG_(F("/"));
+    //    CIC_DEBUG_(filename);
+    //    CIC_DEBUG(F("\""));
+    //
+    //    CIC_DEBUG_(F("Content to write: \""));
+    //    CIC_DEBUG_(content);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -170,11 +170,11 @@ boolean SPIFFSManager::FSWriteToFile(String directory, String filename, String c
     // Open/Create file
     File f = SPIFFS.open(filepath, "w");
     if (f) {
-        CIC_DEBUG(F("SUCCESS: File created."));
+        //CIC_DEBUG(F("SUCCESS: File created."));
 
         // Check if the content was saved successfully
         if (f.print(content)) {
-            CIC_DEBUG(F("SUCCESS: Content saved to file."));
+            //CIC_DEBUG(F("SUCCESS: Content saved to file."));
         } else {
             success = false;
         }
@@ -182,7 +182,7 @@ boolean SPIFFSManager::FSWriteToFile(String directory, String filename, String c
         f.close();
     } else {
         success = false;
-        CIC_DEBUG(F("ERROR: Fail creating file."));
+        //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
 
     return success;
@@ -204,17 +204,17 @@ String SPIFFSManager::FSReadToFile(String directory, String filename) {
 
     if (file) {
 
-        CIC_DEBUG_(F("File located: "));
-        CIC_DEBUG(file.name());
+        //        CIC_DEBUG_(F("File located: "));
+        //        CIC_DEBUG(file.name());
 
         String line = file.readStringUntil('\n');
-        CIC_DEBUG_("Content: ");
-        CIC_DEBUG(line);
+        //        CIC_DEBUG_("Content: ");
+        //        CIC_DEBUG(line);
         file.close();
 
         return line;
     } else {
-        CIC_DEBUG(F("EMPTY DIRECTORY."));
+        //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
     return "";
 }
@@ -228,9 +228,9 @@ String SPIFFSManager::FSReadToFile(String directory, String filename) {
  */
 boolean SPIFFSManager::FSDeleteFiles(String directory) {
 
-    CIC_DEBUG_(F("Deleting files from directory: \""));
-    CIC_DEBUG_(directory);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Deleting files from directory: \""));
+    //    CIC_DEBUG_(directory);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -246,11 +246,11 @@ boolean SPIFFSManager::FSDeleteFiles(String directory) {
     // Remove all files
     while (file) {
 
-        CIC_DEBUG_(F("Removing file : "));
-        CIC_DEBUG(file.name());
+        //        CIC_DEBUG_(F("Removing file : "));
+        //        CIC_DEBUG(file.name());
 
         if (!SPIFFS.remove(file.name())) {
-            CIC_DEBUG(F("ERROR during file deletion!"));
+            //            CIC_DEBUG(F("ERROR during file deletion!"));
             success = false;
         }
         file = dir.openNextFile();
@@ -269,11 +269,11 @@ boolean SPIFFSManager::FSDeleteFiles(String directory) {
  */
 boolean SPIFFSManager::FSDeleteFile(String directory, int filename) {
 
-    CIC_DEBUG_(F("Deleting file: \""));
-    CIC_DEBUG_(directory);
-    CIC_DEBUG_(F("/"));
-    CIC_DEBUG_(filename);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Deleting file: \""));
+    //    CIC_DEBUG_(directory);
+    //    CIC_DEBUG_(F("/"));
+    //    CIC_DEBUG_(filename);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -287,13 +287,13 @@ boolean SPIFFSManager::FSDeleteFile(String directory, int filename) {
     filepath += "/";
     filepath += filename;
 
-    CIC_DEBUG_(F("Removing file : "));
-    CIC_DEBUG(filepath);
+    //    CIC_DEBUG_(F("Removing file : "));
+    //    CIC_DEBUG(filepath);
 
     // Remove file
     if (!SPIFFS.remove(filepath)) {
         success = false;
-        CIC_DEBUG(F("ERROR: Fail deleting file."));
+        //        CIC_DEBUG(F("ERROR: Fail deleting file."));
     }
 
     return success;
@@ -307,9 +307,9 @@ boolean SPIFFSManager::FSDeleteFile(String directory, int filename) {
  */
 unsigned int SPIFFSManager::FSReadInt(String filepath) {
 
-    CIC_DEBUG_(F("Reading unsigned int from filepath: \""));
-    CIC_DEBUG_(filepath);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Reading unsigned int from filepath: \""));
+    //    CIC_DEBUG_(filepath);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -323,15 +323,15 @@ unsigned int SPIFFSManager::FSReadInt(String filepath) {
 
     if (file) {
 
-        CIC_DEBUG_(F("File located: \""));
-        CIC_DEBUG_(file.name());
-        CIC_DEBUG(F("\""));
+        //        CIC_DEBUG_(F("File located: \""));
+        //        CIC_DEBUG_(file.name());
+        //        CIC_DEBUG(F("\""));
 
         String filename = file.name();
 
         return filename.substring(filepath.length() + 1).toInt();
     } else {
-        CIC_DEBUG(F("EMPTY DIRECTORY."));
+        //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
 
     return 0;
@@ -345,9 +345,9 @@ unsigned int SPIFFSManager::FSReadInt(String filepath) {
  */
 float SPIFFSManager::FSReadFloat(String filepath) {
 
-    CIC_DEBUG_(F("Reading float from filepath: \""));
-    CIC_DEBUG_(filepath);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Reading float from filepath: \""));
+    //    CIC_DEBUG_(filepath);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -361,15 +361,15 @@ float SPIFFSManager::FSReadFloat(String filepath) {
 
     if (file) {
 
-        CIC_DEBUG_(F("File located: \""));
-        CIC_DEBUG_(file.name());
-        CIC_DEBUG(F("\""));
+        //        CIC_DEBUG_(F("File located: \""));
+        //        CIC_DEBUG_(file.name());
+        //        CIC_DEBUG(F("\""));
 
         String filename = file.name();
 
         return filename.substring(filepath.length() + 1).toFloat();
     } else {
-        CIC_DEBUG(F("EMPTY DIRECTORY."));
+        //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
 
 
@@ -385,9 +385,9 @@ float SPIFFSManager::FSReadFloat(String filepath) {
  */
 unsigned long SPIFFSManager::FSReadULong(String filepath) {
 
-    CIC_DEBUG_(F("Reading unsigned long from filepath: \""));
-    CIC_DEBUG_(filepath);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Reading unsigned long from filepath: \""));
+    //    CIC_DEBUG_(filepath);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -400,15 +400,15 @@ unsigned long SPIFFSManager::FSReadULong(String filepath) {
 
     if (file) {
 
-        CIC_DEBUG_(F("File located: \""));
-        CIC_DEBUG_(file.name());
-        CIC_DEBUG(F("\""));
+        //        CIC_DEBUG_(F("File located: \""));
+        //        CIC_DEBUG_(file.name());
+        //        CIC_DEBUG(F("\""));
 
         String filename = file.name();
 
         return strtoul(filename.substring(filepath.length() + 1).c_str(), NULL, 10);
     } else {
-        CIC_DEBUG(F("EMPTY DIRECTORY."));
+        //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
 
     return 0;
@@ -422,9 +422,9 @@ unsigned long SPIFFSManager::FSReadULong(String filepath) {
  */
 String SPIFFSManager::FSReadString(String filepath) {
 
-    CIC_DEBUG_(F("Reading String from filepath: \""));
-    CIC_DEBUG_(filepath);
-    CIC_DEBUG(F("\""));
+    //    CIC_DEBUG_(F("Reading String from filepath: \""));
+    //    CIC_DEBUG_(filepath);
+    //    CIC_DEBUG(F("\""));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -437,15 +437,15 @@ String SPIFFSManager::FSReadString(String filepath) {
 
     if (file) {
 
-        CIC_DEBUG_(F("File located: \""));
-        CIC_DEBUG_(file.name());
-        CIC_DEBUG(F("\""));
+        //        CIC_DEBUG_(F("File located: \""));
+        //        CIC_DEBUG_(file.name());
+        //        CIC_DEBUG(F("\""));
 
         String filename = file.name();
 
         return filename.substring(filepath.length() + 1);
     } else {
-        CIC_DEBUG(F("EMPTY DIRECTORY."));
+        //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
 
 
@@ -457,8 +457,8 @@ String SPIFFSManager::FSReadString(String filepath) {
  */
 void SPIFFSManager::FSPrintFileList() {
 
-    CIC_DEBUG(F("\n\nFILE LIST"));
-    CIC_DEBUG(F("==========================================="));
+    //    CIC_DEBUG(F("\n\nFILE LIST"));
+    //    CIC_DEBUG(F("==========================================="));
 
     // Mounts SPIFFS file system
     if (!SPIFFS.begin()) {
@@ -532,26 +532,25 @@ float SPIFFSManager::bytesConverter(float bytes, char prefix) {
  */
 String SPIFFSManager::getSettings(String dsc, String DIR, boolean inContent) {
 
-    CIC_DEBUG_(F("\n\nGET "));
-    CIC_DEBUG(dsc);
-    CIC_DEBUG(F("==========================================="));
+    //    CIC_DEBUG_(F("\n\nGET "));
+    //    CIC_DEBUG(dsc);
+    //    CIC_DEBUG(F("==========================================="));
     String settings = FSReadString(DIR);
     if (inContent) {
         settings = FSReadToFile(DIR, settings);
     }
 
-    CIC_DEBUG_(F("Getting "));
-    CIC_DEBUG_(dsc);
-    CIC_DEBUG("....");
+    //    CIC_DEBUG_(F("Getting "));
+    //    CIC_DEBUG_(dsc);
+    //    CIC_DEBUG("....");
 
     if (settings != "") {
-        CIC_DEBUG_(dsc);
-        CIC_DEBUG_(": ");
-        CIC_DEBUG(settings);
+        //        CIC_DEBUG_(dsc);
+        //        CIC_DEBUG_(": ");
+        //        CIC_DEBUG(settings);
     } else {
-
-        CIC_DEBUG_(F("ERROR during reading: "));
-        CIC_DEBUG(dsc);
+        //CIC_DEBUG_(F("ERROR during reading: "));
+        //CIC_DEBUG(dsc);
     }
     return settings;
 }
@@ -561,9 +560,9 @@ String SPIFFSManager::getSettings(String dsc, String DIR, boolean inContent) {
  */
 void SPIFFSManager::deleteSettings(String dsc, String DIR) {
 
-    CIC_DEBUG_(F("\n\nDELETING: "));
-    CIC_DEBUG(dsc);
-    CIC_DEBUG(F("==========================================="));
+    //    CIC_DEBUG_(F("\n\nDELETING: "));
+    //    CIC_DEBUG(dsc);
+    //    CIC_DEBUG(F("==========================================="));
 
     FSDeleteFiles(DIR);
 }
@@ -573,14 +572,14 @@ void SPIFFSManager::saveSettings(String dsc, String DIR, String value) {
 
     deleteSettings(dsc, DIR);
 
-    CIC_DEBUG_(F("\n\nSAVING: "));
-    CIC_DEBUG(dsc);
-    CIC_DEBUG(F("==========================================="));
-
-    CIC_DEBUG(F("Saving..."));
+    //    CIC_DEBUG_(F("\n\nSAVING: "));
+    //    CIC_DEBUG(dsc);
+    //    CIC_DEBUG(F("==========================================="));
+    //
+    //    CIC_DEBUG(F("Saving..."));
 
     if (FSCreateFile(DIR, value)) {
-        CIC_DEBUG(F("Saved success!"));
+        //        CIC_DEBUG(F("Saved success!"));
     }
 }
 
@@ -589,13 +588,13 @@ void SPIFFSManager::saveSettings(String dsc, String DIR, String value, String co
 
     deleteSettings(dsc, DIR);
 
-    CIC_DEBUG_(F("\n\nSAVING: "));
-    CIC_DEBUG(dsc);
-    CIC_DEBUG(F("==========================================="));
-
-    CIC_DEBUG(F("Saving..."));
+    //    CIC_DEBUG_(F("\n\nSAVING: "));
+    //    CIC_DEBUG(dsc);
+    //    CIC_DEBUG(F("==========================================="));
+    //
+    //    CIC_DEBUG(F("Saving..."));
 
     if (FSWriteToFile(DIR, value, content)) {
-        CIC_DEBUG(F("Saved success!"));
+        //        CIC_DEBUG(F("Saved success!"));
     }
 }

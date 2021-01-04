@@ -9,8 +9,8 @@
  */
 
 //LEDs
-#define PIN_LED_RED 33
-#define PIN_LED_GREEN 32
+#define PIN_LED_RED 32
+#define PIN_LED_GREEN 33
 #define PIN_LED_BLUE 25
 
 //Button start Cicada Wizard Portal in mode AP
@@ -21,8 +21,8 @@
 //RAIN GAUGE SENSOR
 #define PIN_RG 4
 //VOLTAGE
-#define PIN_ADC_VCC_IN 34
-#define PIN_ADC_VCC_SO 35
+#define PIN_ADC_VCC_IN 35
+#define PIN_ADC_VCC_SO 34
 
 //Modem SIM800
 #define PIN_MODEM_TURNON 23
@@ -30,7 +30,7 @@
 #define PIN_MODEM_TX 17
 
 //SDCard
-#define PIN_SDCARD_CHIP_SELECT 21 // Pino serial
-#define PIN_SDCARD_MOSI 19 // Pino serial
-#define PIN_SDCARD_MISO 18 // Pino serial
-#define PIN_SDCARD_SCK 22 // Clock pin
+#define PIN_SDCARD_CHIP_SELECT 21 // Pino serial - sdsc
+#define PIN_SDCARD_MOSI 19 // Pino serial - mosi
+#define PIN_SDCARD_MISO 18 // Pino serial - miso
+#define PIN_SDCARD_SCK 22 // Clock pin - sck

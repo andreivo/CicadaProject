@@ -28,6 +28,10 @@ public:
     IPAddress getLocalIP();
     String getSignalQuality();
     int getRSSIasQuality(int RSSI);
+    void deleteWifiCredentials();
+    void setSSID(String ssid);
+    void setPWD(String pwd);
+    String scanNetworks();
 };
 
 #endif

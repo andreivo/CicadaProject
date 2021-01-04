@@ -12,6 +12,9 @@
 DCPSDCard mqttSdCard;
 DCPRTC mqttRTC;
 DCPLeds mqttLeds;
+// Initialize DCPSIM800
+DCPSIM800 mqttSIM800;
+DCPwifi mqttWifi;
 
 DCPMQTT::DCPMQTT() {
 
@@ -69,25 +72,39 @@ boolean DCPMQTT::onTimeToSend() {
     return actualMinutes == nextSlotToSend;
 }
 
-void DCPMQTT::sendAllMessagesData(TinyGsmSim800 modem) {
+boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
     if (onTimeToSend()) {
-        mqttLeds.redTurnOn();
-        TinyGsmClient _clientTransport(modem);
-        PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
-        clientPub = &_clientPub;
-        clientPub->setSocketTimeout(10);
-        sendMessagesData();
-        mqttLeds.redTurnOff();
+        if (mqttSIM800.isConnected()) {
+            mqttLeds.redTurnOn();
+            TinyGsmClient _clientTransport(modem);
+            PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
+            clientPub = &_clientPub;
+            clientPub->setSocketTimeout(20);
+            sendMessagesData();
+            mqttLeds.redTurnOff();
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
     }
 }
 
-void DCPMQTT::sendAllMessagesData() {
+boolean DCPMQTT::sendAllMessagesDataWifi() {
     if (onTimeToSend()) {
-        WiFiClient _clientTransport;
-        PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
-        clientPub = &_clientPub;
-        clientPub->setSocketTimeout(10);
-        sendMessagesData();
+        if (mqttWifi.isConnected()) {
+            WiFiClient _clientTransport;
+            PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
+            clientPub = &_clientPub;
+            clientPub->setSocketTimeout(20);
+            sendMessagesData();
+            return true;
+        } else {
+            return false;
+        }
+    } else {
+        return true;
     }
 }
 

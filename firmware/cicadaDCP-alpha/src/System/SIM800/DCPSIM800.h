@@ -27,8 +27,14 @@ public:
     String getOperator();
     IPAddress getLocalIP();
     String getSignalQuality();
+    String getIMEI();
+    String getIMSI();
+    void resetConfig();
+    void setAPN(String apn);
+    void setUSER(String user);
+    void setPWD(String pwd);
     boolean isConnected();
-
+    String sendAT(String comm);
 };
 
 

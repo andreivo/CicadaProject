@@ -110,3 +110,15 @@ void DCPRainGauge::readRG() {
         nextSlotTimeToRead();
     }
 }
+
+String DCPRainGauge::printTipBucket() {
+    portENTER_CRITICAL_ISR(&rgMux);
+    int tbCounter = tipBucketCounter;
+    portEXIT_CRITICAL_ISR(&rgMux);
+
+    if (tbCounter > 0) {
+        return String(tbCounter);
+    } else {
+        return F("No Rain Gauge Data");
+    }
+}

@@ -24,8 +24,11 @@ class DCPMQTT {
 public:
     DCPMQTT();
     void sendMessagesData();
-    void sendAllMessagesData();
-    void sendAllMessagesData(TinyGsmSim800 modem);
+    //void sendAllMessagesData();
+    boolean sendAllMessagesDataWifi();
+    //void sendAllMessagesData(TinyGsmSim800 modem);
+    boolean sendAllMessagesDataSim(TinyGsmSim800 modem);
+    boolean simIsConnected(TinyGsmSim800 modemGSM);
     boolean connectMQTTServer();
     boolean setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT_SERVER, String _MQTT_PORT, String _MQTT_USER, String _MQTT_PWD, String _TOPIC, String _tknDCP, String _pwdDCP, String _LA, String _LO);
 

@@ -27,6 +27,27 @@ void DCPSDCard::giveSDMutex() {
     xSemaphoreGive(SDMutex);
 }
 
+void dateTime(uint16_t* date, uint16_t* time) {
+    uint16_t year;
+    uint8_t month, day, hour, minute, second;
+
+    // User gets date and time from GPS or real-time clock here
+    struct tm *newtime = sdRTC.convEpoch(sdRTC.nowEpoch());
+
+    year = newtime->tm_year + 1900;
+    month = newtime->tm_mon;
+    day = newtime->tm_mday;
+    hour = newtime->tm_hour;
+    minute = newtime->tm_min;
+    second = newtime->tm_sec;
+
+    // return date using FAT_DATE macro to format fields
+    *date = FAT_DATE(year, month, day);
+
+    // return time using FAT_TIME macro to format fields
+    *time = FAT_TIME(hour, minute, second);
+}
+
 /**
  * Setup SDCARD module
  */
@@ -89,6 +110,42 @@ void DCPSDCard::printDirectory(String path, int numTabs) {
     }
 }
 
+uint32_t DCPSDCard::usedSpace(String path) {
+    //String path = "/";
+    uint32_t result = 0;
+    int attempts = 0;
+    while (attempts <= SD_ATTEMPTS) {
+        if (takeSDMutex()) {
+            FileSD dir = SD.open(path.c_str());
+            // Begin at the start of the directory
+            dir.rewindDirectory();
+
+            while (true) {
+                FileSD entry = dir.openNextFile();
+                if (!entry) {
+                    // no more files
+                    //Serial.println("**nomorefiles**");
+                    break;
+                }
+
+                if (entry.isDirectory()) {
+                    result = result + usedSpace(entry.name());
+                } else {
+                    // files have sizes, directories do not
+                    result = result + entry.size();
+                }
+                entry.close();
+            }
+            giveSDMutex();
+            return result;
+        } else {
+            CIC_DEBUG("Waiting to usedSpace...");
+        }
+        attempts = attempts + 1;
+        delay(SD_ATTEMPTS_DELAY);
+    }
+}
+
 String DCPSDCard::getFirstFile(String path) {
     int attempts = 0;
     while (attempts <= SD_ATTEMPTS) {
@@ -121,7 +178,7 @@ boolean DCPSDCard::writeFile(String filename, String content) {
         if (takeSDMutex()) {
             // open the file. note that only one file can be open at a time,
             // so you have to close this one before opening another.
-            FileSD myFile = SD.open(filename.c_str(), FILE_WRITE);
+            FileSD myFile = SD.open(filename.c_str(), FILE_WRITE, dateTime);
 
             // if the file opened okay, write to it:
             if (myFile) {
@@ -222,6 +279,34 @@ String DCPSDCard::readFile(String filename) {
     return "";
 }
 
+void DCPSDCard::printContentFile(String filename) {
+    int attempts = 0;
+    while (attempts <= SD_ATTEMPTS) {
+        if (takeSDMutex()) {
+            // re-open the file for reading:
+            FileSD myFile = SD.open(filename.c_str());
+            if (myFile) {
+                // read from the file until there's nothing else in it:
+                while (myFile.available()) {
+                    CIC_DEBUG_((char) myFile.read());
+                }
+                // close the file:
+                myFile.close();
+
+            } else {
+                // if the file didn't open, print an error:
+                CIC_DEBUG_(F("Error opening "));
+                CIC_DEBUG(filename);
+            }
+            giveSDMutex();
+        } else {
+            CIC_DEBUG("Waiting to read File...");
+        }
+        attempts = attempts + 1;
+        delay(SD_ATTEMPTS_DELAY);
+    }
+}
+
 boolean DCPSDCard::deleteFile(String filename) {
     int attempts = 0;
     while (attempts <= SD_ATTEMPTS) {
@@ -263,3 +348,16 @@ boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, St
     writeFile(filename, content);
     return true;
 }
+
+uint32_t DCPSDCard::clusterCount() {
+    return SD.volume.clusterCount();
+}
+
+uint32_t DCPSDCard::blocksPerCluster() {
+    return SD.volume.blocksPerCluster();
+}
+
+uint8_t DCPSDCard::fatType() {
+    return SD.volume.fatType();
+}
+

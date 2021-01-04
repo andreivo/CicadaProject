@@ -29,8 +29,9 @@ public:
     void initVccSensor(String _codeVccIn, String _typeVccIn, int timeSlotVccIn, String _codeVccSol, String _typeVccSol, int timeSlotVccSol);
     void readVccIn();
     void readVccSol();
+    String printVccIn();
+    String printVccSol();
 private:
-
     int nextSlotTimeToRead(int TIME_TO_READ);
     String codeVccIn;
     String typeVccIn;

@@ -15,16 +15,18 @@
 #include <esp_task_wdt.h>
 #include "../CicadaWizard/CicadaWizard.h"
 #include "../PINS_IO.h"
-#include "../System/SDCard/DCPSDCard.h"
-#include "../System/SPIFFS/SPIFFSManager.h"
-#include "../System/WIFI/DCPwifi.h"
-#include "../System/LEDs/DCPLeds.h"
-#include "../System/SIM800/DCPSIM800.h"
-#include "../System/RTC/DCPRTC.h"
-#include "../System/MQTT/DCPMQTT.h"
+#include "SerialCommands/DCPSerialCommands.h"
+#include "SDCard/DCPSDCard.h"
+#include "SPIFFS/SPIFFSManager.h"
+#include "WIFI/DCPwifi.h"
+#include "LEDs/DCPLeds.h"
+#include "SIM800/DCPSIM800.h"
+#include "RTC/DCPRTC.h"
+#include "MQTT/DCPMQTT.h"
 #include "../Sensors/DHT/DCPDht.h"
 #include "../Sensors/RAINGauge/DCPRainGauge.h"
 #include "../Sensors/VOLTAGE/DCPVoltage.h"
+
 
 
 #define CIC_DEBUG_ENABLED true
@@ -77,7 +79,7 @@ void giveCommunicationMutexWait();
 class DCPSystem {
 public:
     DCPSystem();
-
+    void readSerialCommands();
     void preInitSystem();
     void initCommunication();
     void setupWizard();

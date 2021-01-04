@@ -147,3 +147,15 @@ void DCPVoltage::readVccSol() {
         nextVccSolSlotTimeToRead();
     }
 }
+
+String DCPVoltage::printVccIn() {
+    int adcValue = analogRead(PIN_ADC_VCC_IN);
+    float vccin = ADC2VOLTS(adcValue);
+    return String(vccin) + "v";
+}
+
+String DCPVoltage::printVccSol() {
+    int adcValue = analogRead(PIN_ADC_VCC_SO);
+    float vccin = ADC2VOLTS(adcValue);
+    return String(vccin) + "v";
+}

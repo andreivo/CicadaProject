@@ -23,6 +23,7 @@ public:
     void setupRGSensor();
     void initRGSensor(String _codeRG, String _typeRG, int timeSlotRG);
     void readRG();
+    String printTipBucket();
 private:
     String codeRG;
     String typeRG;

@@ -20,6 +20,7 @@ public:
     DCPDht();
     void initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int timeSlotDHT);
     void readDHT();
+    String printDHT();
 private:
     String codeTemp;
     String typeTemp;
@@ -29,6 +30,7 @@ private:
     void nextSlotTimeToRead();
     int nextSlotDHT;
     boolean timeToReadDHT();
+
 };
 
 #endif

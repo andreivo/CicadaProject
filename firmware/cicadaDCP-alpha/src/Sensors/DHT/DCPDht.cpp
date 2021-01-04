@@ -92,3 +92,13 @@ void DCPDht::readDHT() {
         nextSlotTimeToRead();
     }
 }
+
+String DCPDht::printDHT() {
+    float t, h;
+    delay(200);
+    if (dht.read2(PIN_DHT, &t, &h, NULL) == SimpleDHTErrSuccess) {
+        return "Temperature: " + String(t) + "\nHumidity: " + String(h);
+    } else {
+        return F("Error reading DHT Sensor!");
+    }
+}

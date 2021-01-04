@@ -100,3 +100,13 @@ time_t DCPRTC::nowEpoch() {
     time_t tt = time(NULL); //Obtem o tempo atual em segundos. Utilize isso sempre que precisar obter o tempo atual
     return tt;
 }
+
+struct tm *DCPRTC::convEpoch(time_t in_time) {
+    struct tm *convTime = gmtime(&in_time);
+    return convTime;
+}
+
+boolean DCPRTC::checkFormat(String calTimestamp) {
+    time_t tt = stringToTime(calTimestamp);
+    return printTime(tt) == calTimestamp;
+}

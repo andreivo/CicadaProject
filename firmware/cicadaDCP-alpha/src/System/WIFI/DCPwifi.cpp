@@ -152,3 +152,78 @@ int DCPwifi::getRSSIasQuality(int RSSI) {
     }
     return quality;
 }
+
+void DCPwifi::deleteWifiCredentials() {
+
+    wifiSpiffsManager.FSDeleteFiles(DIR_WIFI_SSID);
+    wifiSpiffsManager.FSDeleteFiles(DIR_WIFI_PWD);
+
+    WiFi.disconnect(true); // still not erasing the ssid/pw. Will happily reconnect on next start
+    WiFi.begin("0", "0"); // adding this effectively seems to erase the previous stored SSID/PW
+    delay(1000);
+}
+
+void DCPwifi::setSSID(String ssid) {
+    wifiSpiffsManager.saveSettings("SSID", DIR_WIFI_SSID, ssid);
+}
+
+void DCPwifi::setPWD(String pwd) {
+    wifiSpiffsManager.saveSettings("Password", DIR_WIFI_PWD, pwd);
+}
+
+String DCPwifi::scanNetworks() {
+    String result = "\n";
+
+    if (!isConnected()) {
+        WiFi.disconnect();
+    }
+
+    ///////////////
+    int n = WiFi.scanNetworks();
+    if (n == 0) {
+        return F("No networks found. Refresh to scan again.");
+    } else {
+        //sort networks
+        int indices[n];
+        for (int i = 0; i < n; i++) {
+            indices[i] = i;
+        }
+
+        // RSSI SORT
+        // old sort
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (WiFi.RSSI(indices[j]) > WiFi.RSSI(indices[i])) {
+                    std::swap(indices[i], indices[j]);
+                }
+            }
+        }
+
+        // remove duplicates ( must be RSSI sorted )
+        String cssid;
+        for (int i = 0; i < n; i++) {
+            if (indices[i] == -1) continue;
+            cssid = WiFi.SSID(indices[i]);
+            for (int j = i + 1; j < n; j++) {
+                if (cssid == WiFi.SSID(indices[j])) {
+                    indices[j] = -1; // set dup aps to index -1
+                }
+            }
+        }
+
+        //display networks in page
+        for (int i = 0; i < n; i++) {
+            if (indices[i] == -1) continue; // skip dups
+            int quality = getRSSIasQuality(WiFi.RSSI(indices[i]));
+            String rssiQ;
+            rssiQ += quality;
+            result = result + WiFi.SSID(indices[i]) + " (" + rssiQ + "%)";
+
+            if (WiFi.encryptionType(indices[i]) != WIFI_AUTH_OPEN) {
+                result = result + " (auth)";
+            }
+            result = result + "\n";
+        }
+    }
+    return result;
+}

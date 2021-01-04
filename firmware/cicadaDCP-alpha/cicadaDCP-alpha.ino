@@ -44,6 +44,7 @@ void setup() {
 }
 
 void loop() {
+  cicadaDcpSystem.readSerialCommands();
   cicadaDcpSystem.checkAPWizard(coreTask);
   cicadaDcpSystem.blinkStatus();
   cicadaDcpSystem.readSensors();
