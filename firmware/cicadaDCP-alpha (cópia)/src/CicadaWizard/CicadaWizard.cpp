@@ -109,7 +109,6 @@ void CicadaWizard::setupConfigPortal() {
     _configPortalStart = millis();
 
     DEBUG_WM(F("Configuring access point... "));
-    DEBUG_WM_(F("SSID: "));
     DEBUG_WM(_apName);
     if (_apPassword != NULL) {
         if (strlen(_apPassword) < 8 || strlen(_apPassword) > 63) {
@@ -117,7 +116,6 @@ void CicadaWizard::setupConfigPortal() {
             DEBUG_WM(F("Invalid AccessPoint password. Ignoring"));
             _apPassword = NULL;
         }
-        DEBUG_WM_(F("Password: "));
         DEBUG_WM(_apPassword);
     }
 
@@ -134,7 +132,7 @@ void CicadaWizard::setupConfigPortal() {
     }
 
     delay(500); // Without delay I've seen the IP address blank
-    DEBUG_WM_(F("AP IP address: "));
+    DEBUG_WM(F("AP IP address: "));
     DEBUG_WM(WiFi.softAPIP());
 
     /* Setup the DNS server redirecting all the domains to the apIP */
@@ -1363,13 +1361,9 @@ void CicadaWizard::setRemoveDuplicateAPs(boolean removeDuplicates) {
 template <typename Generic>
 void CicadaWizard::DEBUG_WM(Generic text) {
     if (_debug) {
-        Serial.println(text);
-    }
-}
 
-void CicadaWizard::DEBUG_WM_(String text) {
-    if (_debug) {
-        Serial.print(text);
+        Serial.print("*WM: ");
+        Serial.println(text);
     }
 }
 

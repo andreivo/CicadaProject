@@ -485,7 +485,7 @@ void SPIFFSManager::FSPrintFileList() {
  */
 void SPIFFSManager::FSFormat() {
 
-    CIC_DEBUG(F("\n\nFORMATTING CONFIGURATION FILE SYSTEM"));
+    CIC_DEBUG(F("\n\nFORMATTING FILE SYSTEM"));
     CIC_DEBUG(F("==========================================="));
 
     // Mounts SPIFFS file system
@@ -494,7 +494,8 @@ void SPIFFSManager::FSFormat() {
     }
 
     // Format
-    CIC_DEBUG(F("Formatting file system..."));
+    CIC_DEBUG(F("Formatting file system... (relax, this could take a while)"));
+    CIC_DEBUG(F("Ok, \"a while\" is  -- uh -- too much generic, it takes 1m 20sec on average. Better, no? ;)"));
 
     int start = millis();
     if (SPIFFS.format()) {
@@ -503,7 +504,6 @@ void SPIFFSManager::FSFormat() {
         CIC_DEBUG_((millis() - start));
         CIC_DEBUG(F(" ms"));
     } else {
-
         CIC_DEBUG(F("ERROR: Fail formatting file system."));
     }
 }
@@ -523,7 +523,6 @@ float SPIFFSManager::bytesConverter(float bytes, char prefix) {
 
         // Megabyte (MB)
     } else if (prefix == 'M') {
-
         return bytes / 1000000;
     }
 }
@@ -553,7 +552,6 @@ String SPIFFSManager::getSettings(String dsc, String DIR, boolean inContent) {
         //CIC_DEBUG_(F("ERROR during reading: "));
         //CIC_DEBUG(dsc);
     }
-
     return settings;
 }
 

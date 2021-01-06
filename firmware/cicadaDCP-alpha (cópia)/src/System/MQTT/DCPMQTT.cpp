@@ -75,13 +75,13 @@ boolean DCPMQTT::onTimeToSend() {
 boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
     if (onTimeToSend()) {
         if (mqttSIM800.isConnected()) {
-            mqttLeds.greenTurnOn();
+            mqttLeds.redTurnOn();
             TinyGsmClient _clientTransport(modem);
             PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
             clientPub = &_clientPub;
             clientPub->setSocketTimeout(20);
             sendMessagesData();
-            mqttLeds.greenTurnOff();
+            mqttLeds.redTurnOff();
             return true;
         } else {
             return false;
@@ -94,13 +94,11 @@ boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
 boolean DCPMQTT::sendAllMessagesDataWifi() {
     if (onTimeToSend()) {
         if (mqttWifi.isConnected()) {
-            mqttLeds.greenTurnOn();
             WiFiClient _clientTransport;
             PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
             clientPub = &_clientPub;
             clientPub->setSocketTimeout(20);
             sendMessagesData();
-            mqttLeds.greenTurnOff();
             return true;
         } else {
             return false;
@@ -117,14 +115,25 @@ void DCPMQTT::sendMessagesData() {
     CIC_DEBUG_("On core: ");
     CIC_DEBUG(xPortGetCoreID());
 
-    if (connectMQTTServer()) {
-        if (!mqttSdCard.mqttPublishFiles(publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
-            CIC_DEBUG_(F("Error on sending"));
+    String fileData = mqttSdCard.getFirstFile("/");
+    if (fileData != "") {
+        if (connectMQTTServer()) {
+            while (fileData != "") {
+                if (mqttSdCard.readPublishFile(fileData, publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
+                    mqttSdCard.deleteFile(fileData);
+                    fileData = mqttSdCard.getFirstFile("/");
+                } else {
+                    fileData = mqttSdCard.getFirstFile("/");
+                    CIC_DEBUG_(F("Error on sending: "));
+                    CIC_DEBUG(fileData);
+                }
+            }
+        } else {
+            CIC_DEBUG(F("MQTT Server connection failure!"))
         }
     } else {
-        CIC_DEBUG(F("MQTT Server connection failure!"))
+        CIC_DEBUG(F("No messages to send!"))
     }
-
     nextSlotTimeToSend();
     CIC_DEBUG(F("Finished send MQTT messages!"));
 }

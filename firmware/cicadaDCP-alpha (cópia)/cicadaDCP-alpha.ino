@@ -23,9 +23,9 @@ void setup() {
    
   // Init all system configurations
   cicadaDcpSystem.initSystem();
-
+  
   // Create a new parallel task on core 0
-  // The task that is running in parallel transmit data to server MQTT               
+  // The task that is running in parallel transmit data to server MQTT
   xTaskCreatePinnedToCore (
                      taskTransmitLoop,   /* function that implements the task */
                      "taskTransmitLoop", /* task name */
@@ -33,7 +33,7 @@ void setup() {
                      NULL,               /* input parameter for the task (can be NULL) */
                      1,                  /* task priority (0 to N) */
                      &coreTask,          /* reference to the task (can be NULL) */
-                     0);
+                     0);                 /* Core that will perform the task */
 
   /* Internet connection may take seconds to complete. This delay can block the main loop.
      In the case of the PubSubClient library, the default connection timeout is 15 seconds.
@@ -44,7 +44,7 @@ void setup() {
 }
 
 void loop() {
-  cicadaDcpSystem.readSerialCommands(coreTask);
+  cicadaDcpSystem.readSerialCommands();
   cicadaDcpSystem.checkAPWizard(coreTask);
   cicadaDcpSystem.blinkStatus();
   cicadaDcpSystem.readSensors();

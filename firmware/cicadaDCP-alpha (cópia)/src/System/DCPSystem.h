@@ -79,10 +79,10 @@ void giveCommunicationMutexWait();
 class DCPSystem {
 public:
     DCPSystem();
-    void readSerialCommands(xTaskHandle coreTask);
+    void readSerialCommands();
     void preInitSystem();
-    boolean initCommunication(boolean startPromptOnFail = true);
-    void setupWizard(xTaskHandle coreTask);
+    void initCommunication();
+    void setupWizard();
     void initSystem();
     void checkAPWizard(xTaskHandle coreTask);
     void blinkStatus();
@@ -112,8 +112,6 @@ private:
     int nextTimeSlotToSaveMetadata;
     void nextSlotToSaveMetadata();
     boolean onTimeToSaveMetadata();
-    boolean networkFailureBoot();
-    void clearSerialInput();
 
 };
 

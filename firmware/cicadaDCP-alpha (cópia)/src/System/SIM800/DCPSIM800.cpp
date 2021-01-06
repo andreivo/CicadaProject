@@ -88,20 +88,13 @@ boolean DCPSIM800::setupSIM800Module() {
 
             //Mostra informação sobre o modem
             CIC_DEBUG_(F("Modem Info: "));
-            String mInfo = modemGSM.getModemInfo();
-            CIC_DEBUG(mInfo);
-            if (!mInfo || mInfo == "") {
-                CIC_DEBUG(F("Modem info failed"));
-                conn = false;
-            }
+            CIC_DEBUG(modemGSM.getModemInfo());
 
             //Inicializa o modem
-            if (conn) {
-                if (!modemGSM.restart()) {
-                    CIC_DEBUG(F("Restarting GSM Modem failed"));
-                    delay(SIM_CONN_DELAY);
-                    conn = false;
-                }
+            if (!modemGSM.restart()) {
+                CIC_DEBUG(F("Restarting GSM Modem failed"));
+                delay(SIM_CONN_DELAY);
+                conn = false;
             }
 
             //Espera pela rede
