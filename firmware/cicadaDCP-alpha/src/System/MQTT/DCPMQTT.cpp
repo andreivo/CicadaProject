@@ -186,7 +186,7 @@ boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknD
                 giveCommunicationMutex();
                 return true;
             } else {
-                CIC_DEBUGWL_(F("Error status: "));
+                CIC_DEBUGWL_(F("Published unsuccessful! Error status: "));
                 CIC_DEBUGWL(String(status)); //Status 1 se sucesso ou 0 se deu erro
                 giveCommunicationMutex();
                 return false;

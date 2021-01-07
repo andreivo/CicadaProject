@@ -166,13 +166,12 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
             }
 
             dir.rewindDirectory();
-
             while (myFile.openNext(&dir, O_RDONLY)) {
                 char fileName[40];
                 myFile.getName(fileName, sizeof (fileName));
-
                 if (!myFile.isDirectory()) {
                     myFile.close();
+
                     if (readPublishFile(fileName, callback, _clientPub, tknDCP, pwdDCP, TOPIC)) {
                         if (!dir.remove(fileName)) {
                             CIC_DEBUGWL_("Delete file error: ");
@@ -208,14 +207,20 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
 }
 
 boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String msg, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC), PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC) {
+    CIC_DEBUGWL_(F("Publishing messages from file "));
     CIC_DEBUGWL(filename.c_str());
     File32 myFile;
     if (myFile.open(filename.c_str(), O_RDONLY)) {
         // read from the file until there's nothing else in it:
         String msg = "";
+        int msgNumber = 0;
         while (myFile.available()) {
             char cMsg = (char) myFile.read();
             if (cMsg == '\n') {
+                msgNumber += 1;
+                CIC_DEBUGWL_(F("Message #"));
+                CIC_DEBUGWL_(msgNumber);
+                CIC_DEBUGWL_(F(": "));
                 (*callback)(msg, _clientPub, tknDCP, pwdDCP, TOPIC);
                 msg = "";
             } else {
@@ -800,7 +805,7 @@ boolean DCPSDCard::writeLog(String log, boolean ln) {
             }
             giveSDMutex("writeLog");
         } else {
-            Serial.println("Waiting to writeLog...");
+            //Serial.println("Waiting to writeLog...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
