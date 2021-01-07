@@ -726,7 +726,7 @@ boolean DCPSDCard::printSDError() {
 
 boolean DCPSDCard::writeLog(String log, boolean ln) {
     String filename = "log/";
-    filename += sdRTC.now("%Y%m%d") + ".log";
+    filename += sdRTC.now("%Y%m%d") + ".lc" + xPortGetCoreID();
     int attempts = 0;
     while (attempts <= SD_ATTEMPTS) {
         if (takeSDMutex("writeLog")) {
