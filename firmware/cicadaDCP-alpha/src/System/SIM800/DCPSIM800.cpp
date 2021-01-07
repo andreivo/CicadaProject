@@ -130,6 +130,7 @@ boolean DCPSIM800::setupSIM800Module() {
                 simDCPLeds.greenTurnOff();
                 return true;
             }
+            simDCPLeds.redTurnOff();
         }
     } else {
         CIC_DEBUG(F("No APN credentials for SIM card"));

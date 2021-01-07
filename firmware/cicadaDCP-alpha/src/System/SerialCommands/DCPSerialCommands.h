@@ -41,7 +41,7 @@ private:
     void printSystemSimStatus();
     void weatherComm(String serialCommand);
     void printSystemWeathers();
-    void lsComm();
+    void lsComm(String serialCommand);
     void catComm(String serialCommand);
     void fsstatusComm();
     void clearSerialInput();

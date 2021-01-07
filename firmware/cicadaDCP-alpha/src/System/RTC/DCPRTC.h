@@ -24,9 +24,10 @@ public:
     time_t nowEpoch();
     struct tm *convEpoch(time_t in_time);
     boolean checkFormat(String calTimestamp);
+    time_t stringToTime(String calTimestamp);
 private:
     void setupRTCModule(time_t tt);
-    time_t stringToTime(String calTimestamp);
+
     String getPartOfSplit(String data, char separator, int index);
 
 };

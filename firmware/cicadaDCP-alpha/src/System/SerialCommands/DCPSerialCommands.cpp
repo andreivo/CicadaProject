@@ -88,7 +88,7 @@ void DCPSerialCommands::readSerialCommands(xTaskHandle coreTask) {
         } else if (mandatoryCommand == "sim") {
             simComm(serialCommand);
         } else if (mandatoryCommand == "ls") {
-            lsComm();
+            lsComm(serialCommand);
         } else if (mandatoryCommand == "cat") {
             catComm(serialCommand);
         } else if (mandatoryCommand == "fsformat") {
@@ -97,6 +97,8 @@ void DCPSerialCommands::readSerialCommands(xTaskHandle coreTask) {
             fsstatusComm();
         } else if (mandatoryCommand == "deloldfiles") {
             serialSDCard.deleteOldFiles();
+        } else if (mandatoryCommand == "deloldlogs") {
+            serialSDCard.deleteOldFiles("log");
         } else if (mandatoryCommand == "weather") {
             weatherComm(serialCommand);
         } else {
@@ -163,8 +165,12 @@ void DCPSerialCommands::printCommands() {
     Serial.println(F("\nWeather files commands:"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("ls                 Print the current weather file list."));
-    Serial.println(F("cat -f \"[file]\"  Print the file content."));
-    Serial.println(F("deloldfiles        Deletes files from years prior to the current one."));
+    Serial.println(F("   -l              Print the log file list."));
+    Serial.println(F("cat -f \"[file]\"    Print the file content."));
+    Serial.println(F("                   Print the file content e.g 1: cat -f \"20210106.dht\""));
+    Serial.println(F("                   Print the log content  e.g 2: cat -f \"log/20210106.log\""));
+    Serial.println(F("deloldfiles        Delete files older than 1 year."));
+    Serial.println(F("deloldlogs         Delete logs older than 1 year."));
     Serial.println(F("fsformat           Format weather file system. (WARNING: cannot be undone)"));
     Serial.println(F("fsstatus           Print the current weather file system status."));
 
@@ -248,15 +254,14 @@ void DCPSerialCommands::factoryresetComm(xTaskHandle coreTask) {
 void DCPSerialCommands::sconfigComm() {
     Serial.println(F("\nSYSTEM CONFIGURATION"));
     Serial.println(F("----------------------------------------------------------"));
-    Serial.print(F(""));
-    Serial.print(F("To change these values, please access Cicada Wizard AP."));
-    Serial.print(F(""));
+    Serial.println(F("To change these values, please access Cicada Wizard AP."));
+    Serial.println(F(""));
 
     Serial.println(F("System"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Firmware                   : "));
     Serial.println(serialSpiffs.getSettings(".", DIR_FIRMWARE_VERSION, false));
-    Serial.print(F(""));
+    Serial.println(F(""));
 
     Serial.println(F("Station"));
     Serial.println(F("----------------------------------------------------------"));
@@ -675,10 +680,25 @@ void DCPSerialCommands::printSystemWeathers() {
 
 /******************************************************************************/
 
-void DCPSerialCommands::lsComm() {
-    Serial.println(F("\nWEATHER FILES LIST"));
-    Serial.println(F("----------------------------------------------------------"));
-    serialSDCard.printDirectory("/");
+void DCPSerialCommands::lsComm(String serialCommand) {
+    String args = getArguments(serialCommand, 1);
+    if (args != "") {
+        String madatoryArg = getArguments(args, 0, ' ');
+        String value = getArguments(args, 1, ' ');
+        value = getArguments(value, 1, '"');
+        if (madatoryArg == "l") {
+            Serial.println(F("\nLOG FILES LIST"));
+            Serial.println(F("----------------------------------------------------------"));
+            serialSDCard.printDirectory("log");
+        } else {
+            Serial.print(F("ERROR! Argument not recognized: "));
+            Serial.println(madatoryArg);
+        }
+    } else {
+        Serial.println(F("\nWEATHER FILES LIST"));
+        Serial.println(F("----------------------------------------------------------"));
+        serialSDCard.printDirectory("/");
+    }
 }
 
 void DCPSerialCommands::catComm(String serialCommand) {

@@ -15,6 +15,9 @@ DCPSystem cicadaDcpSystem;
 xTaskHandle coreTask;
 
 void setup() {
+  //Disable Log on initialization
+  logDisable();
+  
   // PreInitialization
   cicadaDcpSystem.preInitSystem();
   
@@ -41,6 +44,9 @@ void setup() {
      change the trigger time to 120 seconds.*/
   esp_task_wdt_init(120, true);
   esp_task_wdt_add(NULL);
+
+  //Enable Log after initialization
+  logEnable();
 }
 
 void loop() {

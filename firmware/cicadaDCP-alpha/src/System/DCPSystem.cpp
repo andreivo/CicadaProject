@@ -91,7 +91,25 @@ DCPRTC cicadaRTC;
 
 DCPSDCard cicadaSDCard;
 
+DCPSDCard logSDCard;
+
 DCPMQTT cicadaMQTT;
+
+boolean enableLog = false;
+
+void logEnable() {
+    enableLog = true;
+}
+
+void logDisable() {
+    enableLog = false;
+}
+
+void cic_log(String msg, boolean ln) {
+    if (enableLog) {
+        logSDCard.writeLog(msg, ln);
+    }
+};
 
 /**
  * Sensor configurations
@@ -145,6 +163,7 @@ void DCPSystem::preInitSystem() {
     CIC_DEBUG(F(")"));
 
     //inicia o SDCard
+    logSDCard.setupSDCardModule();
     cicadaSDCard.setupSDCardModule();
     cicadaSDCard.printDirectory("/");
 
@@ -716,12 +735,13 @@ boolean DCPSystem::onTimeToSaveMetadata() {
 
 void DCPSystem::storeMetadados() {
     if (onTimeToSaveMetadata()) {
-
         cicadaLeds.redTurnOn();
         updateCommunicationStatus();
         cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY);
         nextSlotToSaveMetadata();
         cicadaLeds.redTurnOff();
+
+        cicadaSDCard.cleanOlderFiles();
     }
 }
 

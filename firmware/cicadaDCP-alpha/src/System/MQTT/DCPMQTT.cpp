@@ -119,7 +119,9 @@ void DCPMQTT::sendMessagesData() {
 
     if (connectMQTTServer()) {
         if (!mqttSdCard.mqttPublishFiles(publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
-            CIC_DEBUG_(F("Error on sending"));
+            CIC_DEBUG_(F("Error on MQTT messages publication."));
+        } else {
+            CIC_DEBUG(F("Successful MQTT messages publication."));
         }
     } else {
         CIC_DEBUG(F("MQTT Server connection failure!"))
@@ -158,7 +160,7 @@ boolean DCPMQTT::connectMQTTServer() {
             CIC_DEBUG("Waiting modem to connectMQTTServer ...");
         }
         attempts = attempts + 1;
-        vTaskDelay(SIM_ATTEMPTS_DELAY);
+        vTaskDelay(pdMS_TO_TICKS(SIM_ATTEMPTS_DELAY));
     }
     return false;
 }
@@ -180,22 +182,22 @@ boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknD
         if (takeCommunicationMutex()) {
             int status = _clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
             if (status == 1) {
-                CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
+                CIC_DEBUGWL(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
                 giveCommunicationMutex();
                 return true;
             } else {
-                CIC_DEBUG_(F("Error status: "));
-                CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
+                CIC_DEBUGWL_(F("Error status: "));
+                CIC_DEBUGWL(String(status)); //Status 1 se sucesso ou 0 se deu erro
                 giveCommunicationMutex();
                 return false;
             }
         } else {
-            CIC_DEBUG("Waiting modem to publishMessage ...");
+            CIC_DEBUGWL("Waiting modem to publishMessage ...");
         }
         attempts = attempts + 1;
-        vTaskDelay(SIM_ATTEMPTS_DELAY);
+        vTaskDelay(pdMS_TO_TICKS(SIM_ATTEMPTS_DELAY));
     }
-    CIC_DEBUG("Published unsuccessful!");
+    CIC_DEBUGWL("Published unsuccessful!");
     return false;
 }
 
