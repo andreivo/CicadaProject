@@ -422,15 +422,40 @@ boolean DCPSDCard::storeData(String sensor, String measures) {
     return true;
 }
 
+String DCPSDCard::prepareDataMetadata(String dataType, String collectionDate, String value, String context) {
+    String cxt = "";
+    if (context != "") {
+        cxt = ",\"context\":" + context;
+    }
+    return "{\"dtT\":\"" + dataType + "\",\"colDT\":\"" + collectionDate + "\",\"val\":\"" + value + "\"" + cxt + "}";
+}
+
 boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ) {
     CIC_DEBUGWL(F("Store Metadata!"));
-    String content = "\"mtd\":{\"LA\":" + la + ",\"LO\":" + lo + ",\"bkt\":" + bucket;
-    content = content + ",\"cty:\":\"" + comType + "\"";
-    content = content + ",\"icc:\":\"" + simICCID + "\"";
-    content = content + ",\"opr:\":\"" + simOpera + "\"";
-    content = content + ",\"lip:\":\"" + comLocalIP + "\"";
-    content = content + ",\"csq:\":\"" + comSQ + "\"}";
+
     String filename = sdRTC.now("%Y%m%d") + ".mtd";
+
+    String collectionDate = sdRTC.now("%Y-%m-%d %H:%M:%SZ");
+
+    //part 1
+    String dataContent = prepareDataMetadata("la", collectionDate, la);
+    dataContent += "," + prepareDataMetadata("lo", collectionDate, lo);
+
+    String content = "\"metadata\":[" + dataContent + "]";
+    writeFile(filename, content);
+
+
+    //part 2
+    dataContent = prepareDataMetadata("bkt", collectionDate, bucket);
+    content = "\"metadata\":[" + dataContent + "]";
+    writeFile(filename, content);
+
+
+    //part 3
+    String context = "\"{'cty':'" + comType + "','car':'" + simOpera + "','icc':'" + simICCID + "','lip':'" + comLocalIP + "'}\"";
+    dataContent = prepareDataMetadata("cqs", collectionDate, comSQ, context);
+
+    content = "\"metadata\":[" + dataContent + "]";
     writeFile(filename, content);
 
     return true;

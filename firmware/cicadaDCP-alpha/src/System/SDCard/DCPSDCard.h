@@ -95,6 +95,7 @@ public:
     boolean deleteFile(String filename);
     String prepareData(String sensorCode, String dataType, String collectionDate, String value);
     boolean storeData(String sensor, String measures);
+    String prepareDataMetadata(String dataType, String collectionDate, String value, String context = "");
     boolean storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ);
     void deleteOldFiles(String path = "/");
     void cleanOlderFiles();

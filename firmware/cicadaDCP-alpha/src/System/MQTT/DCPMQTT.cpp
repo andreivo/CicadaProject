@@ -27,7 +27,6 @@ boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT
     CIC_DEBUG_HEADER(F("SETUP MQTT MODULE"));
 
     TIME_TO_SEND = timeToSend;
-    //TIME_TO_SEND = 5;
     CIC_DEBUG_(F("Slot Time to send: "));
     CIC_DEBUG_(TIME_TO_SEND);
     CIC_DEBUG(F(" min."));

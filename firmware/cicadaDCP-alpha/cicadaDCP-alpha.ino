@@ -14,6 +14,11 @@
 DCPSystem cicadaDcpSystem;
 xTaskHandle coreTask;
 
+
+void taskTransmitLoop(void * pvParameters ){
+  cicadaDcpSystem.taskTransmitLoop(); 
+}
+
 void setup() {
   //Disable Log on initialization
   logDisable();
@@ -57,8 +62,4 @@ void loop() {
 
   //Update Task Watchdog timer
   esp_task_wdt_reset();
-}
-
-void taskTransmitLoop(void * pvParameters ){
-  cicadaDcpSystem.taskTransmitLoop(); 
 }
