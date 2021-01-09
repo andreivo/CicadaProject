@@ -282,7 +282,7 @@ void DCPSerialCommands::sconfigComm() {
     Serial.println(F(" minutes"));
     Serial.print(F("Time slot to store metadata: "));
     Serial.print(serialSpiffs.getSettings(".", DIR_STATION_STOREMETADATA, false));
-    Serial.println(F(" hours"));
+    Serial.println(F(" minutes"));
 
     Serial.println(F(""));
     Serial.println(F("DHT Sensor"));

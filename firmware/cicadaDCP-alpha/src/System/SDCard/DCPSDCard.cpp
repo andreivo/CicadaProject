@@ -452,7 +452,7 @@ boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, St
 
 
     //part 3
-    String context = "\"{'cty':'" + comType + "','car':'" + simOpera + "','icc':'" + simICCID + "','lip':'" + comLocalIP + "'}\"";
+    String context = "\"{'cty':'" + comType + "','icc':'" + simICCID + "','lip':'" + comLocalIP + "'}\"";
     dataContent = prepareDataMetadata("cqs", collectionDate, comSQ, context);
 
     content = "\"metadata\":[" + dataContent + "]";

@@ -687,11 +687,10 @@ void DCPSystem::taskTransmitLoop() {
     CIC_DEBUG(uxHighWaterMark);
 
     while (true) {
-
+        vTaskDelay(100);
         storeMetadados();
-        vTaskDelay(10);
+        vTaskDelay(100);
         transmiteData();
-        vTaskDelay(10);
     }
 }
 
