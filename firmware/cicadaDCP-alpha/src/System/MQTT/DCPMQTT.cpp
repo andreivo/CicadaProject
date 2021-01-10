@@ -83,6 +83,7 @@ boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
             mqttLeds.greenTurnOff();
             return true;
         } else {
+            nextSlotTimeToSend();
             return false;
         }
     } else {
