@@ -9,9 +9,9 @@
  */
 
 //LEDs
-#define PIN_LED_RED 32
+#define PIN_LED_RED 25
 #define PIN_LED_GREEN 33
-#define PIN_LED_BLUE 25
+#define PIN_LED_BLUE 32
 
 //Button start Cicada Wizard Portal in mode AP
 #define PIN_AP_WIZARD 26

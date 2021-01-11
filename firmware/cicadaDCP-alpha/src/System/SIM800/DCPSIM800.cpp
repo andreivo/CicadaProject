@@ -80,20 +80,24 @@ boolean DCPSIM800::setupSIM800Module() {
         while (count++ < SIM_CONN_COUNTER) {
 
             CIC_DEBUG(F("Setup GSM..."));
+            CIC_DEBUG(F("Please, wait for registration on the network. This operation can take up to 30 seconds."));
             boolean conn = true;
 
             //Inicializamos a serial onde está o modem
             SerialGSM.begin(9600, SERIAL_8N1, PIN_MODEM_RX, PIN_MODEM_TX, false);
-            simDCPLeds.redBlink(6, 500);
+            simDCPLeds.redBlink(60, 500);
+            String csq = getSignalQuality();
+            CIC_DEBUG_(F("Signal quality: "));
+            CIC_DEBUG(csq);
 
             //Mostra informação sobre o modem
             CIC_DEBUG_(F("Modem Info: "));
             String mInfo = modemGSM.getModemInfo();
-            CIC_DEBUG(mInfo);
             if (!mInfo || mInfo == "") {
-                CIC_DEBUG(F("Modem info failed"));
+                CIC_DEBUG(F("FAIL"));
                 conn = false;
             }
+            CIC_DEBUG(mInfo);
 
             //Inicializa o modem
             if (conn) {
@@ -101,6 +105,8 @@ boolean DCPSIM800::setupSIM800Module() {
                     CIC_DEBUG(F("Restarting GSM Modem failed"));
                     delay(SIM_CONN_DELAY);
                     conn = false;
+                } else {
+                    CIC_DEBUG(F("Modem restart"));
                 }
             }
 
@@ -110,16 +116,19 @@ boolean DCPSIM800::setupSIM800Module() {
                     CIC_DEBUG(F("Failed to connect to network"));
                     delay(SIM_CONN_DELAY);
                     conn = false;
+                } else {
+                    CIC_DEBUG(F("Network Ok"));
                 }
             }
 
             //Conecta à rede gprs (APN, usuário, senha)
             if (conn) {
                 if (!modemGSM.gprsConnect(apn.c_str(), user.c_str(), pwd.c_str())) {
-
                     CIC_DEBUG(F("GPRS Connection Failed"));
                     delay(SIM_CONN_DELAY);
                     conn = false;
+                } else {
+                    CIC_DEBUG(F("GPRS Connection"));
                 }
             }
 
