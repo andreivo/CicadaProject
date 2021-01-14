@@ -105,7 +105,7 @@ public:
     void setupWizard(xTaskHandle coreTask);
     void initSystem();
     void checkAPWizard(xTaskHandle coreTask);
-    void blinkStatus();
+    void updateStatus();
     void readSensors();
     void printNowDate();
     void initMQTT();

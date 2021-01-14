@@ -57,7 +57,7 @@ void setup() {
 void loop() {
   cicadaDcpSystem.readSerialCommands(coreTask);
   cicadaDcpSystem.checkAPWizard(coreTask);
-  cicadaDcpSystem.blinkStatus();
+  cicadaDcpSystem.updateStatus();
   cicadaDcpSystem.readSensors();
 
   //Update Task Watchdog timer

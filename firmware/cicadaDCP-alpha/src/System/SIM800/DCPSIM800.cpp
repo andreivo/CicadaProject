@@ -10,9 +10,11 @@
 #include "DCPSIM800.h"
 
 // Time to try
-#define SIM_CONN_COUNTER 3
+#define SIM_CONN_COUNTER 10
 // Delay to connect to WiFi (WIFI_CONN_DELAY X WIFI_CONN_COUNTER = time to access point mode)
 #define SIM_CONN_DELAY 500
+
+int CIC_REVALIDATE_CONN = 3; //Minutes
 
 /**
  * File system directories and variables
@@ -20,6 +22,8 @@
 SPIFFSManager simSpiffsManager;
 
 DCPLeds simDCPLeds;
+
+DCPRTC simRTC;
 
 //Canal serial que vamos usar para comunicarmos com o modem. Utilize sempre 1
 HardwareSerial SerialGSM(1);
@@ -64,6 +68,8 @@ void DCPSIM800::turnOff() {
  */
 boolean DCPSIM800::setupSIM800Module() {
     CIC_DEBUG_HEADER(F("SETUP SIM800 MODULE"));
+    nextSlotToRevalidateConn();
+    enableRevalidate = false;
 
     // Get MQTT Host
     String apn = simSpiffsManager.getSettings(F("SIM Carrier APN"), DIR_SIMCARD_APN, true);
@@ -73,12 +79,10 @@ boolean DCPSIM800::setupSIM800Module() {
     String pwd = simSpiffsManager.getSettings(F("SIM  Carrier APN Pwd"), DIR_SIMCARD_PWD, true);
 
     if (apn != "") {
-
-        turnOn();
         int count = 0;
 
         while (count++ < SIM_CONN_COUNTER) {
-
+            turnOn();
             CIC_DEBUG(F("Setup GSM..."));
             CIC_DEBUG(F("Please, wait for registration on the network. This operation can take up to 30 seconds."));
             boolean conn = true;
@@ -137,9 +141,13 @@ boolean DCPSIM800::setupSIM800Module() {
                 simDCPLeds.redTurnOff();
                 simDCPLeds.greenBlink(20);
                 simDCPLeds.greenTurnOff();
+                enableRevalidate = true;
                 return true;
             }
             simDCPLeds.redTurnOff();
+            turnOff();
+            CIC_DEBUG(F("The connection failed. A new connection will be made in 5 seconds."));
+            delay(5000);
         }
     } else {
         CIC_DEBUG(F("No APN credentials for SIM card"));
@@ -331,6 +339,40 @@ boolean DCPSIM800::isConnected() {
         delay(SIM_ATTEMPTS_DELAY);
     }
     return false;
+}
+
+void DCPSIM800::nextSlotToRevalidateConn() {
+    /*********************/
+    int actualSeconds = simRTC.now("%M").toInt() + 1;
+
+    int rSlot = actualSeconds % CIC_REVALIDATE_CONN;
+    int iSlot = (int) (actualSeconds / CIC_REVALIDATE_CONN);
+
+    if (rSlot > 0) {
+        iSlot = iSlot + 1;
+    }
+
+    int nextSlot = iSlot*CIC_REVALIDATE_CONN;
+    if (nextSlot >= 60) {
+        nextSlot = nextSlot - 60;
+    }
+    nextTimeSlotToRevalidateConn = nextSlot;
+}
+
+boolean DCPSIM800::onTimeToRevalidateConn() {
+    int actualSeconds = simRTC.now("%M").toInt();
+    return actualSeconds == nextTimeSlotToRevalidateConn;
+}
+
+void DCPSIM800::revalidateConnection() {
+    if (enableRevalidate) {
+        if (onTimeToRevalidateConn()) {
+            if (!isConnected()) {
+                turnOff();
+            }
+            nextSlotToRevalidateConn();
+        }
+    }
 }
 
 void DCPSIM800::resetConfig() {

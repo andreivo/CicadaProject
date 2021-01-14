@@ -348,8 +348,8 @@ void DCPSystem::checkAPWizard(xTaskHandle coreTask) {
     }
 }
 
-void DCPSystem::blinkStatus() {
-
+void DCPSystem::updateStatus() {
+    dcpSIM800.revalidateConnection();
     cicadaLeds.blinkStatusOk();
 }
 

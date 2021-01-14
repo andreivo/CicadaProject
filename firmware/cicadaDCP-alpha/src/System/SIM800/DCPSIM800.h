@@ -35,6 +35,13 @@ public:
     void setPWD(String pwd);
     boolean isConnected();
     String sendAT(String comm);
+
+    int nextTimeSlotToRevalidateConn;
+    boolean enableRevalidate = true;
+    void nextSlotToRevalidateConn();
+    boolean onTimeToRevalidateConn();
+    void revalidateConnection();
+
 };
 
 
