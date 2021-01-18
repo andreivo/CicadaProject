@@ -201,3 +201,8 @@ boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknD
     return false;
 }
 
+void DCPMQTT::updateNextSlot() {
+    if (onTimeToSend()) {
+        nextSlotTimeToSend();
+    }
+}

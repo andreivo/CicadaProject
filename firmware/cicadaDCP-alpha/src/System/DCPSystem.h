@@ -23,9 +23,11 @@
 #include "SIM800/DCPSIM800.h"
 #include "RTC/DCPRTC.h"
 #include "MQTT/DCPMQTT.h"
+#include "SelfUpdate/DCPSelfUpdate.h"
 #include "../Sensors/DHT/DCPDht.h"
 #include "../Sensors/RAINGauge/DCPRainGauge.h"
 #include "../Sensors/VOLTAGE/DCPVoltage.h"
+
 
 
 
@@ -50,6 +52,10 @@ void giveCommunicationMutexWait();
 void logEnable();
 void logDisable();
 void cic_log(String msg, boolean ln = true);
+
+boolean getInUpdate();
+void setInUpdate(boolean inup);
+
 /******************************************************************************/
 /******************************************************************************/
 
@@ -103,7 +109,7 @@ public:
     void preInitSystem();
     boolean initCommunication(boolean startPromptOnFail = true);
     void setupWizard(xTaskHandle coreTask);
-    void initSystem();
+    void initSystem(xTaskHandle coreTask);
     void checkAPWizard(xTaskHandle coreTask);
     void updateStatus();
     void readSensors();
@@ -114,6 +120,7 @@ public:
     String IpAddress2String(const IPAddress& ipAddress);
     void updateCommunicationStatus();
     void updateCommunicationSignal();
+    void initSelfUpdate();
 
 private:
     void setupTimeoutWizard();
@@ -131,6 +138,7 @@ private:
     void storeMetadados();
     int nextTimeSlotToSaveMetadata;
     void nextSlotToSaveMetadata();
+    void updateNextSlotMetadados();
     boolean onTimeToSaveMetadata();
     boolean networkFailureBoot();
     void clearSerialInput();

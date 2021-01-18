@@ -21,6 +21,7 @@ public:
     void initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, String _typeHum, int timeSlotDHT);
     void readDHT();
     String printDHT();
+    void updateNextSlot();
 private:
     String codeTemp;
     String typeTemp;

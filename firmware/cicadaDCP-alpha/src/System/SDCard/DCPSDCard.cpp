@@ -68,6 +68,8 @@ boolean DCPSDCard::setupSDCardModule() {
         return false;
     }
 
+    FsDateTime::setCallback(dateTime);
+
     if (!sd.exists("log")) {
         if (!sd.mkdir("log")) {
             CIC_DEBUGWL(F("Create log folder failed"));
@@ -76,9 +78,15 @@ boolean DCPSDCard::setupSDCardModule() {
         }
     }
 
-    CIC_DEBUG_HEADERWL(F("Initializing SD card..."));
+    if (!sd.exists("update")) {
+        if (!sd.mkdir("update")) {
+            CIC_DEBUGWL(F("Create update folder failed"));
+            printSDError();
+            return false;
+        }
+    }
 
-    FsDateTime::setCallback(dateTime);
+    CIC_DEBUG_HEADERWL(F("Initializing SD card..."));
 
     CIC_DEBUGWL(F("initialization done."));
     return true;
@@ -136,6 +144,37 @@ boolean DCPSDCard::writeFile(String filename, String content) {
                 CIC_DEBUGWL(filename);
                 CIC_DEBUGWL_("content: ");
                 CIC_DEBUGWL(content);
+                giveSDMutex("writeFile");
+                return true;
+            } else {
+                // if the file didn't open, print an error:
+                CIC_DEBUGWL_(F("Error opening "));
+                CIC_DEBUGWL(filename);
+            }
+            giveSDMutex("writeFile");
+        } else {
+
+            CIC_DEBUGWL("Waiting to write File...");
+        }
+        attempts = attempts + 1;
+        vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
+    }
+    return false;
+}
+
+boolean DCPSDCard::writeBinFile(String filename, uint8_t buff[128], int len) {
+    int attempts = 0;
+    while (attempts <= SD_ATTEMPTS) {
+        if (takeSDMutex("writeFile")) {
+            // open the file. note that only one file can be open at a time,
+            // so you have to close this one before opening another.
+            //File32 myFile = sd.open(filename.c_str(), FILE_WRITE, dateTime);
+            File32 myFile;
+            if (myFile.open(filename.c_str(), O_APPEND | O_RDWR | O_CREAT | O_AT_END)) {
+                // write it to Serial
+                myFile.write(buff, len);
+                // close the file:
+                myFile.close();
                 giveSDMutex("writeFile");
                 return true;
             } else {
@@ -409,6 +448,64 @@ void DCPSDCard::cleanOlderFiles() {
     deleteOldFiles("log");
 }
 
+boolean DCPSDCard::deleteUpdate() {
+    int attempts = 0;
+    boolean result = true;
+    String path = "update";
+
+    CIC_DEBUGWL_(F("Delete "));
+    CIC_DEBUGWL_(path);
+    CIC_DEBUGWL(F(" files."));
+    while (attempts <= SD_ATTEMPTS) {
+        if (takeSDMutex("deleteUpdate")) {
+            File32 myDir;
+            File32 myFile;
+            // Open root directory
+            if (!myDir.open(path.c_str())) {
+                CIC_DEBUGWL(F("Error dir.open failed"));
+            }
+            myDir.rewindDirectory();
+
+            while (myFile.openNext(&myDir, O_RDONLY)) {
+                if (!myFile.isDirectory()) {
+                    char fileName[40];
+                    myFile.getName(fileName, sizeof (fileName));
+                    myFile.close();
+
+                    if (myDir.remove(fileName)) {
+                        CIC_DEBUGWL_(F("Delete file: "));
+                        CIC_DEBUGWL(fileName);
+                    } else {
+                        CIC_DEBUGWL_(F("Delete file error: "));
+                        CIC_DEBUGWL(fileName);
+                        result = false;
+                    }
+
+                } else {
+                    myFile.close();
+                }
+            }
+
+            if (myDir.getError()) {
+                CIC_DEBUGWL(F("deleteUpdate: OpenNext failed"));
+            }
+            myDir.close();
+            giveSDMutex("deleteUpdate");
+            break;
+        } else {
+
+            CIC_DEBUGWL(F("Waiting to deleteUpdate..."));
+        }
+        attempts = attempts + 1;
+        vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
+    }
+    return result;
+}
+
+boolean DCPSDCard::fileExists(String file) {
+    return sd.exists(file);
+}
+
 String DCPSDCard::prepareData(String sensorCode, String dataType, String collectionDate, String value) {
 
     return "{\"snsEC\":" + sensorCode + ",\"dtT\":\"" + dataType + "\",\"colDT\":\"" + collectionDate + "\",\"val\":\"" + value + "\"}";
@@ -430,7 +527,7 @@ String DCPSDCard::prepareDataMetadata(String dataType, String collectionDate, St
     return "{\"dtT\":\"" + dataType + "\",\"colDT\":\"" + collectionDate + "\",\"val\":\"" + value + "\"" + cxt + "}";
 }
 
-boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ) {
+boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware) {
     CIC_DEBUGWL(F("Store Metadata!"));
 
     String filename = sdRTC.now("%Y%m%d") + ".mtd";
@@ -440,7 +537,6 @@ boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, St
     //part 1
     String dataContent = prepareDataMetadata("la", collectionDate, la);
     dataContent += "," + prepareDataMetadata("lo", collectionDate, lo);
-
     String content = "\"metadata\":[" + dataContent + "]";
     writeFile(filename, content);
 
@@ -454,7 +550,12 @@ boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, St
     //part 3
     String context = "\"{'cty':'" + comType + "','icc':'" + simICCID + "','lip':'" + comLocalIP + "'}\"";
     dataContent = prepareDataMetadata("cqs", collectionDate, comSQ, context);
+    content = "\"metadata\":[" + dataContent + "]";
+    writeFile(filename, content);
 
+    //part 4
+    dataContent = prepareDataMetadata("fmw", collectionDate, firmware);
+    dataContent += "," + prepareDataMetadata("dfmw", collectionDate, dateFirmware);
     content = "\"metadata\":[" + dataContent + "]";
     writeFile(filename, content);
 

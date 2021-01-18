@@ -30,7 +30,7 @@ void setup() {
   cicadaDcpSystem.initCommunication();
    
   // Init all system configurations
-  cicadaDcpSystem.initSystem();
+  cicadaDcpSystem.initSystem(coreTask);
 
   // Create a new parallel task on core 0
   // The task that is running in parallel transmit data to server MQTT               

@@ -17,12 +17,20 @@ DCPDht serialDHT;
 DCPRainGauge serialdcpRainGauge;
 DCPVoltage serialdcpVoltage;
 DCPSDCard serialSDCard;
+SPIFFSManager serialSpiffs;
+DCPLeds serialLeds;
+
+CicadaWizard serialWizard;
+hw_timer_t * timeoutSerialWizard = NULL;
+
+DCPSelfUpdate serialSelfUpdate;
 
 DCPSerialCommands::DCPSerialCommands() {
 }
 
-void DCPSerialCommands::initSerialCommands(String firmware) {
+void DCPSerialCommands::initSerialCommands(String firmware, String firmwareDate) {
     FIRMWARE = firmware;
+    FIRMWARE_DATE = firmwareDate;
 }
 
 String DCPSerialCommands::getArguments(String data, int index, char separator) {
@@ -48,7 +56,7 @@ String DCPSerialCommands::getArguments(String data, int index, char separator) {
 /**
  * Read Serial Commands
  */
-void DCPSerialCommands::readSerialCommands() {
+void DCPSerialCommands::readSerialCommands(xTaskHandle coreTask) {
 
     // Holds Serial Monitor commands
     String serialCommand = "";
@@ -72,61 +80,35 @@ void DCPSerialCommands::readSerialCommands() {
             timeComm(serialCommand);
         } else if (mandatoryCommand == "status") {
             statusComm();
+        } else if (mandatoryCommand == "factoryreset") {
+            factoryresetComm(coreTask);
+        } else if (mandatoryCommand == "sconfig") {
+            sconfigComm();
+        } else if (mandatoryCommand == "wizard") {
+            wizardComm(coreTask);
+        } else if (mandatoryCommand == "forceupdate") {
+            forceUpdateComm(coreTask);
         } else if (mandatoryCommand == "wifi") {
             wifiComm(serialCommand);
         } else if (mandatoryCommand == "sim") {
             simComm(serialCommand);
         } else if (mandatoryCommand == "ls") {
-            lsComm();
+            lsComm(serialCommand);
         } else if (mandatoryCommand == "cat") {
             catComm(serialCommand);
+        } else if (mandatoryCommand == "fsformat") {
+            serialSDCard.formatSD();
         } else if (mandatoryCommand == "fsstatus") {
             fsstatusComm();
+        } else if (mandatoryCommand == "deloldfiles") {
+            serialSDCard.deleteOldFiles();
+        } else if (mandatoryCommand == "deloldlogs") {
+            serialSDCard.deleteOldFiles("log");
         } else if (mandatoryCommand == "weather") {
             weatherComm(serialCommand);
-        }//        else if (serialCommand == "reset")
-            //        {
-            //            fullReset();
-            //        }
-            //        else if (serialCommand == "status")
-            //        {
-            //            printSystemStatus();
-            //        }
-            //        else if (serialCommand == "resetwifi")
-            //        {
-            //            resetWiFiSettings();
-            //        }
-            //        else if (serialCommand == "filelist")
-            //        {
-            //            FSPrintFileList();
-            //        }
-            //        else if (serialCommand == "fsformat")
-            //        {
-            //            FSFormat();
-            //        }
-            //        else if (serialCommand == "cleardatadir")
-            //        {
-            //
-            //            CIC_DEBUG_HEADER(F("DELETING WEATHER DATA"));
-            //            FSDeleteFiles(DIR_WEATHER_DATA);
-            //        }
-            //        else if (serialCommand == "fsstatus")
-            //        {
-            //            printFileSystemStatus();
-            //        }
-            //        else if (serialCommand == "dump")
-            //        {
-            //            dump();
-            //        }
-            //        else if (serialCommand == "deletedata")
-            //        {
-            //            deleteWeatherData();
-            //        }
-        else {
-
+        } else {
             Serial.print(F("ERROR! Command not recognized: "));
             Serial.println(serialCommand);
-
             printCommands();
         }
     }
@@ -137,34 +119,39 @@ void DCPSerialCommands::readSerialCommands() {
  */
 void DCPSerialCommands::printCommands() {
 
+    Serial.println(F(""));
     Serial.println(F("======================================================"));
     Serial.println(F("           CICADA DATA COLLECTION PLATFORM            "));
     Serial.print(F("                 Version: "));
     Serial.println(FIRMWARE);
+    Serial.print(F("             Date: "));
+    Serial.println(FIRMWARE_DATE);
     Serial.println(F("      https://github.com/andreivo/CicadaProject       "));
     Serial.println(F("======================================================"));
     Serial.println(F(""));
     Serial.println(F("SYSTEM AVALIABLE COMMANDS"));
-    Serial.println(F("------------------------------------------------------"));
+    Serial.println(F("----------------------------------------------------------"));
 
     Serial.println(F("help              Show all available commands"));
 
     Serial.println(F("\nSystem commands:"));
-    Serial.println(F("----------------"));
+    Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("reboot             Reboot system."));
     Serial.println(F("time               Print the current system datetime."));
     Serial.println(F("   -s \"[value]\"    Set a new system datetime. Format value YYYY-mm-ddTHH:MM:SSZ."));
     Serial.println(F("status             Print the current system status to serial monitor including,"));
     Serial.println(F("                     wifi connectivity, Sim connectivity, etc."));
-    Serial.println(F("factoryreset       Reset system completely, format file system, reset message,"));
-    Serial.println(F("                     delete weather data. (WARNING: cannot be undone)"));
+    Serial.println(F("factoryreset       Reset system completely, format configuration file system,"));
+    Serial.println(F("                     format weather file system, reset all configuration and"));
+    Serial.println(F("                     reboot system."));
+    Serial.println(F("                     (WARNING: cannot be undone)"));
     Serial.println(F("sconfig            Print the current system configuration."));
-    Serial.println(F("  -\"[var]\" \"[val]\" Update the system variable configuration."));
-    Serial.println(F("                     The [var] indicates the variable to be updated."));
-    Serial.println(F("                     The [val] indicates a new value."));
+    Serial.println(F("wizard             Enable Cicada Wizard on the access point network."));
+    Serial.println(F("forceupdate        Starts checking for new firmware and updates the system if it exists."));
+
 
     Serial.println(F("\nWifi system commands:"));
-    Serial.println(F("---------------------"));
+    Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("wifi               Print the current system status."));
     Serial.println(F("   -r                Reset WiFi appliance settings, SSID and password."));
     Serial.println(F("   -d                Print available SSID."));
@@ -173,7 +160,7 @@ void DCPSerialCommands::printCommands() {
 
 
     Serial.println(F("\nSim Card system commands:"));
-    Serial.println(F("-------------------------"));
+    Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("sim               Print the current system status."));
     Serial.println(F("   -on               Moden turn on."));
     Serial.println(F("   -off              Moden turn off."));
@@ -181,17 +168,23 @@ void DCPSerialCommands::printCommands() {
     Serial.println(F("   -a \"[value]\"    Set a new Carrier APN."));
     Serial.println(F("   -u \"[value]\"    Set a new User."));
     Serial.println(F("   -p \"[value]\"    Set a new Password."));
-    Serial.println(F("   -c AT\"[value]\"  Send AT command. Do not include the AT prefix."));
+    Serial.println(F("   -c \"[value]\"    Send AT command. Do not include the AT prefix, e.g +CSQ."));
 
     Serial.println(F("\nWeather files commands:"));
-    Serial.println(F("---------------------"));
+    Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("ls                 Print the current weather file list."));
-    Serial.println(F("cat -f \"[file]\"  Print the file content."));
+    Serial.println(F("   -l              Print the log file list."));
+    Serial.println(F("   -u              Print the update file list."));
+    Serial.println(F("cat -f \"[file]\"    Print the file content."));
+    Serial.println(F("                   Print the file content e.g 1: cat -f \"20210106.dht\""));
+    Serial.println(F("                   Print the log content  e.g 2: cat -f \"log/20210106.log\""));
+    Serial.println(F("deloldfiles        Delete files older than 1 year."));
+    Serial.println(F("deloldlogs         Delete logs older than 1 year."));
     Serial.println(F("fsformat           Format weather file system. (WARNING: cannot be undone)"));
     Serial.println(F("fsstatus           Print the current weather file system status."));
 
     Serial.println(F("\nWeather data commands:"));
-    Serial.println(F("----------------------"));
+    Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("weather            Print the current sensor values."));
     Serial.println(F("   -ht             Print the current humidity and temperature."));
     Serial.println(F("   -r              Print the current rain gauge tip bucket count."));
@@ -214,7 +207,7 @@ void DCPSerialCommands::statusComm() {
 }
 
 void DCPSerialCommands::timeComm(String serialCommand) {
-    Serial.print("Actual: ");
+    Serial.print("Datetime: ");
     Serial.println(serialComRTC.now());
     String args = getArguments(serialCommand, 1);
     if (args != "") {
@@ -235,6 +228,231 @@ void DCPSerialCommands::timeComm(String serialCommand) {
     }
 }
 
+void DCPSerialCommands::factoryresetComm(xTaskHandle coreTask) {
+    Serial.println(F("\n\nFACTORY RESET"));
+    Serial.println(F("=========================================================="));
+    Serial.println(F("WARNING.....WARNING.....WARNING.....\n"
+            "Reset system completely, format configuration file system,\n"
+            "format weather file system, reset all configuration and \n"
+            "reboot system. \n\n"
+            "(WARNING: cannot be undone)\n\n"
+            "Enter 'Y' to continue: "));
+    while (!Serial.available()) {
+        SysCall::yield();
+    }
+    char command = Serial.read();
+    if (command != 'Y') {
+        Serial.println(F("Quiting, you did not enter 'Y'."));
+        // Read any existing Serial data.
+        clearSerialInput();
+        return;
+    }
+    // Read any existing Serial data.
+    clearSerialInput();
+
+    esp_task_wdt_delete(NULL);
+    vTaskDelete(coreTask);
+    delay(100);
+
+    serialSpiffs.FSFormat();
+    serialSDCard.formatSD(false);
+    delay(1000);
+    rebootComm();
+}
+
+void DCPSerialCommands::sconfigComm() {
+    Serial.println(F("\nSYSTEM CONFIGURATION"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.println(F("To change these values, please access Cicada Wizard AP."));
+    Serial.println(F(""));
+
+    Serial.println(F("System"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("Firmware                   : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_FIRMWARE_VERSION, false));
+    Serial.println(F(""));
+
+    Serial.println(F("Station"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("ID                         : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_ID, false));
+    Serial.print(F("Name                       : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_NAME, false));
+    Serial.print(F("Password                   : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_PASS, false));
+    Serial.print(F("Latitude                   : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_LATITUDE, false));
+    Serial.print(F("Longitude                  : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_LONGITUDE, false));
+    Serial.print(F("Bucket Calibration         : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_BUCKET_VOL, false));
+    Serial.print(F("Time slot to send          : "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_STATION_SENDTIMEINTERVAL, false));
+    Serial.println(F(" minutes"));
+    Serial.print(F("Time slot to store metadata: "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_STATION_STOREMETADATA, false));
+    Serial.println(F(" minutes"));
+    Serial.print(F("Self update-Host           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEHOST, true));
+    Serial.print(F("Self update-Path           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEPATH, true));
+    Serial.print(F("Self update-Port           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEPORT, false));
+    Serial.print(F("Self update-Daily Time     : "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_STATION_SETIME, false));
+    Serial.println(F(":00 hours"));
+
+    Serial.println(F(""));
+    Serial.println(F("DHT Sensor"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("Time slot to collection    : "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTDHT, false));
+    Serial.println(F(" minutes"));
+    Serial.print(F("Temperature Code           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODETEMP, false));
+    Serial.print(F("Temperature Data Type      : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPETEMP, false));
+    Serial.print(F("Humidity Code              : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEHUM, false));
+    Serial.print(F("Humidity Data Type         : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEHUM, false));
+
+    Serial.println(F(""));
+    Serial.println(F("Pluviometer"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("Code                       : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEPLUV, false));
+    Serial.print(F("Data Type      : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEPLUV, false));
+    Serial.print(F("Time slot to collection    : "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTPLUV, false));
+    Serial.println(F(" minutes"));
+
+    Serial.println(F(""));
+    Serial.println(F("Input Battery Vcc"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("Code                       : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEVIN, false));
+    Serial.print(F("Data Type                  : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEVIN, false));
+    Serial.print(F("Time slot to collection    : "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTVIN, false));
+    Serial.println(F(" minutes"));
+
+    Serial.println(F(""));
+    Serial.println(F("Solar Cell Vcc"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("Code                       : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEVSO, false));
+    Serial.print(F("Data Type                  : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEVSO, false));
+    Serial.print(F("Time slot to collection    : "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTVSO, false));
+    Serial.println(F(" minutes"));
+
+    Serial.println(F(""));
+    Serial.println(F("MQTT server"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("MQTT host server           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_SERVER, true));
+    Serial.print(F("MQTT port                  : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_PORT, false));
+    Serial.print(F("MQTT user                  : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_USER, false));
+    Serial.print(F("MQTT password              : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_PWD, false));
+    Serial.print(F("MQTT password              : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_PWD, true));
+    Serial.print(F("MQTT Topic                 : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_TOPIC, false));
+
+    Serial.println(F(""));
+    Serial.println(F("SIM Card"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("Carrier APN                : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SIMCARD_APN, true));
+    Serial.print(F("Carrier APN User           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SIMCARD_USER, false));
+    Serial.print(F("Carrier APN Password       : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_SIMCARD_PWD, true));
+
+    Serial.println(F(""));
+    Serial.println(F("Wifi"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.print(F("SSID                       : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_WIFI_SSID, false));
+    Serial.print(F("Password                   : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_WIFI_PWD, false));
+}
+
+void DCPSerialCommands::initSelfUpdate(xTaskHandle coreTask) {
+    CIC_DEBUG_HEADER(F("INIT FORCE SELF UPDATE"));
+
+    // Get Host
+    String host = commSpiffsManager.getSettings("Self Up Host", DIR_STATION_SEHOST, true);
+    // Get HostPath
+    String hostpath = commSpiffsManager.getSettings("Self Up Host Path", DIR_STATION_SEPATH, true);
+    // Get Port
+    String port = commSpiffsManager.getSettings("Self Up Port", DIR_STATION_SEPORT, false);
+
+    String sttName = commSpiffsManager.FSReadString(DIR_STATION_NAME);
+
+    String timeToCheckUp = commSpiffsManager.FSReadString(DIR_STATION_SETIME);
+    if (timeToCheckUp == "") {
+        timeToCheckUp = "10";
+        commSpiffsManager.FSDeleteFiles(DIR_STATION_SETIME);
+        commSpiffsManager.FSCreateFile(DIR_STATION_SETIME, timeToCheckUp);
+    }
+
+    serialSelfUpdate.setupSelfUpdate(timeToCheckUp.toInt(), host, hostpath, port.toInt(), FIRMWARE_DATE, sttName, coreTask);
+}
+
+void DCPSerialCommands::forceUpdateComm(xTaskHandle coreTask) {
+    initSelfUpdate(coreTask);
+    serialSelfUpdate.updateFirmware(true);
+}
+
+void DCPSerialCommands::wizardComm(xTaskHandle coreTask) {
+    Serial.println(F("WIZARD CICADA DCP"));
+    Serial.println(F("----------------------------------------------------------"));
+    Serial.println(F("Timeout: 10 minutes"));
+
+    serialLeds.blueTurnOn();
+    setupTimeoutWizard();
+
+    esp_task_wdt_delete(NULL);
+    vTaskDelete(coreTask);
+    delay(100);
+
+    serialWizard.setDebugOutput(true);
+    String ssid = serialSpiffs.getSettings(".", DIR_STATION_ID, false);
+    String pwd = serialSpiffs.getSettings(".", DIR_STATION_PASS, false);
+    serialWizard.startWizardPortal(ssid.c_str(), pwd.c_str());
+}
+
+void IRAM_ATTR onTimeoutSerialWizard() {
+    //If the Wizard is active and the timeout has been reached reboot the module.
+    //This causes an exception for access to global variables
+    //without a critical section and forces a reboot.
+    ESP.restart();
+}
+
+void DCPSerialCommands::setupTimeoutWizard() {
+    /****
+     * Time interrupt for timeout to AP Wizard mode
+     */
+    // Configure Prescaler to 80, as our timer runs @ 80Mhz
+    // Giving an output of 80,000,000 / 80 = 1,000,000 ticks / second
+    timeoutSerialWizard = timerBegin(0, 80, true);
+    timerAttachInterrupt(timeoutSerialWizard, &onTimeoutSerialWizard, true);
+    // Fire Interrupt every 1m ticks, so 1s
+    // ticks * (seconds * minutes) = 10 minutos
+    uint64_t timeoutWiz = 1000000 * (60 * 10);
+    //uint64_t timeoutWiz = 1000000 * (10);
+    timerAlarmWrite(timeoutSerialWizard, timeoutWiz, true);
+    timerAlarmEnable(timeoutSerialWizard);
+}
+
 float DCPSerialCommands::bytesConverter(float bytes, char prefix) {
 
     // Kilobyte (KB)
@@ -253,7 +471,7 @@ float DCPSerialCommands::bytesConverter(float bytes, char prefix) {
 void DCPSerialCommands::printSystemEnvironmentStatus() {
 
     Serial.println(F("\nSYSTEM ENVIRONMENT STATUS"));
-    Serial.println(F("-------------------------"));
+    Serial.println(F("----------------------------------------------------------"));
 
     Serial.print(F("Free Heap size: "));
     Serial.print(ESP.getFreeHeap());
@@ -314,7 +532,7 @@ void DCPSerialCommands::wifiComm(String serialCommand) {
 void DCPSerialCommands::printSystemWiFiStatus() {
 
     Serial.println(F("\nSYSTEM WIFI STATUS"));
-    Serial.println(F("------------------"));
+    Serial.println(F("----------------------------------------------------------"));
 
     Serial.print(F("Status:                                "));
     if (WiFi.status() == WL_CONNECTED) {
@@ -367,6 +585,7 @@ void DCPSerialCommands::simComm(String serialCommand) {
         } else if (madatoryArg == "off") {
             //Turn off
             serialSIM800.turnOff();
+            Serial.println(F("Modem turnoff is done!"));
         } else if (madatoryArg == "r") {
             //Reset
             serialSIM800.resetConfig();
@@ -405,7 +624,7 @@ void DCPSerialCommands::simComm(String serialCommand) {
 void DCPSerialCommands::printSystemSimStatus() {
 
     Serial.println(F("\nSYSTEM SIM CARD STATUS"));
-    Serial.println(F("----------------------"));
+    Serial.println(F("----------------------------------------------------------"));
 
     bool res = serialSIM800.isConnected();
     Serial.print(F("GPRS status:                           "));
@@ -491,7 +710,7 @@ void DCPSerialCommands::weatherComm(String serialCommand) {
  */
 void DCPSerialCommands::printSystemWeathers() {
     Serial.println(F("\nSYSTEM WEATHER ACTUAL VALUES"));
-    Serial.println(F("----------------------------"));
+    Serial.println(F("----------------------------------------------------------"));
     //temperature //humidity
     Serial.println(serialDHT.printDHT());
     //tip bucket count
@@ -507,10 +726,29 @@ void DCPSerialCommands::printSystemWeathers() {
 
 /******************************************************************************/
 
-void DCPSerialCommands::lsComm() {
-    Serial.println(F("\nWEATHER FILES LIST"));
-    Serial.println(F("----------------------------"));
-    serialSDCard.printDirectory("/", 0);
+void DCPSerialCommands::lsComm(String serialCommand) {
+    String args = getArguments(serialCommand, 1);
+    if (args != "") {
+        String madatoryArg = getArguments(args, 0, ' ');
+        String value = getArguments(args, 1, ' ');
+        value = getArguments(value, 1, '"');
+        if (madatoryArg == "l") {
+            Serial.println(F("\nLOG FILES LIST"));
+            Serial.println(F("----------------------------------------------------------"));
+            serialSDCard.printDirectory("log");
+        } else if (madatoryArg == "u") {
+            Serial.println(F("\nUPDATE FILES LIST"));
+            Serial.println(F("----------------------------------------------------------"));
+            serialSDCard.printDirectory("update");
+        } else {
+            Serial.print(F("ERROR! Argument not recognized: "));
+            Serial.println(madatoryArg);
+        }
+    } else {
+        Serial.println(F("\nWEATHER FILES LIST"));
+        Serial.println(F("----------------------------------------------------------"));
+        serialSDCard.printDirectory("/");
+    }
 }
 
 void DCPSerialCommands::catComm(String serialCommand) {
@@ -523,7 +761,7 @@ void DCPSerialCommands::catComm(String serialCommand) {
             Serial.print(F("\n"));
             Serial.print(value);
             Serial.println(F(" CONTENT"));
-            Serial.println(F("----------------------------"));
+            Serial.println(F("----------------------------------------------------------"));
             serialSDCard.printContentFile(value);
         } else {
             Serial.print(F("ERROR! Argument not recognized: "));
@@ -535,54 +773,27 @@ void DCPSerialCommands::catComm(String serialCommand) {
 void DCPSerialCommands::fsstatusComm() {
 
     Serial.println(F("\nWEATHER FILES STATUS"));
-    Serial.println(F("----------------------------"));
+    Serial.println(F("----------------------------------------------------------"));
 
-    Serial.print("Clusters:          ");
-    Serial.println(serialSDCard.clusterCount());
-    Serial.print("Blocks x Cluster:  ");
-    Serial.println(serialSDCard.blocksPerCluster());
-
-    Serial.print("Total Blocks:      ");
-    Serial.println(serialSDCard.blocksPerCluster() * serialSDCard.clusterCount());
-    Serial.println();
-
-    // print the type and size of the first FAT-type volume
-    float volumesize;
-    float usedSpace = serialSDCard.usedSpace();
-    usedSpace /= 1000.00;
-
-
-    Serial.print("Volume type is:    FAT");
-    Serial.println(serialSDCard.fatType(), DEC);
-    volumesize = serialSDCard.blocksPerCluster(); // clusters are collections of blocks
-    volumesize *= serialSDCard.clusterCount(); // we'll have a lot of clusters
-    volumesize /= 2.00; // SD card blocks are always 512 bytes (2 blocks are 1KB)
-    float freeSpace = (float) volumesize - (float) usedSpace;
-
-    Serial.print("Volume size (Kb):  ");
-    Serial.println(volumesize);
-    Serial.print("Volume size (Mb):  ");
-    volumesize /= 1024.00;
-    Serial.println(volumesize);
-    Serial.print("Volume size (Gb):  ");
-    Serial.println((float) volumesize / 1024.00);
-
-    Serial.print("Used (Kb)       :  ");
-    Serial.println(usedSpace);
-    Serial.print("Used (Mb)       :  ");
-    usedSpace /= 1024.00;
-    Serial.println(usedSpace);
-    Serial.print("Used (Gb)       :  ");
-    Serial.println((float) usedSpace / 1024.00);
-
-    Serial.print("Available (Kb)  :  ");
-    Serial.println(freeSpace);
-    Serial.print("Available (Mb)  :  ");
-    freeSpace /= 1024.0;
-    Serial.println(freeSpace);
-    Serial.print("Available (Gb)  :  ");
-    Serial.println((float) freeSpace / 1024.00);
-
-
-
+    Serial.println(serialSDCard.getCardType());
+    Serial.println(serialSDCard.cidDmp());
+    Serial.println(serialSDCard.csdDmp());
+    Serial.println(serialSDCard.dmpVol());
 }
+
+void DCPSerialCommands::clearSerialInput() {
+    uint32_t m = micros();
+    do {
+        if (Serial.read() >= 0) {
+            m = micros();
+        }
+    } while (micros() - m < 10000);
+}
+
+String DCPSerialCommands::padL(int len, String inS) {
+    char buffer[len];
+    String format = "%" + String(len) + "s";
+    sprintf(buffer, format.c_str(), inS.c_str());
+    return buffer;
+}
+

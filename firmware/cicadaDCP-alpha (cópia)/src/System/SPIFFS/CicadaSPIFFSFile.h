@@ -18,7 +18,12 @@ const String DIR_STATION_TIME_TO_RESET = "/stt/ttr";
 const String DIR_STATION_NAME = "/stt/name";
 const String DIR_STATION_PASS = "/stt/pass";
 const String DIR_STATION_STOREMETADATA = "/stt/smi";
-
+const String DIR_STATION_SEHOST = "/stt/host";
+const String FILE_STATION_SEHOST = "hostserver";
+const String DIR_STATION_SEPATH = "/stt/path";
+const String FILE_STATION_SEPATH = "pathserver";
+const String DIR_STATION_SEPORT = "/stt/port";
+const String DIR_STATION_SETIME = "/stt/tup";
 
 const String DIR_SENSOR_CODETEMP = "/sen/codetemp";
 const String DIR_SENSOR_CODEHUM = "/sen/codehum";

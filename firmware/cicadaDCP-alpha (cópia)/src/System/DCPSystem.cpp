@@ -52,10 +52,20 @@ void giveCommunicationMutexWait() {
     //CIC_DEBUG("Give CommunicationMutex");
     xSemaphoreGive(CommunicationMutex);
 }
+boolean inUpdate = false;
+
+boolean getInUpdate() {
+    return inUpdate;
+}
+
+void setInUpdate(boolean inup) {
+    inUpdate = inup;
+}
 /******************************************************************************/
 /******************************************************************************/
 
 const String FIRMWARE_VERSION = "0.0.1-alpha";
+const String FIRMWARE_DATE = "2021-01-01T10:10:00Z";
 
 String STATION_ID = "CicadaDCP";
 const String STATION_ID_PREFIX = "CicadaDCP-";
@@ -64,7 +74,7 @@ String STATION_PWD = "";
 String STATION_LONGITUDE = "";
 String STATION_LATITUDE = "";
 float CIC_STATION_BUCKET_VOLUME = 3.22; // Bucket Calibrated Volume in ml
-int CIC_STATION_STOREMETADATA = 12;
+int CIC_STATION_STOREMETADATA = 10;
 
 
 String SIM_ICCID = "";
@@ -91,7 +101,27 @@ DCPRTC cicadaRTC;
 
 DCPSDCard cicadaSDCard;
 
+DCPSDCard logSDCard;
+
 DCPMQTT cicadaMQTT;
+
+DCPSelfUpdate selfUpdate;
+
+boolean enableLog = false;
+
+void logEnable() {
+    enableLog = true;
+}
+
+void logDisable() {
+    enableLog = false;
+}
+
+void cic_log(String msg, boolean ln) {
+    if (enableLog) {
+        logSDCard.writeLog(msg, ln);
+    }
+};
 
 /**
  * Sensor configurations
@@ -115,8 +145,8 @@ DCPSystem::DCPSystem() {
 /**
  * Read Serial Commands
  */
-void DCPSystem::readSerialCommands() {
-    DCPCommands.readSerialCommands();
+void DCPSystem::readSerialCommands(xTaskHandle coreTask) {
+    DCPCommands.readSerialCommands(coreTask);
 }
 
 /**
@@ -136,7 +166,7 @@ void DCPSystem::preInitSystem() {
     cicadaLeds.greenTurnOff();
     cicadaLeds.blueTurnOff();
 
-    DCPCommands.initSerialCommands(FIRMWARE_VERSION);
+    DCPCommands.initSerialCommands(FIRMWARE_VERSION, FIRMWARE_DATE);
 
     // Init the Serial
     CIC_DEBUG_SETUP(CIC_SYSTEM_BAUDRATE);
@@ -145,8 +175,9 @@ void DCPSystem::preInitSystem() {
     CIC_DEBUG(F(")"));
 
     //inicia o SDCard
+    logSDCard.setupSDCardModule();
     cicadaSDCard.setupSDCardModule();
-    cicadaSDCard.printDirectory("/", 0);
+    cicadaSDCard.printDirectory("/");
 
     // Get Station ID from file system or create the file with
     initStationID();
@@ -173,16 +204,92 @@ void DCPSystem::preInitSystem() {
     printConfiguration();
 }
 
-void DCPSystem::initCommunication() {
+boolean DCPSystem::initCommunication(boolean startPromptOnFail) {
     if (!dcpWifi.setupWiFiModule()) {
         if (!dcpSIM800.setupSIM800Module()) {
-            setupWizard();
+            if (startPromptOnFail) {
+                return networkFailureBoot();
+            }
+            return false;
         } else {
             cicadaRTC.setupRTCModule(dcpSIM800.getNetworkDate());
         }
     } else {
         cicadaRTC.setupRTCModule(dcpWifi.getNetworkDate());
     }
+    return true;
+}
+
+boolean DCPSystem::networkFailureBoot() {
+    cicadaLeds.redTurnOn();
+    cicadaLeds.greenTurnOn();
+    cicadaLeds.blueTurnOn();
+
+    Serial.println(F("\n\nNETWORK FAILURE ON BOOT"));
+    Serial.println(F("=========================================================="));
+    Serial.println(F("WARNING.....WARNING.....WARNING.....\n"
+            "The system cannot be started without the internal clock being set.\n"
+            "For clock setting, enable the network or provide the datetime manually."
+            "\n"
+            "What do you want to do? Options are:\n"
+            "\tW - Enable Cicada Wizard on the access point to configuration network.\n"
+            "\tM - Provide the datetime manually\n"
+            "\tQ - Quit and reboot system.\n"
+            "\n"
+            "Enter option: "));
+    while (!Serial.available()) {
+        SysCall::yield();
+    }
+    char command = Serial.read();
+    if (!strchr("WMQ", command)) {
+        Serial.println(F("FAIL: Invalid option entered."));
+        clearSerialInput();
+        networkFailureBoot();
+    }
+
+    // Read any existing Serial data.
+    clearSerialInput();
+    if (command == 'W') {
+        setupWizard(NULL);
+    } else if (command == 'M') {
+        clearSerialInput();
+        Serial.println(F("Please provide a datetime in YYYY-mm-ddTHH:MM:SSZ format:"));
+
+        while (!Serial.available()) {
+            SysCall::yield();
+        }
+
+        if (Serial.available() > 0) {
+            String strDatetime = Serial.readString();
+            strDatetime.trim();
+            Serial.flush();
+            Serial.println(strDatetime);
+            if (cicadaRTC.checkFormat(strDatetime)) {
+                cicadaRTC.setupRTCModule(strDatetime);
+                Serial.println(F("The clock setting is done! Operating without a network!"));
+                clearSerialInput();
+                cicadaLeds.redTurnOff();
+                cicadaLeds.greenTurnOff();
+                cicadaLeds.blueTurnOff();
+                return true;
+            } else {
+                Serial.println(F("Quiting, invalid datetime. Restart in a few seconds."));
+                delay(2000);
+                ESP.restart();
+            }
+        }
+    } else if (command == 'Q') {
+        ESP.restart();
+    }
+}
+
+void DCPSystem::clearSerialInput() {
+    uint32_t m = micros();
+    do {
+        if (Serial.read() >= 0) {
+            m = micros();
+        }
+    } while (micros() - m < 10000);
 }
 
 void DCPSystem::setupTimeoutWizard() {
@@ -191,6 +298,7 @@ void DCPSystem::setupTimeoutWizard() {
      */
     // Configure Prescaler to 80, as our timer runs @ 80Mhz
     // Giving an output of 80,000,000 / 80 = 1,000,000 ticks / second
+
     timeoutWizard = timerBegin(0, 80, true);
     timerAttachInterrupt(timeoutWizard, &onTimeoutWizard, true);
     // Fire Interrupt every 1m ticks, so 1s
@@ -204,11 +312,18 @@ void DCPSystem::setupTimeoutWizard() {
 /**
  * Setup Cicada Wizard
  */
-void DCPSystem::setupWizard() {
-    CIC_DEBUG_HEADER(F("SETUP CICADA DCP"));
-    cicadaLeds.blueTurnOn();
+void DCPSystem::setupWizard(xTaskHandle coreTask) {
+    CIC_DEBUG_HEADER(F("WIZARD CICADA DCP"));
+    CIC_DEBUG(F("Timeout: 10 minutes"));
 
+    cicadaLeds.blueTurnOn();
     setupTimeoutWizard();
+
+    esp_task_wdt_delete(NULL);
+    if (coreTask) {
+        vTaskDelete(coreTask);
+    }
+    delay(100);
 
     cicadaWizard.setDebugOutput(true);
     String ssid = getSSIDAP();
@@ -218,41 +333,50 @@ void DCPSystem::setupWizard() {
 /**
  * Init all system configurations
  */
-void DCPSystem::initSystem() {
+void DCPSystem::initSystem(xTaskHandle coreTask) {
+
     initSensorsConfig();
     nextSlotToSaveMetadata();
     initMQTT();
+    initSelfUpdate(coreTask);
 
     cicadaLeds.redTurnOff();
     cicadaLeds.greenTurnOff();
     cicadaLeds.blueTurnOff();
 
-    CIC_DEBUG_(F("Startup completed on: "));
+    CIC_DEBUG_(F("\nStartup completed on: "));
     printNowDate();
 }
 
 void DCPSystem::printNowDate() {
+
     CIC_DEBUG(cicadaRTC.now());
 }
 
 void DCPSystem::checkAPWizard(xTaskHandle coreTask) {
     if (digitalRead(PIN_AP_WIZARD) == HIGH) {
-        esp_task_wdt_delete(NULL);
-        vTaskDelete(coreTask);
-        delay(100);
-        setupWizard();
+
+        setupWizard(coreTask);
     }
 }
 
-void DCPSystem::blinkStatus() {
+void DCPSystem::updateStatus() {
+    dcpSIM800.revalidateConnection();
     cicadaLeds.blinkStatusOk();
 }
 
 void DCPSystem::readSensors() {
-    dcpDHT.readDHT();
-    dcpRainGauge.readRG();
-    dcpVoltage.readVccIn();
-    dcpVoltage.readVccSol();
+    if (!getInUpdate()) {
+        dcpDHT.readDHT();
+        dcpRainGauge.readRG();
+        dcpVoltage.readVccIn();
+        dcpVoltage.readVccSol();
+    } else {
+        dcpDHT.updateNextSlot();
+        dcpRainGauge.updateNextSlot();
+        dcpVoltage.updateNextSlotIn();
+        dcpVoltage.updateNextSlotSol();
+    }
 }
 
 /**
@@ -383,9 +507,10 @@ void DCPSystem::initSlotStoreMetadata() {
     if (smi) {
         CIC_STATION_STOREMETADATA = smi;
     } else {
-        CIC_STATION_STOREMETADATA = 12;
+
+        CIC_STATION_STOREMETADATA = 10;
         spiffsManager.FSCreateFile(DIR_STATION_STOREMETADATA, String(CIC_STATION_STOREMETADATA));
-        CIC_DEBUG(F("TIME SLOT TO STORE METADATA not found.\nUsing 12 hours as default value..."));
+        CIC_DEBUG(F("TIME SLOT TO STORE METADATA not found.\nUsing 10 minutes as default value..."));
     }
 
     CIC_DEBUG_(F("TIME SLOT TO STORE METADATA: "));
@@ -413,12 +538,36 @@ void DCPSystem::initMQTT() {
     String sttPass = spiffsManager.FSReadString(DIR_STATION_PASS);
     String timeToSend = spiffsManager.FSReadString(DIR_STATION_SENDTIMEINTERVAL);
     if (timeToSend == "") {
+
         timeToSend = "10";
         spiffsManager.FSDeleteFiles(DIR_STATION_SENDTIMEINTERVAL);
         spiffsManager.FSCreateFile(DIR_STATION_SENDTIMEINTERVAL, timeToSend);
     }
 
     cicadaMQTT.setupMQTTModule(timeToSend.toInt(), STATION_ID, host, port, user, pass, topic, STATION_NAME, sttPass, STATION_LATITUDE, STATION_LONGITUDE);
+}
+
+/**
+ * Initialize Self Update
+ */
+void DCPSystem::initSelfUpdate(xTaskHandle coreTask) {
+    CIC_DEBUG_HEADER(F("INIT SELF UPDATE"));
+
+    // Get Host
+    String host = spiffsManager.getSettings("Self Up Host", DIR_STATION_SEHOST, true);
+    // Get HostPath
+    String hostpath = spiffsManager.getSettings("Self Up Host Path", DIR_STATION_SEPATH, true);
+    // Get Port
+    String port = spiffsManager.getSettings("Self Up Port", DIR_STATION_SEPORT, false);
+
+    String timeToCheckUp = spiffsManager.FSReadString(DIR_STATION_SETIME);
+    if (timeToCheckUp == "") {
+        timeToCheckUp = "10";
+        spiffsManager.FSDeleteFiles(DIR_STATION_SETIME);
+        spiffsManager.FSCreateFile(DIR_STATION_SETIME, timeToCheckUp);
+    }
+
+    selfUpdate.setupSelfUpdate(timeToCheckUp.toInt(), host, hostpath, port.toInt(), FIRMWARE_DATE, STATION_NAME, coreTask);
 }
 
 /**
@@ -524,6 +673,7 @@ void DCPSystem::initSensorsConfig() {
     }
 
     if (collvso == "") {
+
         collvso = "10";
         spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTVSO);
         spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTVSO, collvso);
@@ -545,15 +695,18 @@ void DCPSystem::initSensorsConfig() {
 }
 
 void DCPSystem::printConfiguration() {
+
     spiffsManager.FSPrintFileList();
 }
 
 String DCPSystem::getFwmVersion() {
+
     return FIRMWARE_VERSION;
 }
 
 String DCPSystem::getSSIDAP() {
     String __ssidAP = STATION_ID;
+
     return __ssidAP;
 }
 
@@ -575,66 +728,70 @@ void DCPSystem::taskTransmitLoop() {
     CIC_DEBUG(uxHighWaterMark);
 
     while (true) {
-        storeMetadados();
-        vTaskDelay(10);
-        transmiteData();
-        vTaskDelay(10);
+        vTaskDelay(20);
+        if (!getInUpdate()) {
+            storeMetadados();
+            transmiteData();
+            selfUpdate.updateFirmware();
+        } else {
+            updateNextSlotMetadados();
+            cicadaMQTT.updateNextSlot();
+        }
     }
 }
-
-//void DCPSystem::transmiteData() {
-//    if (dcpWifi.isConnected()) {
-//        cicadaMQTT.sendAllMessagesData();
-//    } else {
-//        if (dcpSIM800.isConnected()) {
-//            cicadaMQTT.sendAllMessagesData(dcpSIM800.getModem());
-//        } else {
-//            initCommunication();
-//        }
-//    }
-//}
 
 void DCPSystem::transmiteData() {
     if (!cicadaMQTT.sendAllMessagesDataWifi()) {
         if (!cicadaMQTT.sendAllMessagesDataSim(dcpSIM800.getModem())) {
-            initCommunication();
+            if (!initCommunication(false)) {
+                CIC_DEBUG(F("Communication failure. Operating without network!"));
+            }
         }
     }
 }
 
 void DCPSystem::nextSlotToSaveMetadata() {
-    int actualHour = cicadaRTC.now("%H").toInt() + 1;
+    /*********************/
+    int actualMinutes = cicadaRTC.now("%M").toInt() + 1;
 
-    int rSlot = actualHour % CIC_STATION_STOREMETADATA;
-    int iSlot = (int) (actualHour / CIC_STATION_STOREMETADATA);
+    int rSlot = actualMinutes % CIC_STATION_STOREMETADATA;
+    int iSlot = (int) (actualMinutes / CIC_STATION_STOREMETADATA);
 
     if (rSlot > 0) {
         iSlot = iSlot + 1;
     }
 
     int nextSlot = iSlot*CIC_STATION_STOREMETADATA;
-    if (nextSlot >= 24) {
-        nextSlot = nextSlot - 24;
+    if (nextSlot >= 60) {
+        nextSlot = nextSlot - 60;
     }
-
     nextTimeSlotToSaveMetadata = nextSlot;
     CIC_DEBUG_(F("Next slot to Save Metadata: "));
     CIC_DEBUG_(nextTimeSlotToSaveMetadata);
-    CIC_DEBUG(F(" hour."));
+    CIC_DEBUG(F(" min."));
 }
 
 boolean DCPSystem::onTimeToSaveMetadata() {
-    int actualHour = cicadaRTC.now("%H").toInt();
-    return actualHour == nextTimeSlotToSaveMetadata;
+    int actualMinutes = cicadaRTC.now("%M").toInt();
+    return actualMinutes == nextTimeSlotToSaveMetadata;
+}
+
+void DCPSystem::updateNextSlotMetadados() {
+    if (onTimeToSaveMetadata()) {
+        nextSlotToSaveMetadata();
+    }
 }
 
 void DCPSystem::storeMetadados() {
     if (onTimeToSaveMetadata()) {
+        CIC_DEBUG_HEADER(F("STORE METADATA"));
         cicadaLeds.redTurnOn();
         updateCommunicationStatus();
-        cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY);
+        cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY, FIRMWARE_VERSION, FIRMWARE_DATE);
         nextSlotToSaveMetadata();
         cicadaLeds.redTurnOff();
+
+        cicadaSDCard.cleanOlderFiles();
     }
 }
 
@@ -663,6 +820,7 @@ void DCPSystem::updateCommunicationStatus() {
         CIC_DEBUG_(F("Signal quality:"));
         CIC_DEBUG(COM_SIGNAL_QUALITTY);
     } else {
+
         COM_TYPE = "SIM";
         CIC_DEBUG_(F("Conection Type:"));
         CIC_DEBUG(COM_TYPE);

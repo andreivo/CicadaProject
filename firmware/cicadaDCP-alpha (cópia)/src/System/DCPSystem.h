@@ -23,9 +23,11 @@
 #include "SIM800/DCPSIM800.h"
 #include "RTC/DCPRTC.h"
 #include "MQTT/DCPMQTT.h"
+#include "SelfUpdate/DCPSelfUpdate.h"
 #include "../Sensors/DHT/DCPDht.h"
 #include "../Sensors/RAINGauge/DCPRainGauge.h"
 #include "../Sensors/VOLTAGE/DCPVoltage.h"
+
 
 
 
@@ -46,27 +48,51 @@ boolean takeCommunicationMutex();
 boolean takeCommunicationMutexWait();
 void giveCommunicationMutex();
 void giveCommunicationMutexWait();
+
+void logEnable();
+void logDisable();
+void cic_log(String msg, boolean ln = true);
+
+boolean getInUpdate();
+void setInUpdate(boolean inup);
+
 /******************************************************************************/
 /******************************************************************************/
 
 #if CIC_DEBUG_ENABLED
-#define CIC_DEBUG_(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) {Serial.print((text)); giveSerialMutex(); break;} attempts = attempts+1;delay(SERIAL_ATTEMPTS_DELAY);}}
+#define CIC_DEBUG_(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) {Serial.print((text)); cic_log(String(text), false); giveSerialMutex(); break;} attempts = attempts+1;delay(SERIAL_ATTEMPTS_DELAY);}}
 #else
-#define CIC_DEBUG_(text) {}
+#define CIC_DEBUG_(text) { cic_log(String(text), false);}
 #endif
 
 #if CIC_DEBUG_ENABLED
-
-#define CIC_DEBUG_HEADER(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.println(F("\n")); Serial.println((text)); Serial.println(F("===========================================")); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY);}}
+#define CIC_DEBUGWL_(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) {Serial.print((text)); giveSerialMutex(); break;} attempts = attempts+1;delay(SERIAL_ATTEMPTS_DELAY);}}
 #else
-#define CIC_DEBUG_HEADER(text) {}
+#define CIC_DEBUGWL_(text) {}
 #endif
 
 #if CIC_DEBUG_ENABLED
-
-#define CIC_DEBUG(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.print((text)); Serial.print(F(" (Core: ")); Serial.print(xPortGetCoreID()); Serial.println(F(")")); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY); }}
+#define CIC_DEBUG_HEADER(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.println(F("\n")); Serial.println((text)); Serial.println(F("===========================================")); cic_log(String(text)); cic_log(F("===========================================")); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY);}}
 #else
-#define CIC_DEBUG(text) {}
+#define CIC_DEBUG_HEADER(text) {cic_log(String(text)); cic_log(F("==========================================="));}
+#endif
+
+#if CIC_DEBUG_ENABLED
+#define CIC_DEBUG_HEADERWL(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.println(F("\n")); Serial.println((text)); Serial.println(F("===========================================")); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY);}}
+#else
+#define CIC_DEBUG_HEADERWL(text) {}
+#endif
+
+#if CIC_DEBUG_ENABLED
+#define CIC_DEBUG(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.print((text)); Serial.print(F(" (Core: ")); Serial.print(xPortGetCoreID()); Serial.println(F(")")); cic_log(String(text) + " (Core: " + String(xPortGetCoreID()) + ")"); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY); }}
+#else
+#define CIC_DEBUG(text) {cic_log(String(text) + " (Core: " + String(xPortGetCoreID()) + ")");}
+#endif
+
+#if CIC_DEBUG_ENABLED
+#define CIC_DEBUGWL(text) { int attempts = 0; while (attempts <= SERIAL_ATTEMPTS) { if (takeSerialMutex()) { Serial.print((text)); Serial.print(F(" (Core: ")); Serial.print(xPortGetCoreID()); Serial.println(F(")")); giveSerialMutex(); break; } attempts = attempts + 1; delay(SERIAL_ATTEMPTS_DELAY); }}
+#else
+#define CIC_DEBUGWL(text) {}
 #endif
 
 // Serial debug
@@ -79,13 +105,13 @@ void giveCommunicationMutexWait();
 class DCPSystem {
 public:
     DCPSystem();
-    void readSerialCommands();
+    void readSerialCommands(xTaskHandle coreTask);
     void preInitSystem();
-    void initCommunication();
-    void setupWizard();
-    void initSystem();
+    boolean initCommunication(boolean startPromptOnFail = true);
+    void setupWizard(xTaskHandle coreTask);
+    void initSystem(xTaskHandle coreTask);
     void checkAPWizard(xTaskHandle coreTask);
-    void blinkStatus();
+    void updateStatus();
     void readSensors();
     void printNowDate();
     void initMQTT();
@@ -94,6 +120,7 @@ public:
     String IpAddress2String(const IPAddress& ipAddress);
     void updateCommunicationStatus();
     void updateCommunicationSignal();
+    void initSelfUpdate(xTaskHandle coreTask);
 
 private:
     void setupTimeoutWizard();
@@ -111,7 +138,10 @@ private:
     void storeMetadados();
     int nextTimeSlotToSaveMetadata;
     void nextSlotToSaveMetadata();
+    void updateNextSlotMetadados();
     boolean onTimeToSaveMetadata();
+    boolean networkFailureBoot();
+    void clearSerialInput();
 
 };
 

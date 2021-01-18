@@ -29,6 +29,8 @@ DCPRTC simRTC;
 HardwareSerial SerialGSM(1);
 TinyGsm modemGSM(SerialGSM);
 
+DCPSDCard simSdCard;
+
 DCPSIM800::DCPSIM800() {
 }
 
@@ -84,7 +86,7 @@ boolean DCPSIM800::setupSIM800Module() {
         while (count++ < SIM_CONN_COUNTER) {
             turnOn();
             CIC_DEBUG(F("Setup GSM..."));
-            CIC_DEBUG(F("Please, wait for registration on the network. This operation can take up to 30 seconds."));
+            CIC_DEBUG(F("Please, wait for registration on the network. This operation takes quite some time."));
             boolean conn = true;
 
             //Inicializamos a serial onde está o modem
@@ -92,7 +94,8 @@ boolean DCPSIM800::setupSIM800Module() {
             simDCPLeds.redBlink(60, 500);
             String csq = getSignalQuality();
             CIC_DEBUG_(F("Signal quality: "));
-            CIC_DEBUG(csq);
+            CIC_DEBUG_(csq);
+            CIC_DEBUG(F("%"));
 
             //Mostra informação sobre o modem
             CIC_DEBUG_(F("Modem Info: "));
@@ -278,7 +281,7 @@ String DCPSIM800::getSignalQuality() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
         if (takeCommunicationMutex()) {
-            String result = String(modemGSM.getSignalQuality());
+            String result = String(getCSQasQuality(modemGSM.getSignalQuality()));
             giveCommunicationMutex();
             return result;
         } else {
@@ -289,6 +292,13 @@ String DCPSIM800::getSignalQuality() {
     }
     return "";
 
+}
+
+int DCPSIM800::getCSQasQuality(int CSQ) {
+    int quality = 0;
+    quality = (CSQ * 100) / 31;
+
+    return quality;
 }
 
 String DCPSIM800::getIMEI() {

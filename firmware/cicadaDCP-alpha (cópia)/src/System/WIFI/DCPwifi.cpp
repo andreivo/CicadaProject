@@ -33,6 +33,8 @@ SPIFFSManager wifiSpiffsManager;
 
 DCPLeds wifiDCPLeds;
 
+DCPSDCard wifiSdCard;
+
 DCPwifi::DCPwifi() {
 }
 
@@ -226,4 +228,132 @@ String DCPwifi::scanNetworks() {
         }
     }
     return result;
+}
+
+// Utility to extract header value from headers
+
+String DCPwifi::getHeaderValue(String header, String headerName) {
+    return header.substring(strlen(headerName.c_str()));
+}
+
+boolean DCPwifi::downloadFile(String host, String hostPath, int port, String filename, String saveAs, boolean checkContentType) {
+    WiFiClient client;
+    long contentLength = 0;
+    bool isValidContentType = false;
+
+    String bin = hostPath + "/" + filename;
+
+    if (client.connect(host.c_str(), port)) {
+        // Connection Succeed.
+        // Fecthing the bin
+        CIC_DEBUG("Fetching: " + String(bin));
+
+        // Get the contents of the bin file
+        client.print(String("GET ") + bin + " HTTP/1.1\r\n" +
+                "Host: " + host + "\r\n" +
+                "Cache-Control: no-cache\r\n" +
+                "Connection: close\r\n\r\n");
+
+        // Check what is being sent
+        CIC_DEBUG_(String("GET ") + bin + " HTTP/1.1\r\n" +
+                "Host: " + host + "\r\n" +
+                "Cache-Control: no-cache\r\n" +
+                "Connection: close\r\n\r\n");
+
+        unsigned long timeout = millis();
+        while (client.available() == 0) {
+            if (millis() - timeout > 50000) {
+                CIC_DEBUG("Client Timeout !");
+                client.stop();
+                return false;
+            }
+        }
+
+        while (client.available()) {
+            // read line till /n
+            String line = client.readStringUntil('\n');
+            // remove space, to check if the line is end of headers
+            line.trim();
+
+            // if the the line is empty,
+            // this is end of headers
+            // break the while and feed the
+            // remaining `client` to the
+            // Update.writeStream();
+            if (!line.length()) {
+                //headers ended
+                break; // and get the OTA started
+            }
+
+            // Check if the HTTP Response is 200
+            // else break and Exit Update
+            if (line.startsWith("HTTP/1.1")) {
+                if (line.indexOf("200") < 0) {
+                    CIC_DEBUG("Got a non 200 status code from server.");
+                    CIC_DEBUG(line);
+                    return false;
+                }
+            }
+
+            // extract headers here
+            // Start with content length
+            if (line.startsWith("Content-Length: ")) {
+                contentLength = atol((getHeaderValue(line, "Content-Length: ")).c_str());
+                CIC_DEBUG("Got " + String(contentLength) + " bytes from server");
+            }
+
+            // Next, the content type
+            if (checkContentType) {
+                if (line.startsWith("Content-Type: ")) {
+                    String contentType = getHeaderValue(line, "Content-Type: ");
+                    CIC_DEBUG("Got " + contentType + " payload.");
+                    if (contentType == "application/octet-stream") {
+                        isValidContentType = true;
+                    }
+                }
+            } else {
+                isValidContentType = true;
+            }
+        }
+    } else {
+        // Probably a choppy network?
+        CIC_DEBUG("Connection to " + String(host) + " failed. Please check your setup");
+        return false;
+    }
+
+    // Check what is the contentLength and if content type is `application/octet-stream`
+    CIC_DEBUG("contentLength : " + String(contentLength) + ", isValidContentType : " + String(isValidContentType));
+
+    // check contentLength and content type
+    if (contentLength && isValidContentType) {
+        // create buffer for read
+        uint8_t buff[128] = {0};
+        File32 myFile;
+
+        // read all data from server
+        CIC_DEBUG(F("Download in progress."));
+        if (myFile.open(saveAs.c_str(), O_RDWR | O_CREAT)) {
+            while (contentLength > 0 || contentLength == -1) {
+                // get available data size
+                size_t size = client.available();
+
+                if (size) {
+                    // read up to 128 byte
+                    int c = client.readBytes(buff, ((size > sizeof (buff)) ? sizeof (buff) : size));
+                    myFile.write(buff, c);
+
+                    if (contentLength > 0) {
+                        contentLength -= c;
+                    }
+                }
+                delay(1);
+                //Update Task Watchdog timer
+                esp_task_wdt_reset();
+            }
+        }
+        CIC_DEBUG(F(""));
+        myFile.close();
+        CIC_DEBUG("Download is done!");
+        return true;
+    }
 }

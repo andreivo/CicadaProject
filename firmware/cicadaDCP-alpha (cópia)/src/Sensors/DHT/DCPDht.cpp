@@ -102,3 +102,9 @@ String DCPDht::printDHT() {
         return F("Error reading DHT Sensor!");
     }
 }
+
+void DCPDht::updateNextSlot() {
+    if (timeToReadDHT()) {
+        nextSlotTimeToRead();
+    }
+}

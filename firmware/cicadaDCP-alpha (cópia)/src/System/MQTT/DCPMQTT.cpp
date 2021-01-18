@@ -27,7 +27,6 @@ boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT
     CIC_DEBUG_HEADER(F("SETUP MQTT MODULE"));
 
     TIME_TO_SEND = timeToSend;
-    //TIME_TO_SEND = 5;
     CIC_DEBUG_(F("Slot Time to send: "));
     CIC_DEBUG_(TIME_TO_SEND);
     CIC_DEBUG(F(" min."));
@@ -75,15 +74,16 @@ boolean DCPMQTT::onTimeToSend() {
 boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
     if (onTimeToSend()) {
         if (mqttSIM800.isConnected()) {
-            mqttLeds.redTurnOn();
+            mqttLeds.greenTurnOn();
             TinyGsmClient _clientTransport(modem);
             PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
             clientPub = &_clientPub;
             clientPub->setSocketTimeout(20);
             sendMessagesData();
-            mqttLeds.redTurnOff();
+            mqttLeds.greenTurnOff();
             return true;
         } else {
+            nextSlotTimeToSend();
             return false;
         }
     } else {
@@ -94,11 +94,13 @@ boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
 boolean DCPMQTT::sendAllMessagesDataWifi() {
     if (onTimeToSend()) {
         if (mqttWifi.isConnected()) {
+            mqttLeds.greenTurnOn();
             WiFiClient _clientTransport;
             PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
             clientPub = &_clientPub;
             clientPub->setSocketTimeout(20);
             sendMessagesData();
+            mqttLeds.greenTurnOff();
             return true;
         } else {
             return false;
@@ -115,25 +117,16 @@ void DCPMQTT::sendMessagesData() {
     CIC_DEBUG_("On core: ");
     CIC_DEBUG(xPortGetCoreID());
 
-    String fileData = mqttSdCard.getFirstFile("/");
-    if (fileData != "") {
-        if (connectMQTTServer()) {
-            while (fileData != "") {
-                if (mqttSdCard.readPublishFile(fileData, publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
-                    mqttSdCard.deleteFile(fileData);
-                    fileData = mqttSdCard.getFirstFile("/");
-                } else {
-                    fileData = mqttSdCard.getFirstFile("/");
-                    CIC_DEBUG_(F("Error on sending: "));
-                    CIC_DEBUG(fileData);
-                }
-            }
+    if (connectMQTTServer()) {
+        if (!mqttSdCard.mqttPublishFiles(publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
+            CIC_DEBUG_(F("Error on MQTT messages publication."));
         } else {
-            CIC_DEBUG(F("MQTT Server connection failure!"))
+            CIC_DEBUG(F("Successful MQTT messages publication."));
         }
     } else {
-        CIC_DEBUG(F("No messages to send!"))
+        CIC_DEBUG(F("MQTT Server connection failure!"))
     }
+
     nextSlotTimeToSend();
     CIC_DEBUG(F("Finished send MQTT messages!"));
 }
@@ -167,7 +160,7 @@ boolean DCPMQTT::connectMQTTServer() {
             CIC_DEBUG("Waiting modem to connectMQTTServer ...");
         }
         attempts = attempts + 1;
-        vTaskDelay(SIM_ATTEMPTS_DELAY);
+        vTaskDelay(pdMS_TO_TICKS(SIM_ATTEMPTS_DELAY));
     }
     return false;
 }
@@ -189,22 +182,27 @@ boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknD
         if (takeCommunicationMutex()) {
             int status = _clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
             if (status == 1) {
-                CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
+                CIC_DEBUGWL(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
                 giveCommunicationMutex();
                 return true;
             } else {
-                CIC_DEBUG_(F("Error status: "));
-                CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
+                CIC_DEBUGWL_(F("Published unsuccessful! Error status: "));
+                CIC_DEBUGWL(String(status)); //Status 1 se sucesso ou 0 se deu erro
                 giveCommunicationMutex();
                 return false;
             }
         } else {
-            CIC_DEBUG("Waiting modem to publishMessage ...");
+            CIC_DEBUGWL("Waiting modem to publishMessage ...");
         }
         attempts = attempts + 1;
-        vTaskDelay(SIM_ATTEMPTS_DELAY);
+        vTaskDelay(pdMS_TO_TICKS(SIM_ATTEMPTS_DELAY));
     }
-    CIC_DEBUG("Published unsuccessful!");
+    CIC_DEBUGWL("Published unsuccessful!");
     return false;
 }
 
+void DCPMQTT::updateNextSlot() {
+    if (onTimeToSend()) {
+        nextSlotTimeToSend();
+    }
+}

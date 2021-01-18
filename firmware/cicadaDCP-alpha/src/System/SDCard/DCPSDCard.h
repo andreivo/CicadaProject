@@ -96,9 +96,11 @@ public:
     String prepareData(String sensorCode, String dataType, String collectionDate, String value);
     boolean storeData(String sensor, String measures);
     String prepareDataMetadata(String dataType, String collectionDate, String value, String context = "");
-    boolean storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ);
+    boolean storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware);
     void deleteOldFiles(String path = "/");
     void cleanOlderFiles();
+    boolean fileExists(String file);
+    boolean deleteUpdate();
     String getCardType();
     String cidDmp();
     String csdDmp();
@@ -106,11 +108,12 @@ public:
     String dmpVol();
     void formatSD(boolean ask = true);
     boolean writeLog(String log, boolean ln = true);
+    boolean writeBinFile(String filename, uint8_t buff[128], int len);
+    boolean takeSDMutex(String function);
+    void giveSDMutex(String function);
 private:
     int ctrlLog = 1;
     boolean readPublishFile(String filename, boolean(*callback)(String msg, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC), PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC);
-    boolean takeSDMutex(String function);
-    void giveSDMutex(String function);
     String padL(int len, String inS);
     String padR(int len, String inS);
     boolean printSDError();

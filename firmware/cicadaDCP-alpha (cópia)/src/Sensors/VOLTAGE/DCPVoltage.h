@@ -31,6 +31,8 @@ public:
     void readVccSol();
     String printVccIn();
     String printVccSol();
+    void updateNextSlotIn();
+    void updateNextSlotSol();
 private:
     int nextSlotTimeToRead(int TIME_TO_READ);
     String codeVccIn;

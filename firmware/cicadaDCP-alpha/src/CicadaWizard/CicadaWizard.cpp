@@ -515,6 +515,19 @@ void CicadaWizard::handleRoot() {
     // Get the previous Store metadata interval
     String smi = spiffsMan.getSettings("Store metadata interval", DIR_STATION_STOREMETADATA, false);
 
+    // Get the previous self update host
+    String host = spiffsMan.getSettings("Host", DIR_STATION_SEHOST, true);
+
+    // Get the previous self update path
+    String supath = spiffsMan.getSettings("Path", DIR_STATION_SEPATH, true);
+
+    // Get the previous self update port
+    String suport = spiffsMan.getSettings("Port", DIR_STATION_SEPORT, false);
+
+    // Get the previous self update time
+    String sudtupdate = spiffsMan.getSettings("Time", DIR_STATION_SETIME, false);
+
+
     // Setup the form
     String form = FPSTR(HTTP_FORM_CONFIG_STATION);
     form.replace("{vol}", vol);
@@ -524,6 +537,11 @@ void CicadaWizard::handleRoot() {
     form.replace("{lon}", lon);
     form.replace("{sti}", sti);
     form.replace("{smi}", smi);
+
+    form.replace("{suhost}", host);
+    form.replace("{supath}", supath);
+    form.replace("{suport}", suport);
+    form.replace("{sudtupdate}", sudtupdate);
 
     form.replace("{sttid}", stationID);
     form.replace("{cicadalogo}", HTTP_CICADALOGO);
@@ -586,6 +604,23 @@ void CicadaWizard::handleSaveCicadaStation() {
     // Send Time Interval
     String smi = server->arg("smi");
     spiffsMan.saveSettings("Store metadata Interval", DIR_STATION_STOREMETADATA, smi);
+
+
+    // Get the previous self update host
+    String host = server->arg("suhost");
+    spiffsMan.saveSettings("Host", DIR_STATION_SEHOST, FILE_STATION_SEHOST, host);
+
+    // Get the previous self update path
+    String supath = server->arg("supath");
+    spiffsMan.saveSettings("Path", DIR_STATION_SEPATH, FILE_STATION_SEPATH, supath);
+
+    // Get the previous self update port
+    String suport = server->arg("suport");
+    spiffsMan.saveSettings("Port", DIR_STATION_SEPORT, suport);
+
+    // Get the previous self update time
+    String sudtupdate = server->arg("sudtupdate");
+    spiffsMan.saveSettings("Time", DIR_STATION_SETIME, sudtupdate);
 
     //Redirect Step 2
     handleMQTTSERVER();
@@ -659,6 +694,7 @@ void CicadaWizard::handleSensors() {
  * Save CICADA Sensors
  */
 void CicadaWizard::handleSaveSensorsConfig() {
+
     DEBUG_WM(F("\n\nSAVE CICADA DCP Sensors"));
     DEBUG_WM(F("===========================================\n"));
 
@@ -747,6 +783,7 @@ void CicadaWizard::handleMQTTSERVER() {
  * Save CICADA MQTT
  */
 void CicadaWizard::handleSaveCicadaMQTT() {
+
     DEBUG_WM(F("\n\nSAVE CICADA DCP MQTT"));
     DEBUG_WM(F("===========================================\n"));
 
@@ -771,6 +808,7 @@ void CicadaWizard::handleSaveCicadaMQTT() {
 }
 
 void CicadaWizard::handleSIMCard() {
+
     String page = FPSTR(HTTP_HEAD_HTML);
     page.replace("{v}", "Cicada DCP Wizard");
     page += FPSTR(HTTP_SCRIPT);
@@ -813,6 +851,7 @@ void CicadaWizard::handleSIMCard() {
  * Save CICADA SIM Card
  */
 void CicadaWizard::handleSaveCicadaSIMCard() {
+
     DEBUG_WM(F("\n\nSAVE CICADA SIM CARD"));
     DEBUG_WM(F("===========================================\n"));
 
@@ -830,6 +869,7 @@ void CicadaWizard::handleSaveCicadaSIMCard() {
 }
 
 void CicadaWizard::handleWIFIConfig(String msg) {
+
     String page = FPSTR(HTTP_HEAD_HTML);
     page.replace("{v}", "Cicada DCP Wizard");
     page += FPSTR(HTTP_SCRIPT);
@@ -859,11 +899,13 @@ void CicadaWizard::handleWIFIConfig(String msg) {
 }
 
 void CicadaWizard::handleDelWifi() {
+
     deleteWifiCredentials();
     handleWIFIConfig("The credentials have been deleted!");
 }
 
 void CicadaWizard::handleConfirmFactoryReset() {
+
     String page = FPSTR(HTTP_HEAD_HTML);
     page.replace("{v}", "Cicada DCP Wizard");
     page += FPSTR(HTTP_SCRIPT);
@@ -893,6 +935,7 @@ void CicadaWizard::handleConfirmFactoryReset() {
 }
 
 void CicadaWizard::handleFactoryReset() {
+
     spiffsMan.FSDeleteFiles("/");
     handleRoot();
 }
@@ -1363,12 +1406,14 @@ void CicadaWizard::setRemoveDuplicateAPs(boolean removeDuplicates) {
 template <typename Generic>
 void CicadaWizard::DEBUG_WM(Generic text) {
     if (_debug) {
+
         Serial.println(text);
     }
 }
 
 void CicadaWizard::DEBUG_WM_(String text) {
     if (_debug) {
+
         Serial.print(text);
     }
 }

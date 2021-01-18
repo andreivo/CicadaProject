@@ -41,8 +41,6 @@ public:
     void nextSlotToRevalidateConn();
     boolean onTimeToRevalidateConn();
     void revalidateConnection();
-
+    int getCSQasQuality(int CSQ);
 };
-
-
 #endif

@@ -122,3 +122,9 @@ String DCPRainGauge::printTipBucket() {
         return F("No Rain Gauge Data");
     }
 }
+
+void DCPRainGauge::updateNextSlot() {
+    if (timeToReadRG()) {
+        nextSlotTimeToRead();
+    }
+}

@@ -14,7 +14,15 @@
 DCPSystem cicadaDcpSystem;
 xTaskHandle coreTask;
 
+
+void taskTransmitLoop(void * pvParameters ){
+  cicadaDcpSystem.taskTransmitLoop(); 
+}
+
 void setup() {
+  //Disable Log on initialization
+  logDisable();
+  
   // PreInitialization
   cicadaDcpSystem.preInitSystem();
   
@@ -22,10 +30,10 @@ void setup() {
   cicadaDcpSystem.initCommunication();
    
   // Init all system configurations
-  cicadaDcpSystem.initSystem();
-  
+  cicadaDcpSystem.initSystem(coreTask);
+
   // Create a new parallel task on core 0
-  // The task that is running in parallel transmit data to server MQTT
+  // The task that is running in parallel transmit data to server MQTT               
   xTaskCreatePinnedToCore (
                      taskTransmitLoop,   /* function that implements the task */
                      "taskTransmitLoop", /* task name */
@@ -33,26 +41,25 @@ void setup() {
                      NULL,               /* input parameter for the task (can be NULL) */
                      1,                  /* task priority (0 to N) */
                      &coreTask,          /* reference to the task (can be NULL) */
-                     0);                 /* Core that will perform the task */
+                     0);
 
   /* Internet connection may take seconds to complete. This delay can block the main loop.
      In the case of the PubSubClient library, the default connection timeout is 15 seconds.
      To prevent the Task Watchdog from being triggered (default 5 seconds) it is necessary to 
-     change the trigger time to 120 seconds.*/
-  esp_task_wdt_init(120, true);
+     change the trigger time to 600 seconds.*/
+  esp_task_wdt_init(600, true);
   esp_task_wdt_add(NULL);
+
+  //Enable Log after initialization
+  logEnable();
 }
 
 void loop() {
-  cicadaDcpSystem.readSerialCommands();
+  cicadaDcpSystem.readSerialCommands(coreTask);
   cicadaDcpSystem.checkAPWizard(coreTask);
-  cicadaDcpSystem.blinkStatus();
+  cicadaDcpSystem.updateStatus();
   cicadaDcpSystem.readSensors();
 
   //Update Task Watchdog timer
   esp_task_wdt_reset();
-}
-
-void taskTransmitLoop(void * pvParameters ){
-  cicadaDcpSystem.taskTransmitLoop(); 
 }

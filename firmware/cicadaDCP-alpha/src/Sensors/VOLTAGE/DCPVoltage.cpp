@@ -159,3 +159,15 @@ String DCPVoltage::printVccSol() {
     float vccin = ADC2VOLTS(adcValue);
     return String(vccin) + "v";
 }
+
+void DCPVoltage::updateNextSlotIn() {
+    if (timeToReadVccIn()) {
+        nextVccInSlotTimeToRead();
+    }
+}
+
+void DCPVoltage::updateNextSlotSol() {
+    if (timeToReadVccSol()) {
+        nextVccSolSlotTimeToRead();
+    }
+}

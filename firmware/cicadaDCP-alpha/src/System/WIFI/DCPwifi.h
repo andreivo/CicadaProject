@@ -32,6 +32,8 @@ public:
     void setSSID(String ssid);
     void setPWD(String pwd);
     String scanNetworks();
+private:
+
 };
 
 #endif

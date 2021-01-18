@@ -32,6 +32,9 @@ public:
     void setSSID(String ssid);
     void setPWD(String pwd);
     String scanNetworks();
+    boolean downloadFile(String host, String hostPath, int port, String filename, String saveAs, boolean checkContentType = true);
+private:
+    String getHeaderValue(String header, String headerName);
 };
 
 #endif

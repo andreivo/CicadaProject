@@ -33,6 +33,8 @@ SPIFFSManager wifiSpiffsManager;
 
 DCPLeds wifiDCPLeds;
 
+DCPSDCard wifiSdCard;
+
 DCPwifi::DCPwifi() {
 }
 

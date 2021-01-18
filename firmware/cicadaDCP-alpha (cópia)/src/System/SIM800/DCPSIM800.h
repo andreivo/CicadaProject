@@ -35,6 +35,16 @@ public:
     void setPWD(String pwd);
     boolean isConnected();
     String sendAT(String comm);
+
+    int nextTimeSlotToRevalidateConn;
+    boolean enableRevalidate = true;
+    void nextSlotToRevalidateConn();
+    boolean onTimeToRevalidateConn();
+    void revalidateConnection();
+    String getHeaderValue(String header, String headerName);
+    boolean downloadFile(String host, String hostPath, int port, String filename, String saveAs, boolean checkContentType = true);
+    void printPercent(long readLength, long contentLength, uint32_t timeElapsed);
+
 };
 
 

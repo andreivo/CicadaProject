@@ -23,11 +23,14 @@ DCPLeds serialLeds;
 CicadaWizard serialWizard;
 hw_timer_t * timeoutSerialWizard = NULL;
 
+DCPSelfUpdate serialSelfUpdate;
+
 DCPSerialCommands::DCPSerialCommands() {
 }
 
-void DCPSerialCommands::initSerialCommands(String firmware) {
+void DCPSerialCommands::initSerialCommands(String firmware, String firmwareDate) {
     FIRMWARE = firmware;
+    FIRMWARE_DATE = firmwareDate;
 }
 
 String DCPSerialCommands::getArguments(String data, int index, char separator) {
@@ -83,6 +86,8 @@ void DCPSerialCommands::readSerialCommands(xTaskHandle coreTask) {
             sconfigComm();
         } else if (mandatoryCommand == "wizard") {
             wizardComm(coreTask);
+        } else if (mandatoryCommand == "forceupdate") {
+            forceUpdateComm(serialCommand);
         } else if (mandatoryCommand == "wifi") {
             wifiComm(serialCommand);
         } else if (mandatoryCommand == "sim") {
@@ -119,6 +124,8 @@ void DCPSerialCommands::printCommands() {
     Serial.println(F("           CICADA DATA COLLECTION PLATFORM            "));
     Serial.print(F("                 Version: "));
     Serial.println(FIRMWARE);
+    Serial.print(F("             Date: "));
+    Serial.println(FIRMWARE_DATE);
     Serial.println(F("      https://github.com/andreivo/CicadaProject       "));
     Serial.println(F("======================================================"));
     Serial.println(F(""));
@@ -140,23 +147,25 @@ void DCPSerialCommands::printCommands() {
     Serial.println(F("                     (WARNING: cannot be undone)"));
     Serial.println(F("sconfig            Print the current system configuration."));
     Serial.println(F("wizard             Enable Cicada Wizard on the access point network."));
+    Serial.println(F("forceupdate        Starts checking for new firmware and updates the system if it exists."));
+    Serial.println(F("   -f \"[value]\"    Updates the firmware based on the specified file."));
 
 
     Serial.println(F("\nWifi system commands:"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("wifi               Print the current system status."));
-    Serial.println(F("   -r                Reset WiFi appliance settings, SSID and password."));
-    Serial.println(F("   -d                Print available SSID."));
+    Serial.println(F("   -r              Reset WiFi appliance settings, SSID and password."));
+    Serial.println(F("   -d              Print available SSID."));
     Serial.println(F("   -s \"[value]\"    Set a new SSID."));
     Serial.println(F("   -p \"[value]\"    Set a new Password."));
 
 
     Serial.println(F("\nSim Card system commands:"));
     Serial.println(F("----------------------------------------------------------"));
-    Serial.println(F("sim               Print the current system status."));
-    Serial.println(F("   -on               Moden turn on."));
-    Serial.println(F("   -off              Moden turn off."));
-    Serial.println(F("   -r                Reset SIM configuration. (WARNING: This action disconnect to the wifi.)"));
+    Serial.println(F("sim                Print the current system status."));
+    Serial.println(F("   -on             Moden turn on."));
+    Serial.println(F("   -off            Moden turn off."));
+    Serial.println(F("   -r              Reset SIM configuration. (WARNING: This action disconnect to the wifi.)"));
     Serial.println(F("   -a \"[value]\"    Set a new Carrier APN."));
     Serial.println(F("   -u \"[value]\"    Set a new User."));
     Serial.println(F("   -p \"[value]\"    Set a new Password."));
@@ -166,6 +175,7 @@ void DCPSerialCommands::printCommands() {
     Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("ls                 Print the current weather file list."));
     Serial.println(F("   -l              Print the log file list."));
+    Serial.println(F("   -u              Print the update file list."));
     Serial.println(F("cat -f \"[file]\"    Print the file content."));
     Serial.println(F("                   Print the file content e.g 1: cat -f \"20210106.dht\""));
     Serial.println(F("                   Print the log content  e.g 2: cat -f \"log/20210106.log\""));
@@ -283,6 +293,15 @@ void DCPSerialCommands::sconfigComm() {
     Serial.print(F("Time slot to store metadata: "));
     Serial.print(serialSpiffs.getSettings(".", DIR_STATION_STOREMETADATA, false));
     Serial.println(F(" minutes"));
+    Serial.print(F("Self update-Host           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEHOST, true));
+    Serial.print(F("Self update-Path           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEPATH, true));
+    Serial.print(F("Self update-Port           : "));
+    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEPORT, false));
+    Serial.print(F("Self update-Daily Time     : "));
+    Serial.print(serialSpiffs.getSettings(".", DIR_STATION_SETIME, false));
+    Serial.println(F(":00 hours"));
 
     Serial.println(F(""));
     Serial.println(F("DHT Sensor"));
@@ -365,6 +384,65 @@ void DCPSerialCommands::sconfigComm() {
     Serial.println(serialSpiffs.getSettings(".", DIR_WIFI_SSID, false));
     Serial.print(F("Password                   : "));
     Serial.println(serialSpiffs.getSettings(".", DIR_WIFI_PWD, false));
+}
+
+void DCPSerialCommands::initSelfUpdate() {
+    CIC_DEBUG_HEADER(F("INIT FORCE SELF UPDATE"));
+
+    // Get Host
+    String host = commSpiffsManager.getSettings("Self Up Host", DIR_STATION_SEHOST, true);
+    // Get HostPath
+    String hostpath = commSpiffsManager.getSettings("Self Up Host Path", DIR_STATION_SEPATH, true);
+    // Get Port
+    String port = commSpiffsManager.getSettings("Self Up Port", DIR_STATION_SEPORT, false);
+
+    String sttName = commSpiffsManager.FSReadString(DIR_STATION_NAME);
+
+    String timeToCheckUp = commSpiffsManager.FSReadString(DIR_STATION_SETIME);
+    if (timeToCheckUp == "") {
+        timeToCheckUp = "10";
+        commSpiffsManager.FSDeleteFiles(DIR_STATION_SETIME);
+        commSpiffsManager.FSCreateFile(DIR_STATION_SETIME, timeToCheckUp);
+    }
+
+    serialSelfUpdate.setupSelfUpdate(timeToCheckUp.toInt(), host, hostpath, port.toInt(), FIRMWARE_DATE, sttName);
+}
+
+void DCPSerialCommands::forceUpdateComm(String serialCommand) {
+    initSelfUpdate();
+
+    String args = getArguments(serialCommand, 1);
+    if (args != "") {
+        String madatoryArg = getArguments(args, 0, ' ');
+        String value = getArguments(args, 1, ' ');
+        value = getArguments(value, 1, '"');
+        if (madatoryArg == "f") {
+            Serial.println(F("\n\nSTARTING FIRMWARE UPDATE"));
+            Serial.println(F("=========================================================="));
+            Serial.println(F("WARNING.....WARNING.....WARNING.....\n"
+                    "This operation will update the firmware and is irreversible.\n"
+                    "(WARNING: cannot be undone)\n\n"
+                    "Enter 'Y' to continue: "));
+            while (!Serial.available()) {
+                SysCall::yield();
+            }
+            char command = Serial.read();
+            if (command != 'Y') {
+                Serial.println(F("Quiting, you did not enter 'Y'."));
+                // Read any existing Serial data.
+                clearSerialInput();
+                return;
+            }
+            // Read any existing Serial data.
+            clearSerialInput();
+            serialSelfUpdate.startUpdate(value);
+        } else {
+            Serial.print(F("ERROR! Argument not recognized: "));
+            Serial.println(madatoryArg);
+        }
+    } else {
+        serialSelfUpdate.updateFirmware(true);
+    }
 }
 
 void DCPSerialCommands::wizardComm(xTaskHandle coreTask) {
@@ -513,9 +591,9 @@ void DCPSerialCommands::printSystemWiFiStatus() {
     Serial.print(F("Local Ip:                              "));
     Serial.println(WiFi.localIP());
 
-    Serial.print(F("RSSI (dBm):                            "));
-    Serial.print(WiFi.RSSI());
-    Serial.println(F(" (Signal Strength)"));
+    Serial.print(F("Signal Quality:                        "));
+    Serial.print(serialWifi.getSignalQuality());
+    Serial.println(F("%"));
 
     Serial.print(F("Subnet Mask:                           "));
     Serial.println(WiFi.subnetMask());
@@ -540,6 +618,7 @@ void DCPSerialCommands::simComm(String serialCommand) {
         } else if (madatoryArg == "off") {
             //Turn off
             serialSIM800.turnOff();
+            Serial.println(F("Modem turnoff is done!"));
         } else if (madatoryArg == "r") {
             //Reset
             serialSIM800.resetConfig();
@@ -606,8 +685,9 @@ void DCPSerialCommands::printSystemSimStatus() {
         Serial.println(local);
 
         String csq = serialSIM800.getSignalQuality();
-        Serial.print(F("Signal quality:                        "));
-        Serial.println(csq);
+        Serial.print(F("Signal Quality:                        "));
+        Serial.print(csq);
+        Serial.println(F("%"));
     }
 
     // Get MQTT Host
@@ -690,6 +770,10 @@ void DCPSerialCommands::lsComm(String serialCommand) {
             Serial.println(F("\nLOG FILES LIST"));
             Serial.println(F("----------------------------------------------------------"));
             serialSDCard.printDirectory("log");
+        } else if (madatoryArg == "u") {
+            Serial.println(F("\nUPDATE FILES LIST"));
+            Serial.println(F("----------------------------------------------------------"));
+            serialSDCard.printDirectory("update");
         } else {
             Serial.print(F("ERROR! Argument not recognized: "));
             Serial.println(madatoryArg);
@@ -746,3 +830,4 @@ String DCPSerialCommands::padL(int len, String inS) {
     sprintf(buffer, format.c_str(), inS.c_str());
     return buffer;
 }
+
