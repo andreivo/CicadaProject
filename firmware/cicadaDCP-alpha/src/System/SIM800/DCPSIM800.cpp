@@ -297,6 +297,9 @@ String DCPSIM800::getSignalQuality() {
 int DCPSIM800::getCSQasQuality(int CSQ) {
     int quality = 0;
     quality = (CSQ * 100) / 31;
+    if (quality > 100) {
+        quality = 0;
+    }
 
     return quality;
 }
@@ -338,7 +341,7 @@ String DCPSIM800::getIMSI() {
 boolean DCPSIM800::isConnected() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutexWait()) {
+        if (takeCommunicationMutex()) {
             boolean result = modemGSM.isGprsConnected();
             giveCommunicationMutex();
             return result;
@@ -377,8 +380,18 @@ boolean DCPSIM800::onTimeToRevalidateConn() {
 void DCPSIM800::revalidateConnection() {
     if (enableRevalidate) {
         if (onTimeToRevalidateConn()) {
-            if (!isConnected()) {
-                turnOff();
+            int attempts = 0;
+            while (attempts <= SIM_ATTEMPTS) {
+                if (takeCommunicationMutex()) {
+                    boolean result = modemGSM.isGprsConnected();
+                    giveCommunicationMutex();
+                    if (!result) {
+                        turnOff();
+                    }
+                    nextSlotToRevalidateConn();
+                }
+                attempts = attempts + 1;
+                delay(SIM_ATTEMPTS_DELAY);
             }
             nextSlotToRevalidateConn();
         }

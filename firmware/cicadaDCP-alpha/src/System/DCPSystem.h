@@ -56,6 +56,10 @@ void cic_log(String msg, boolean ln = true);
 boolean getInUpdate();
 void setInUpdate(boolean inup);
 
+boolean getInDownload();
+void setInDownload(boolean inDown);
+
+void updateAllSlots();
 /******************************************************************************/
 /******************************************************************************/
 

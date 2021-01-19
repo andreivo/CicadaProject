@@ -19,6 +19,7 @@ DCPVoltage serialdcpVoltage;
 DCPSDCard serialSDCard;
 SPIFFSManager serialSpiffs;
 DCPLeds serialLeds;
+DCPMQTT serialMQTT;
 
 CicadaWizard serialWizard;
 hw_timer_t * timeoutSerialWizard = NULL;
@@ -436,12 +437,14 @@ void DCPSerialCommands::forceUpdateComm(String serialCommand) {
             // Read any existing Serial data.
             clearSerialInput();
             serialSelfUpdate.startUpdate(value);
+            updateAllSlots();
         } else {
             Serial.print(F("ERROR! Argument not recognized: "));
             Serial.println(madatoryArg);
         }
     } else {
         serialSelfUpdate.updateFirmware(true);
+        updateAllSlots();
     }
 }
 

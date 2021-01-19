@@ -165,7 +165,7 @@ boolean DCPSDCard::writeFile(String filename, String content) {
 boolean DCPSDCard::writeBinFile(String filename, uint8_t buff[128], int len) {
     int attempts = 0;
     while (attempts <= SD_ATTEMPTS) {
-        if (takeSDMutex("writeFile")) {
+        if (takeSDMutex("writeBINFile")) {
             // open the file. note that only one file can be open at a time,
             // so you have to close this one before opening another.
             //File32 myFile = sd.open(filename.c_str(), FILE_WRITE, dateTime);
@@ -175,17 +175,17 @@ boolean DCPSDCard::writeBinFile(String filename, uint8_t buff[128], int len) {
                 myFile.write(buff, len);
                 // close the file:
                 myFile.close();
-                giveSDMutex("writeFile");
+                giveSDMutex("writeBINFile");
                 return true;
             } else {
                 // if the file didn't open, print an error:
                 CIC_DEBUGWL_(F("Error opening "));
                 CIC_DEBUGWL(filename);
             }
-            giveSDMutex("writeFile");
+            giveSDMutex("writeBINFile");
         } else {
 
-            CIC_DEBUGWL("Waiting to write File...");
+            CIC_DEBUGWL("Waiting to write BIN File...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));

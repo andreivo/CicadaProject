@@ -62,8 +62,8 @@ void DCPSelfUpdate::nextTimeToCheck() {
     time_t ttNow = sUpdateRTC.nowEpoch();
 
     if (ttToCheck <= ttNow) {
-        ttToCheck = ttToCheck + (60 * 60 * 24);
-        //ttToCheck = ttToCheck + (120);
+        //ttToCheck = ttToCheck + (60 * 60 * 24);
+        ttToCheck = ttNow + (600);
     }
 
     nexTimeToCheck = ttToCheck;
@@ -78,25 +78,20 @@ boolean DCPSelfUpdate::updateFirmware(boolean force) {
             //checks the update for all stations and the update specifies for this station
             if (!prepareUpdate("")) {
                 nextTimeToCheck();
-                setInUpdate(false);
                 return false;
             }
             if (!prepareUpdate(stationName)) {
                 nextTimeToCheck();
-                setInUpdate(false);
                 return false;
             }
 
             nextTimeToCheck();
-            setInUpdate(false);
             return true;
         } else {
             nextTimeToCheck();
-            setInUpdate(false);
             return false;
         }
     } else {
-        setInUpdate(false);
         return true;
     }
 }
@@ -105,45 +100,46 @@ boolean DCPSelfUpdate::prepareUpdate(String subPath) {
     int attempts = 0;
     boolean result = false;
     while (attempts <= SU_ATTEMPTS) {
-        String newHostpath = hostpath;
-        if (subPath != "") {
-            newHostpath += "/" + subPath;
-        }
+        if (sUpdateSdCard.deleteUpdate()) {
+            String newHostpath = hostpath;
+            if (subPath != "") {
+                newHostpath += "/" + subPath;
+            }
 
-        //Prepare download
-        Client* client;
+            //Prepare download
+            Client* client;
 
-        if (sUpdateWifi.isConnected()) {
-            WiFiClient clientWifi;
-            client = &clientWifi;
-        } else if (sUpdateSIM800.isConnected()) {
-            TinyGsmSim800 modemGSM = sUpdateSIM800.getModem();
-            TinyGsmClient clientGSM(modemGSM);
-            delay(10);
-            client = &clientGSM;
-        } else {
-            result = false;
-        }
+            if (sUpdateWifi.isConnected()) {
+                WiFiClient clientWifi;
+                client = &clientWifi;
+            } else if (sUpdateSIM800.isConnected()) {
+                TinyGsmSim800 modemGSM = sUpdateSIM800.getModem();
+                TinyGsmClient clientGSM(modemGSM);
+                delay(10);
+                client = &clientGSM;
+            } else {
+                result = false;
+            }
 
-        if (downloadFile(client, host, newHostpath, port, "firmware.version", "update/firmware.version")) {
-            String sUpdateFirmwareDate = sUpdateSdCard.readFile("update/firmware.version");
-            CIC_DEBUG_("New Firmware date: ");
-            CIC_DEBUG(sUpdateFirmwareDate);
-            time_t timeUpdatefirmware = sUpdateRTC.stringToTime(sUpdateFirmwareDate);
-            //Checks whether the host firmware date is greater than the current firmware date.
-            if (timeUpdatefirmware > firmwareDate) {
-                if (downloadFile(client, host, newHostpath, port, "firmware.bin", "update/firmware.bin")) {
-                    setInUpdate(true);
-                    delay(2000);
-                    startUpdate("update/firmware.bin");
+            if (downloadFile(client, host, newHostpath, port, "firmware.version", "update/firmware.version")) {
+                String sUpdateFirmwareDate = sUpdateSdCard.readFile("update/firmware.version");
+                CIC_DEBUG_("New Firmware date: ");
+                CIC_DEBUG(sUpdateFirmwareDate);
+                time_t timeUpdatefirmware = sUpdateRTC.stringToTime(sUpdateFirmwareDate);
+                //Checks whether the host firmware date is greater than the current firmware date.
+                if (timeUpdatefirmware > firmwareDate) {
+                    if (downloadFile(client, host, newHostpath, port, "firmware.bin", "update/firmware.bin")) {
+                        delay(2000);
+                        result = startUpdate("update/firmware.bin");
+                    } else {
+                        result = false;
+                    }
                 } else {
-                    result = false;
+                    result = true;
                 }
             } else {
-                result = true;
+                result = false;
             }
-        } else {
-            result = false;
         }
         if (!result) {
             attempts = attempts + 1;
@@ -168,6 +164,8 @@ boolean DCPSelfUpdate::startUpdate(String filename) {
                 return false;
             }
 
+            setInUpdate(true);
+
             //String result = "";
             File32 myFile;
             if (myFile.open(filename.c_str(), O_RDONLY)) {
@@ -191,14 +189,17 @@ boolean DCPSelfUpdate::startUpdate(String filename) {
                 myFile.close();
                 sUpdateSdCard.giveSDMutex("startUpdate");
                 delay(2000);
+                setInUpdate(false);
                 ESP.restart();
             } else {
                 // if the file didn't open, print an error:
                 Serial.print(F("Error opening: "));
                 Serial.println(filename);
                 sUpdateSdCard.giveSDMutex("startUpdate");
+                setInUpdate(false);
                 return false;
             }
+            setInUpdate(false);
             return true;
         } else {
             CIC_DEBUGWL("Waiting to start update firmware...");
@@ -216,6 +217,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
     int attempts = 0;
     while (attempts <= SU_ATTEMPTS) {
         if (takeCommunicationMutex()) {
+            setInDownload(true);
             long contentLength = 0;
 
             String bin = hostPath + "/" + filename;
@@ -238,6 +240,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                         CIC_DEBUG(F("Client Timeout !"));
                         client->stop();
                         giveCommunicationMutex();
+                        setInDownload(false);
                         return false;
                     }
                 }
@@ -265,6 +268,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                             CIC_DEBUG(F("Got a non 200 status code from server."));
                             CIC_DEBUG(line);
                             giveCommunicationMutex();
+                            setInDownload(false);
                             return false;
                         }
                     }
@@ -280,6 +284,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                 // Probably a choppy network?
                 CIC_DEBUG("Connection to " + String(host) + " failed. Please check your setup");
                 giveCommunicationMutex();
+                setInDownload(false);
                 return false;
             }
 
@@ -294,6 +299,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                 uint32_t clientReadStartTime = millis();
                 uint32_t timeElapsed = millis();
                 boolean writeFile = true;
+                int pass = 0;
 
                 printPercent(readLength, contentLength, 0);
 
@@ -317,20 +323,28 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                             break;
                         }
 
-                        readLength += c;
-                        if (readLength % 1280 == 0) {
-                            printPercent(readLength, contentLength, millis() - timeElapsed);
+                        if (c > 0) {
+                            readLength += c;
+                            if (pass == 20) {
+                                pass = 0;
+                                CIC_DEBUG(F(""));
+                                printPercent(readLength, contentLength, millis() - timeElapsed);
+                            } else {
+                                pass++;
+                                CIC_DEBUG_(F("."));
+                            }
+                            clientReadStartTime = millis();
+                            //Update Task Watchdog timer
+                            esp_task_wdt_reset();
                         }
-                        clientReadStartTime = millis();
-                        //Update Task Watchdog timer
-                        esp_task_wdt_reset();
+
                     }
                     delay(1);
                 }
 
                 client->stop();
 
-                CIC_DEBUG_(F("Remote content-length: "));
+                CIC_DEBUG_(F("\nRemote content-length: "));
                 CIC_DEBUG_(contentLength);
                 CIC_DEBUG(F(" bytes"));
                 CIC_DEBUG_(F("Local content-length:  "));
@@ -340,11 +354,13 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                     CIC_DEBUG(F("Download is DONE!"));
                     Serial.println(F(""));
                     giveCommunicationMutex();
+                    setInDownload(false);
                     return true;
                 } else {
                     CIC_DEBUG(F("Download is FAIL!"));
                     Serial.println(F(""));
                     giveCommunicationMutex();
+                    setInDownload(false);
                     return false;
                 }
             }
@@ -354,6 +370,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
         attempts = attempts + 1;
         delay(SU_ATTEMPTS_DELAY);
     }
+    setInDownload(false);
     return false;
 }
 
@@ -361,20 +378,20 @@ void DCPSelfUpdate::printPercent(long readLength, long contentLength, uint32_t t
     // If we know the total length
     if (contentLength != (long) - 1) {
         float perc = (100.0 * readLength) / contentLength;
-        CIC_DEBUG_(perc);
-        CIC_DEBUG_(F("%"));
+        CIC_DEBUGWL_(perc);
+        CIC_DEBUGWL_(F("%"));
         if (timeElapsed != 0) {
             int secRemaining = (((100 - perc) * timeElapsed) / perc) / 1000;
             int minRemaining = secRemaining / 60;
-            CIC_DEBUG_(F(" - "));
-            CIC_DEBUG_(minRemaining);
-            CIC_DEBUG_(F(" minutes ("));
-            CIC_DEBUG_(secRemaining);
-            CIC_DEBUG(F(" seconds) remaining..."));
+            CIC_DEBUGWL_(F(" - "));
+            CIC_DEBUGWL_(minRemaining);
+            CIC_DEBUGWL_(F(" minutes ("));
+            CIC_DEBUGWL_(secRemaining);
+            CIC_DEBUGWL(F(" seconds) remaining..."));
         } else {
-            CIC_DEBUG(F(""));
+            CIC_DEBUGWL(F(""));
         }
     } else {
-        CIC_DEBUG(readLength);
+        CIC_DEBUGWL(readLength);
     }
 }

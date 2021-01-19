@@ -52,6 +52,7 @@ void giveCommunicationMutexWait() {
     //CIC_DEBUG("Give CommunicationMutex");
     xSemaphoreGive(CommunicationMutex);
 }
+
 boolean inUpdate = false;
 
 boolean getInUpdate() {
@@ -61,6 +62,17 @@ boolean getInUpdate() {
 void setInUpdate(boolean inup) {
     inUpdate = inup;
 }
+
+boolean inDownload = false;
+
+boolean getInDownload() {
+    return inDownload;
+}
+
+void setInDownload(boolean inDown) {
+    inDownload = inDown;
+}
+
 /******************************************************************************/
 /******************************************************************************/
 
@@ -728,15 +740,23 @@ void DCPSystem::taskTransmitLoop() {
 
     while (true) {
         vTaskDelay(20);
-        if (!getInUpdate()) {
+        if (!getInDownload() && !getInUpdate()) {
             storeMetadados();
             transmiteData();
             selfUpdate.updateFirmware();
         } else {
+            updateAllSlots();
             updateNextSlotMetadados();
-            cicadaMQTT.updateNextSlot();
         }
     }
+}
+
+void updateAllSlots() {
+    cicadaMQTT.updateNextSlot();
+    dcpDHT.updateNextSlot();
+    dcpRainGauge.updateNextSlot();
+    dcpVoltage.updateNextSlotIn();
+    dcpVoltage.updateNextSlotSol();
 }
 
 void DCPSystem::transmiteData() {

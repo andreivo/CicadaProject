@@ -9,7 +9,7 @@
  */
 #include "DCPLeds.h"
 
-#define TIME_TO_STATUS_BLINK 20
+#define TIME_TO_STATUS_BLINK 5
 
 DCPRTC ledsRTC;
 
