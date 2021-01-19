@@ -62,8 +62,9 @@ void DCPSelfUpdate::nextTimeToCheck() {
     time_t ttNow = sUpdateRTC.nowEpoch();
 
     if (ttToCheck <= ttNow) {
-        //ttToCheck = ttToCheck + (60 * 60 * 24);
-        ttToCheck = ttNow + (600);
+        ttToCheck = ttToCheck + (60 * 60 * 24);
+        //To Debug
+        //ttToCheck = ttNow + (600);
     }
 
     nexTimeToCheck = ttToCheck;
@@ -323,21 +324,18 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                             break;
                         }
 
-                        if (c > 0) {
-                            readLength += c;
-                            if (pass == 20) {
-                                pass = 0;
-                                CIC_DEBUG(F(""));
-                                printPercent(readLength, contentLength, millis() - timeElapsed);
-                            } else {
-                                pass++;
-                                CIC_DEBUG_(F("."));
-                            }
-                            clientReadStartTime = millis();
-                            //Update Task Watchdog timer
-                            esp_task_wdt_reset();
+                        readLength += c;
+                        if (pass == 20) {
+                            pass = 0;
+                            CIC_DEBUG(F(""));
+                            printPercent(readLength, contentLength, millis() - timeElapsed);
+                        } else {
+                            pass++;
+                            CIC_DEBUG_(F("."));
                         }
-
+                        clientReadStartTime = millis();
+                        //Update Task Watchdog timer
+                        esp_task_wdt_reset();
                     }
                     delay(1);
                 }

@@ -15,7 +15,7 @@
 
 #define SU_ATTEMPTS 3
 #define SU_ATTEMPTS_DELAY 500
-#define DOWNLOAD_TIMEOUT 30000
+#define DOWNLOAD_TIMEOUT 60000
 
 class DCPSelfUpdate {
 public:
