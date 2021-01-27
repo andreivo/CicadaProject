@@ -1,10 +1,10 @@
 ---
 layout: page
-title: Docsy Jekyll Theme
+title: Cicada Project
 permalink: /
 ---
 
-# Welcome to Docsy Jekyll
+# Welcome to Cicada Project
 
 This is a starter template for a docsy jekyll theme.
 
