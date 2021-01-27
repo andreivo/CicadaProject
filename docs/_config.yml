@@ -48,7 +48,7 @@ feedback: true
 # Image and (square) dimension for logo (don't start with /)
 # If commented, will use material hat theme
 logo: "assets/img/logo/CicadaLogo.png"
-logo_pixels: 54
+logo_pixels: 44
 color: "#30638e"
 # color: "#8c1515" # primary color for header, buttons
 
