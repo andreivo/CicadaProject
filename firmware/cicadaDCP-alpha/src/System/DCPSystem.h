@@ -127,7 +127,7 @@ public:
     void initSelfUpdate();
 
 private:
-    void setupTimeoutWizard();
+    void setupTimeout();
     void initStationID();
     void initStationName();
     void initStationPWD();

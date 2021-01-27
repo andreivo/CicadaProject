@@ -100,7 +100,7 @@ DCPSerialCommands DCPCommands;
 
 // Initialize CicadaWizard
 CicadaWizard cicadaWizard;
-hw_timer_t * timeoutWizard = NULL;
+hw_timer_t * timeoutSys = NULL;
 
 // Initialize DCPWifi
 DCPwifi dcpWifi;
@@ -143,7 +143,7 @@ DCPDht dcpDHT;
 DCPRainGauge dcpRainGauge;
 DCPVoltage dcpVoltage;
 
-void IRAM_ATTR onTimeoutWizard() {
+void IRAM_ATTR onTimeout() {
     //If the Wizard is active and the timeout has been reached reboot the module.
     //This causes an exception for access to global variables
     //without a critical section and forces a reboot.
@@ -237,6 +237,8 @@ boolean DCPSystem::networkFailureBoot() {
     cicadaLeds.greenTurnOn();
     cicadaLeds.blueTurnOn();
 
+    setupTimeout();
+
     Serial.println(F("\n\nNETWORK FAILURE ON BOOT"));
     Serial.println(F("=========================================================="));
     Serial.println(F("WARNING.....WARNING.....WARNING.....\n"
@@ -304,21 +306,21 @@ void DCPSystem::clearSerialInput() {
     } while (micros() - m < 10000);
 }
 
-void DCPSystem::setupTimeoutWizard() {
+void DCPSystem::setupTimeout() {
     /****
      * Time interrupt for timeout to AP Wizard mode
      */
     // Configure Prescaler to 80, as our timer runs @ 80Mhz
     // Giving an output of 80,000,000 / 80 = 1,000,000 ticks / second
 
-    timeoutWizard = timerBegin(0, 80, true);
-    timerAttachInterrupt(timeoutWizard, &onTimeoutWizard, true);
+    timeoutSys = timerBegin(0, 80, true);
+    timerAttachInterrupt(timeoutSys, &onTimeout, true);
     // Fire Interrupt every 1m ticks, so 1s
     // ticks * (seconds * minutes) = 10 minutos
-    uint64_t timeoutWiz = 1000000 * (60 * 10);
+    uint64_t timeoutTick = 1000000 * (60 * 10);
     //uint64_t timeoutWiz = 1000000 * (10);
-    timerAlarmWrite(timeoutWizard, timeoutWiz, true);
-    timerAlarmEnable(timeoutWizard);
+    timerAlarmWrite(timeoutSys, timeoutTick, true);
+    timerAlarmEnable(timeoutSys);
 }
 
 /**
@@ -329,7 +331,7 @@ void DCPSystem::setupWizard(xTaskHandle coreTask) {
     CIC_DEBUG(F("Timeout: 10 minutes"));
 
     cicadaLeds.blueTurnOn();
-    setupTimeoutWizard();
+    setupTimeout();
 
     esp_task_wdt_delete(NULL);
     if (coreTask) {
