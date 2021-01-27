@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Welcome to Jekyll!
 #
 # This config file is meant for settings that affect your whole blog, values
@@ -93,3 +94,10 @@ defaults:
       type: "posts"
     values:
       layout: "post"
+=======
+title: Cicada Project
+description: An open-source platform for collecting environmental data.
+show_downloads: false
+google_analytics:
+theme: jekyll-theme-cayman
+>>>>>>> 36aabb1465312e5332f7a04aa8e479b0cb06b3bf
