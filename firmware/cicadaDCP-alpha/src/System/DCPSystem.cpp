@@ -374,10 +374,12 @@ void DCPSystem::checkAPWizard(xTaskHandle coreTask) {
 }
 
 void DCPSystem::updateStatus() {
-    if (dcpWifi.revalidateConnection()) {
-        dcpSIM800.turnOff();
+    if (!inTransmitionData) {
+        if (dcpWifi.revalidateConnection()) {
+            dcpSIM800.turnOff();
+        }
+        dcpSIM800.revalidateConnection();
     }
-    dcpSIM800.revalidateConnection();
     cicadaLeds.blinkStatusOk();
 }
 
@@ -765,6 +767,7 @@ void updateAllSlots() {
 }
 
 void DCPSystem::transmiteData() {
+    inTransmitionData = true;
     if (!cicadaMQTT.sendAllMessagesDataWifi()) {
         if (!cicadaMQTT.sendAllMessagesDataSim(dcpSIM800.getModem())) {
             if (!initCommunication(false)) {
@@ -772,6 +775,7 @@ void DCPSystem::transmiteData() {
             }
         }
     }
+    inTransmitionData = false;
 }
 
 void DCPSystem::nextSlotToSaveMetadata() {

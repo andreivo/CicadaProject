@@ -57,6 +57,15 @@ boolean DCPwifi::setupWiFiModule() {
     String pwd = wifiSpiffsManager.getSettings("Password", DIR_WIFI_PWD, false);
 
     if (ssid != "") {
+
+        double RSSI = getRSSI(ssid.c_str());
+        int quality = getRSSIasQuality(RSSI);
+        //Network is avaliable?
+        if (quality <= 30) {
+            enableRevalidate = true;
+            return false;
+        }
+
         CIC_DEBUG(F("Using last saved values, should be faster"));
         int count = 0;
 
@@ -64,6 +73,9 @@ boolean DCPwifi::setupWiFiModule() {
             CIC_DEBUG_(F("Connection attempt: "));
             CIC_DEBUG(count);
             wifiDCPLeds.redBlink();
+
+            ssid = wifiSpiffsManager.getSettings("SSID", DIR_WIFI_SSID, false);
+            pwd = wifiSpiffsManager.getSettings("Password", DIR_WIFI_PWD, false);
 
             WiFi.begin(ssid.c_str(), pwd.c_str());
             if (WiFi.status() == WL_CONNECTED) {
@@ -76,6 +88,8 @@ boolean DCPwifi::setupWiFiModule() {
                 return true;
             } else if (WiFi.status() == WL_NO_SSID_AVAIL) {
                 CIC_DEBUG(F("NO SSID AVAILABLE - Configured SSID cannot be reached."));
+                enableRevalidate = true;
+                return false;
             } else if (WiFi.status() == WL_CONNECT_FAILED) {
                 CIC_DEBUG(F("CONNECT FAILED - Password is incorrect."));
             } else if (WiFi.status() == WL_IDLE_STATUS) {

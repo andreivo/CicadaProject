@@ -46,8 +46,8 @@ void setup() {
   /* Internet connection may take seconds to complete. This delay can block the main loop.
      In the case of the PubSubClient library, the default connection timeout is 15 seconds.
      To prevent the Task Watchdog from being triggered (default 5 seconds) it is necessary to 
-     change the trigger time to 120 seconds.*/
-  esp_task_wdt_init(120, true);
+     change the trigger time to 240 seconds.*/
+  esp_task_wdt_init(240, true);
   esp_task_wdt_add(NULL);
 
   //Enable Log after initialization

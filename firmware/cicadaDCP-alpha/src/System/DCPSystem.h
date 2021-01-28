@@ -141,6 +141,7 @@ private:
     void printConfiguration();
     void storeMetadados();
     int nextTimeSlotToSaveMetadata;
+    boolean inTransmitionData;
     void nextSlotToSaveMetadata();
     void updateNextSlotMetadados();
     boolean onTimeToSaveMetadata();
