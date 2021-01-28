@@ -5,11 +5,11 @@ permalink: /
 ---
 <p align="center">
 	<img src="assets/img/logo/CemadenLogColor.png" align="center" height="100" width="100">
-
+</p>
+<br>
+<p align="center">
 # Welcome to Cicada Project
 </p>
-
-
 
 This is a starter template for a docsy jekyll theme.
 
