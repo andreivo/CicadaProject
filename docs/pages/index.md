@@ -3,9 +3,9 @@ layout: page
 title: Cicada Project
 permalink: /
 ---
-
-<img src="assets/img/logo/CemadenLogColor.png" align="center" height="100" width="100">
-
+<p align="center">
+	<img src="assets/img/logo/CemadenLogColor.png" align="center" height="100" width="100">
+</p>
 
 # Welcome to Cicada Project
 
