@@ -4,6 +4,8 @@ title: Cicada Project
 permalink: /
 ---
 
+![assets/img/logo/CemadenLogColor.png](assets/img/logo/CemadenLogColor.png=100x100)
+
 # Welcome to Cicada Project
 
 This is a starter template for a docsy jekyll theme.
