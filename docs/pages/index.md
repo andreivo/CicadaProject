@@ -7,7 +7,7 @@ permalink: /
 	<img src="assets/img/logo/CemadenLogColor.png" align="center" height="100" width="100">
 </p>
 
-<h1 align="center" style="color:#30638e;">Welcome to Cicada Project</h1>
+<h1 align="center" style="color:#00055B;">Welcome to Cicada Project</h1>
 
 This is a starter template for a docsy jekyll theme.
 
