@@ -4,7 +4,7 @@ title: Cicada Project
 permalink: /
 ---
 
-![assets/img/logo/CemadenLogColor.png](assets/img/logo/CemadenLogColor.png=100x100)
+![assets/img/logo/CemadenLogColor.png](assets/img/logo/CemadenLogColor.png =100x100)
 
 # Welcome to Cicada Project
 
