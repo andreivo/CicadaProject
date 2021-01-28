@@ -374,6 +374,9 @@ void DCPSystem::checkAPWizard(xTaskHandle coreTask) {
 }
 
 void DCPSystem::updateStatus() {
+    if (dcpWifi.revalidateConnection()) {
+        dcpSIM800.turnOff();
+    }
     dcpSIM800.revalidateConnection();
     cicadaLeds.blinkStatusOk();
 }

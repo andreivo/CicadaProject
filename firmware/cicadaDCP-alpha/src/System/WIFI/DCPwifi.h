@@ -32,6 +32,13 @@ public:
     void setSSID(String ssid);
     void setPWD(String pwd);
     String scanNetworks();
+
+    int nextTimeSlotToRevalidateConn;
+    boolean enableRevalidate = true;
+    void nextSlotToRevalidateConn();
+    boolean onTimeToRevalidateConn();
+    boolean revalidateConnection();
+    double getRSSI(const char* target_ssid);
 private:
 
 };

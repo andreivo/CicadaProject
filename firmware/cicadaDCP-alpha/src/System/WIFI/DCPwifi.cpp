@@ -14,6 +14,8 @@
 // Delay to connect to WiFi (WIFI_CONN_DELAY X WIFI_CONN_COUNTER = time to access point mode)
 #define WIFI_CONN_DELAY 1000
 
+int WIFI_REVALIDATE_CONN = 3; //Minutes
+
 #define timeZone 0
 
 //Socket UDP que a lib utiliza para recuperar dados sobre o horário
@@ -35,6 +37,8 @@ DCPLeds wifiDCPLeds;
 
 DCPSDCard wifiSdCard;
 
+DCPRTC wifiRTC;
+
 DCPwifi::DCPwifi() {
 }
 
@@ -44,6 +48,8 @@ DCPwifi::DCPwifi() {
 boolean DCPwifi::setupWiFiModule() {
 
     CIC_DEBUG_HEADER(F("SETUP WIFI MODULE"));
+    nextSlotToRevalidateConn();
+    enableRevalidate = false;
 
     // Get MQTT Host
     String ssid = wifiSpiffsManager.getSettings("SSID", DIR_WIFI_SSID, false);
@@ -66,6 +72,7 @@ boolean DCPwifi::setupWiFiModule() {
                 wifiDCPLeds.redTurnOff();
                 wifiDCPLeds.greenBlink(20);
                 wifiDCPLeds.greenTurnOff();
+                enableRevalidate = true;
                 return true;
             } else if (WiFi.status() == WL_NO_SSID_AVAIL) {
                 CIC_DEBUG(F("NO SSID AVAILABLE - Configured SSID cannot be reached."));
@@ -80,9 +87,10 @@ boolean DCPwifi::setupWiFiModule() {
         }
     } else {
         CIC_DEBUG("No saved credentials");
+        enableRevalidate = true;
         return false;
     }
-
+    enableRevalidate = true;
     return false;
 }
 
@@ -228,4 +236,64 @@ String DCPwifi::scanNetworks() {
         }
     }
     return result;
+}
+
+/*********************/
+void DCPwifi::nextSlotToRevalidateConn() {
+    int actualMinutes = wifiRTC.now("%M").toInt() + 1;
+
+    int rSlot = actualMinutes % WIFI_REVALIDATE_CONN;
+    int iSlot = (int) (actualMinutes / WIFI_REVALIDATE_CONN);
+
+    if (rSlot > 0) {
+        iSlot = iSlot + 1;
+    }
+
+    int nextSlot = iSlot*WIFI_REVALIDATE_CONN;
+    if (nextSlot >= 60) {
+        nextSlot = nextSlot - 60;
+    }
+    nextTimeSlotToRevalidateConn = nextSlot;
+}
+
+boolean DCPwifi::onTimeToRevalidateConn() {
+    int actualMinutes = wifiRTC.now("%M").toInt();
+    return actualMinutes == nextTimeSlotToRevalidateConn;
+}
+
+boolean DCPwifi::revalidateConnection() {
+    if (enableRevalidate) {
+        if (onTimeToRevalidateConn()) {
+            boolean result = false;
+            if (!isConnected()) {
+                String ssid = wifiSpiffsManager.getSettings("SSID", DIR_WIFI_SSID, false);
+                double RSSI = getRSSI(ssid.c_str());
+                int quality = getRSSIasQuality(RSSI);
+                if (quality > 30) {
+                    result = setupWiFiModule();
+                }
+            } else {
+                result = true;
+            }
+            nextSlotToRevalidateConn();
+            return result;
+        }
+        nextSlotToRevalidateConn();
+        return isConnected();
+    } else {
+        return isConnected();
+    }
+}
+
+
+// Return RSSI or -500 if target SSID not found
+
+double DCPwifi::getRSSI(const char* target_ssid) {
+    byte available_networks = WiFi.scanNetworks();
+    for (int network = 0; network < available_networks; network++) {
+        if (strcmp(WiFi.SSID(network).c_str(), target_ssid) == 0) {
+            return WiFi.RSSI(network);
+        }
+    }
+    return -500;
 }
