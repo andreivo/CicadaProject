@@ -38,7 +38,7 @@ some time creating a custom Jekyll template that is (almost) as beautiful,
 and includes all the features that I might want.
 
 <p align="center">
-	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="60%" max-width="725px">
+	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="55%" max-width="725px">
 <br><br><b>Fig 2: Cicada Project Parts</b>
 </p>
 
