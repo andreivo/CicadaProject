@@ -10,7 +10,7 @@
           url: "docs/getting-started#development"
         - title: Customization
           url: "docs/getting-started#customization"
-    - title: "Group I: Cicada DCP"
+    - title: "Group I - Cicada DCP"
       url: "docs/gi"
       children:
         - title: Features
@@ -20,7 +20,7 @@
         - title: Customization
           url: "docs/getting-started#customization"
 
-    - title: "Group II: Cicada Broker"
+    - title: "Group II - Cicada Broker"
       url: "docs/gii"
       children:
         - title: Features
@@ -29,7 +29,7 @@
           url: "docs/getting-started#development"
         - title: Customization
           url: "docs/getting-started#customization"
-    - title: "Group III: Cicada Data Science"
+    - title: "Group III - Cicada Data Science"
       url: "docs/giii"
       children:
         - title: Features
