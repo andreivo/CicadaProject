@@ -20,7 +20,7 @@ O Cemaden possui um rede Observacional com mais de 5000 Plataformas de Coletas d
 O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação da rede observacional do Cemaden, baseado principalmente na descentralização da autoridade gerencial sob as PCDs que compõe a rede. Para possibilitar essa descentralização, as PCDs devem seguir um modelo padrão e ter o menor custo possível de aquisição e operação, o que resultará em uma redução significativa no custo de manutenção além de incentivar a expansão da rede.
 
 <p align="center">
-	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="138" width="300">
+	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="80%">
 </p>
 
 
