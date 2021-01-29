@@ -18,8 +18,6 @@ This is a starter template for a docsy jekyll theme.
 
 ## Purpose
 
-{% global.body %}
-
 GitHub pages uses Jekyll natively, so when I make documentation, I typically
 look for Jekyll templates. Why? Using Jekyll means that I can use markdown,
 and allow for users to easily contribute, and build automatically just by
