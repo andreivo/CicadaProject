@@ -21,7 +21,7 @@ O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação
 
 <p align="center">
 	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="70%">
-<br>Fig 1: Cicada CONOPs
+<br><br><b>Fig 1: Cicada CONOPs</b>
 </p>
 
 
