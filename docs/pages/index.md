@@ -28,7 +28,7 @@ O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação
 
 ## The Project
 
-O projeto foi dividido em 3 partes. Como mostra a figura 2.
+O projeto foi dividido em 3 grupos, com o objetivo de estruturar o seu desenvolvimento e permitir que pesquisas possam ser desenvolvidas de forma segmentada. A figura 2 apresenta a divisão dos grupos.
 
 <p align="center">
 	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="55%" max-width="725px">
