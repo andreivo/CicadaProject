@@ -13,7 +13,7 @@
     - title: "Group I - Cicada DCP"
       url: "docs/gi"
       children:
-        - title: Getting
+        - title: Getting Started
           url: "docs/gi/getting-started"
         - title: Development
           url: "docs/getting-started#development"
