@@ -21,12 +21,12 @@ O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação
 
 <p align="center">
 	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="80%">
+Fig 1: Cicada CONOPs
 </p>
 
 
 
-
-## Purpose
+## The Project
 
 GitHub pages uses Jekyll natively, so when I make documentation, I typically
 look for Jekyll templates. Why? Using Jekyll means that I can use markdown,
