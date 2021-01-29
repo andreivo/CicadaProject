@@ -12,12 +12,12 @@ permalink: /
 
 # Welcome
 
-Bem vindo ao Projeto Cigarra.
+Welcome to the Cicada Project.
 
-O Projeto Cigarra é uma colaboração entre o <a href="http://www.cemaden.gov.br/" target="_blank">Cemaden</a> e a <a href="https://www.unifesp.br/" target="_blank">Unifesp</a> e nasceu de uma necessidade do Cemaden.
-O Cemaden possui um rede Observacional com mais de 5000 Plataformas de Coletas de Dados (PCDs) espalhados pelo território brasileiro. As PCDs em geral são equipamentos importados e necessitam de mão de obra especializada, ou seja, consome muito recurso financeiro para manter sua operação.
+The Cicada Project is a collaboration between <a href="http://www.cemaden.gov.br/" target="_blank">Cemaden</a> and <a href="https://www.unifesp.br/" target="_blank">Unifesp</a> and was born out of a need by Cemaden.
+Cemaden has an Observational network with more than 5000 Data Collection Platforms (DCPs) spread across the Brazilian territory. DCPs, in general, are imported equipment and require specialized labor; that is, it consumes a lot of financial resources to maintain its operation.
 
-O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação da rede observacional do Cemaden, baseado principalmente na descentralização da autoridade gerencial sob as PCDs que compõe a rede. Este novo conceito cria um modelo colaborativo que promove o desenvolvimento de uma rede de privada de PCDs Cigarra. Para possibilitar essa descentralização, as PCDs devem seguir um modelo padrão e ter o menor custo possível de aquisição e operação, o que resultará em uma redução significativa no custo de manutenção além de incentivar a expansão da rede.
+The Cicada Project aims to create a new management and operation model for the Cemaden observational network, based mainly on the decentralization of management authority under the DCPs that make up the network. This new concept creates a collaborative model that promotes the development of a private network of Cicada DCPs. To enable this decentralization, DCPs must follow a standard model and have the lowest possible cost of acquisition and operation, resulting in a significant reduction in the cost of maintenance and encouraging the expansion of the network.
 
 <p align="center">
 	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="70%">
@@ -32,16 +32,16 @@ O projeto foi dividido em 3 grupos, com o objetivo de estruturar o seu desenvolv
 
 <p align="center">
 	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="55%" max-width="725px">
-<br><br><b>Fig 2: Cicada Project Parts</b>
+<br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
-1 – An IoT Broker with a standard protocol for sending and receiving environmental data through a reliable communication.
+Group I – An IoT Broker with a standard protocol for sending and receiving environmental data through a reliable communication.
 
-2 - Design of a low cost Datalogger and Sensors, integrated in a Data Collection Platform (Cicada DCP) with high reliability and freedom for adaptations.
+Group II - Design of a low cost Datalogger and Sensors, integrated in a Data Collection Platform (Cicada DCP) with high reliability and freedom for adaptations.
 The Cicada DCP will be designed for native interoperability with the Cicada Broker.
 Fully documented and open-source hardware.
 
-3 - A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
+Group III - A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
 
 
