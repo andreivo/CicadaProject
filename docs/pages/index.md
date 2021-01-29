@@ -37,6 +37,12 @@ which doesn't render natively on GitHub pages. For this reason, I've spent
 some time creating a custom Jekyll template that is (almost) as beautiful,
 and includes all the features that I might want.
 
+<p align="center">
+	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="70%">
+<br><br><b>Fig 2: Cicada Project Parts</b>
+</p>
+
+
 ## Features
 
 What are these features? You should see the {% include doc.html name="Getting Started" path="getting-started" %}
