@@ -11,7 +11,26 @@
         - title: Customization
           url: "docs/getting-started#customization"
     - title: "Group I: Cicada DCP"
-      url: "docs/gI-dcp"
+      url: "docs/gi"
+      children:
+        - title: Features
+          url: "docs/getting-started#getting-started"
+        - title: Development
+          url: "docs/getting-started#development"
+        - title: Customization
+          url: "docs/getting-started#customization"
+
+    - title: "Group II: Cicada Broker"
+      url: "docs/gii"
+      children:
+        - title: Features
+          url: "docs/getting-started#getting-started"
+        - title: Development
+          url: "docs/getting-started#development"
+        - title: Customization
+          url: "docs/getting-started#customization"
+    - title: "Group III: Cicada Data Science"
+      url: "docs/giii"
       children:
         - title: Features
           url: "docs/getting-started#getting-started"

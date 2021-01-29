@@ -1,8 +1,9 @@
 ---
-title: The Project
+title: Group I: Cicada DCP
 tags: 
- - project
-description: Describes the project
+ - Project
+ - Cicada DCP
+description: Describes the Cicada DCP
 ---
 
 # The Project

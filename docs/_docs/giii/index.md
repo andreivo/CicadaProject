@@ -1,8 +1,9 @@
 ---
-title: The Project
+title: Group III: Cicada Data Science
 tags: 
- - project
-description: Describes the project
+ - Project
+ - Data Science
+description: Describes the Cicada Data Science
 ---
 
 # The Project

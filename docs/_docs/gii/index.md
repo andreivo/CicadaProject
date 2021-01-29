@@ -1,8 +1,9 @@
 ---
-title: The Project
+title: Group II: Cicada Broker
 tags: 
- - project
-description: Describes the project
+ - Project
+ - Cicada Broker
+description: Describes the Cicada Broker
 ---
 
 # The Project
