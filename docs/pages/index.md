@@ -14,7 +14,7 @@ permalink: /
 
 Bem vindo ao Projeto Cigarra.
 
-O Projeto Cigarra é uma colaboração entre o <a href="http://www.cemaden.gov.br/" target="_blank">Cemaden</a> e a Unifesp e nasceu de uma necessidade do Cemaden.
+O Projeto Cigarra é uma colaboração entre o <a href="http://www.cemaden.gov.br/" target="_blank">Cemaden</a> e a <a href="https://www.unifesp.br/" target="_blank">Unifesp</a> e nasceu de uma necessidade do Cemaden.
 O Cemaden possui um rede Observacional com mais de 5000 Plataformas de Coletas de Dados (PCDs) espalhados pelo território brasileiro. As PCDs em geral são equipamentos importados e necessitam de mão de obra especializada, ou seja, consome muito recurso financeiro para manter sua operação.
 
 O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação da rede observacional do Cemaden, baseado principalmente na descentralização da autoridade gerencial sob as PCDs que compõe a rede. Este novo conceito cria um modelo colaborativo que promove o desenvolvimento de uma rede de privada de PCDs Cigarra. Para possibilitar essa descentralização, as PCDs devem seguir um modelo padrão e ter o menor custo possível de aquisição e operação, o que resultará em uma redução significativa no custo de manutenção além de incentivar a expansão da rede.
@@ -28,19 +28,21 @@ O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação
 
 ## The Project
 
-GitHub pages uses Jekyll natively, so when I make documentation, I typically
-look for Jekyll templates. Why? Using Jekyll means that I can use markdown,
-and allow for users to easily contribute, and build automatically just by
-way of pushing to a master branch (or general GitHub pages).
-I found Docsy, a beautiful Hugo template, but it requires hugo with GoLang
-which doesn't render natively on GitHub pages. For this reason, I've spent
-some time creating a custom Jekyll template that is (almost) as beautiful,
-and includes all the features that I might want.
+O projeto foi dividido em 3 partes. Como mostra a figura 2.
 
 <p align="center">
 	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="55%" max-width="725px">
 <br><br><b>Fig 2: Cicada Project Parts</b>
 </p>
+
+1 – An IoT Broker with a standard protocol for sending and receiving environmental data through a reliable communication.
+
+2 - Design of a low cost Datalogger and Sensors, integrated in a Data Collection Platform (Cicada DCP) with high reliability and freedom for adaptations.
+The Cicada DCP will be designed for native interoperability with the Cicada Broker.
+Fully documented and open-source hardware.
+
+3 - A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
+In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
 
 
 ## Features
