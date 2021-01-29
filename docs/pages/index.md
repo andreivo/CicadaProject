@@ -14,7 +14,7 @@ permalink: /
 
 Bem vindo ao Projeto Cigarra.
 
-O Projeto Cigarra é uma colaboração entre o Cemaden e a Unifesp e nasceu de uma necessidade do Cemaden.
+O Projeto Cigarra é uma colaboração entre o <a href="http://www.cemaden.gov.br/" target="_blank">Cemaden</a> e a Unifesp e nasceu de uma necessidade do Cemaden.
 O Cemaden possui um rede Observacional com mais de 5000 Plataformas de Coletas de Dados (PCDs) espalhados pelo território brasileiro. As PCDs em geral são equipamentos importados e necessitam de mão de obra especializada, ou seja, consome muito recurso financeiro para manter sua operação.
 
 O Projeto Cigarra tem como objetivo criar um novo modelo de gestão e operação da rede observacional do Cemaden, baseado principalmente na descentralização da autoridade gerencial sob as PCDs que compõe a rede. Este novo conceito cria um modelo colaborativo que promove o desenvolvimento de uma rede de privada de PCDs Cigarra. Para possibilitar essa descentralização, as PCDs devem seguir um modelo padrão e ter o menor custo possível de aquisição e operação, o que resultará em uma redução significativa no custo de manutenção além de incentivar a expansão da rede.
