@@ -14,6 +14,8 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
+lang: en
+
 title: Cicada Project
 email: andre.ivo@gmail.com
 author: André Ivo
