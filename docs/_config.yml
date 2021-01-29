@@ -14,15 +14,6 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-# Plugins
-plugins:
-  - jekyll-multiple-languages-plugin
-
-
-# jekyll-multiple-languages-plugin settings:
-languages: ["en", "es"]
-
-
 title: Cicada Project
 email: andre.ivo@gmail.com
 author: André Ivo
