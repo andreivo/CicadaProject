@@ -24,7 +24,7 @@
       url: "docs/giii/giii-index"
       children:
         - title: Getting Started
-          url: "docs/gii/giii-getting-started"    
+          url: "docs/giii/giii-getting-started"    
     - title: "About"
       url: "about"
     - title: "News"
