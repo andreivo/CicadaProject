@@ -1,4 +1,7 @@
-- title: About
-  url: about
 - title: Documentation
   url: docs
+- title: About
+  url: about
+- title: News
+  url: news
+
