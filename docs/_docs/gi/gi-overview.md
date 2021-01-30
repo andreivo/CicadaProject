@@ -1,9 +1,9 @@
 ---
-title: Getting Started
+title: Overview
 tags: 
  - jekyll
  - github
-description: Getting started with Docsy Jekyll
+description: Cicada DCP Overview
 ---
 
 # Getting Started
