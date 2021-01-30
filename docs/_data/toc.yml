@@ -19,24 +19,23 @@
           url: "docs/getting-started#development"
         - title: Customization
           url: "docs/getting-started#customization"
-
     - title: "Group II - Cicada Broker"
       url: "docs/gii"
       children:
-        - title: Features
+        - title: Features2
           url: "docs/getting-started#getting-started"
-        - title: Development
+        - title: Development2
           url: "docs/getting-started#development"
-        - title: Customization
+        - title: Customization2
           url: "docs/getting-started#customization"
     - title: "Group III - Cicada Data Science"
       url: "docs/giii"
       children:
-        - title: Features
+        - title: Features3
           url: "docs/getting-started#getting-started"
-        - title: Development
+        - title: Development3
           url: "docs/getting-started#development"
-        - title: Customization
+        - title: Customization3
           url: "docs/getting-started#customization"
 
     - title: "Getting Started"
