@@ -11,17 +11,17 @@
         - title: Customization
           url: "docs/getting-started#customization"
     - title: "Group I - Cicada DCP"
-      url: "docs/gi"
+      url: "docs/gi/gi-index"
       children:
         - title: Overview
           url: "docs/gi/gi-overview"
     - title: "Group II - Cicada Broker"
-      url: "docs/gii"
+      url: "docs/gii/gi-index"
       children:
         - title: Overview
           url: "docs/gii/gii-overview"
     - title: "Group III - Cicada Data Science"
-      url: "docs/giii"
+      url: "docs/giii/giii-index"
       children:
         - title: Overview
           url: "docs/gii/giii-overview"
