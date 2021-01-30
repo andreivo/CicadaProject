@@ -2,7 +2,7 @@
   url: docs
   links:
     - title: "The Project"
-      url: "docs/the-project"
+      url: "docs/cicada-project"
       children:
         - title: Features
           url: "docs/getting-started#getting-started"
@@ -13,34 +13,18 @@
     - title: "Group I - Cicada DCP"
       url: "docs/gi/gi-index"
       children:
-        - title: Overview
-          url: "docs/gi/gi-overview"
+        - title: Getting Started
+          url: "docs/gi/gi-getting-started"
     - title: "Group II - Cicada Broker"
       url: "docs/gii/gii-index"
       children:
-        - title: Overview
-          url: "docs/gii/gii-overview"
+        - title: Getting Started
+          url: "docs/gii/gii-getting-started"
     - title: "Group III - Cicada Data Science"
       url: "docs/giii/giii-index"
       children:
-        - title: Overview
-          url: "docs/gii/giii-overview"
-    - title: "Getting Started"
-      url: "docs/getting-started"
-      children:
-        - title: Features
-          url: "docs/getting-started#getting-started"
-        - title: Development
-          url: "docs/getting-started#development"
-        - title: Customization
-          url: "docs/getting-started#customization"
-    - title: "Extras"
-      url: "docs/extras"
-      children:
-        - title: Quizzes
-          url: "docs/extras/example-quiz"
-        - title: Tags Page
-          url: "tags"
+        - title: Getting Started
+          url: "docs/gii/giii-getting-started"    
     - title: "About"
       url: "about"
     - title: "News"

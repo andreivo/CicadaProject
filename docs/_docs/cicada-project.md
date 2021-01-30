@@ -1,18 +1,17 @@
 ---
-title: Getting Started
+title: The Project
 tags: 
- - jekyll
- - github
-description: Getting started with Docsy Jekyll
+ - Project
+description: Describes the project
 ---
 
-# Getting Started
+# The Project
 
 ## Features
 
 ### User Interaction
 
-
+TESTE
 On the right side of any page, you'll notice links to edit the page, or
 open an issue. This ensures that any time you have a question or want to 
 suggest or request a change, you can do so immediately and link directly
