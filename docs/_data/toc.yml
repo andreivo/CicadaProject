@@ -15,29 +15,16 @@
       children:
         - title: Overview
           url: "docs/gi/gi-overview"
-        - title: Development
-          url: "docs/getting-started#development"
-        - title: Customization
-          url: "docs/getting-started#customization"
     - title: "Group II - Cicada Broker"
       url: "docs/gii"
       children:
-        - title: Features2
-          url: "docs/getting-started#getting-started"
-        - title: Development2
-          url: "docs/getting-started#development"
-        - title: Customization2
-          url: "docs/getting-started#customization"
+        - title: Overview
+          url: "docs/gii/gii-overview"
     - title: "Group III - Cicada Data Science"
       url: "docs/giii"
       children:
-        - title: Features3
-          url: "docs/getting-started#getting-started"
-        - title: Development3
-          url: "docs/getting-started#development"
-        - title: Customization3
-          url: "docs/getting-started#customization"
-
+        - title: Overview
+          url: "docs/gii/giii-overview"
     - title: "Getting Started"
       url: "docs/getting-started"
       children:
