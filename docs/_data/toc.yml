@@ -16,7 +16,7 @@
         - title: Overview
           url: "docs/gi/gi-overview"
     - title: "Group II - Cicada Broker"
-      url: "docs/gii/gi-index"
+      url: "docs/gii/gii-index"
       children:
         - title: Overview
           url: "docs/gii/gii-overview"
