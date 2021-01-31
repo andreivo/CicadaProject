@@ -47,8 +47,12 @@ In practice, the Cicada DCP is a monoblock device with a built-in electronic sys
 <br><br><b>Fig 3: Cicada DCP Body Design</b>
 </p>
 
+<p align="center">
+	<script src="https://embed.github.com/view/3d/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl?height=50%&width=auto"></script>
+<br><br><b>Fig 3: Cicada DCP 3d View</b>
+</p>
 
-<script src="https://embed.github.com/view/3d/andreivo/CicadaProject/main/mechanical/design/01-cdcp_base.stl"></script>
+
 
 The body of the Cicada DCP was designed with a simple yet functional concept to serve the most varied audiences, which allows its construction through <b>3D printing</b> or industrial processes such as plastic injection.
 
