@@ -17,7 +17,7 @@ Welcome to the Cicada Project.
 The Cicada Project is a collaboration between <a href="http://www.cemaden.gov.br/" target="_blank">Cemaden</a> and <a href="https://www.unifesp.br/" target="_blank">Unifesp</a> and was born out of a need by Cemaden.
 Cemaden has an Observational network with more than 5000 Data Collection Platforms (DCPs) spread across the Brazilian territory. DCPs, in general, are imported equipment and require specialized labor; that is, it consumes a lot of financial resources to maintain its operation.
 
-The Cicada Project aims to create a new management and operation model for the Cemaden observational network, based mainly on the decentralization of management authority under the DCPs that make up the network. This new concept creates a collaborative model that promotes the development of a private network of Cicada DCPs. To enable this decentralization, DCPs must follow a standard model and have the lowest possible cost of acquisition and operation, resulting in a significant reduction in the cost of maintenance and encouraging the expansion of the network.
+The Cicada Project is a broad concept that can create the new management and operation model for the Cemaden observational network, based mainly on the decentralization of management authority under the DCPs that make up the network. This new concept creates a collaborative model that promotes the development of a private network of Cicada DCPs. To enable this decentralization, DCPs must follow a standard model and have the lowest possible cost of acquisition and operation, resulting in a significant reduction in the cost of maintenance and encouraging the expansion of the network.
 
 <p align="center">
 	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="70%">
@@ -35,11 +35,19 @@ The project was divided into 3 groups to structure its development and allow res
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
-#### Group I (Cicada DCP):
+### Group I (Cicada DCP):
 
-Design of a low cost Datalogger and Sensors, integrated in a Data Collection Platform (Cicada DCP) with high reliability and freedom for adaptations.
-The Cicada DCP will be designed for native interoperability with the Cicada Broker.
-Fully documented and open-source hardware.
+Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integrated into a Data Collection Platform that has requirement high reliability and freedom for adaptations. The Cicada DCP was designed for native interoperability with the Cicada Broker, and all project is open-source and documented.
+
+In practice, the Cicada DCP is a monoblock device with a built-in electronic system that allows the integration of sensors for monitoring the environment and actuators, e.g., alarm sirens. By default, Cicada DCP has humidity, temperature, and rainfall sensors, as shown in Fig. 3.
+
+<p align="center">
+	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="50%">
+	<img src="assets/img/CicadaDCPCut.png" align="center" height="auto" width="50%">
+<br><br><b>Fig 3: Cicada DCP Body Design</b>
+</p>
+
+
 
 For more details, see the section {% include doc.html name="Cicada DCP" path="gi/gi-index" %}.
 
