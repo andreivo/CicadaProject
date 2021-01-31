@@ -58,11 +58,11 @@ The body of the Cicada DCP was designed with a simple yet functional concept to 
 
 For more details, see the section {% include doc.html name="Cicada DCP" path="gi/gi-index" %}.
 
-### Group II (Cicada Broker):
+### <ins>Group II (Cicada Broker):</ins>
 
 An IoT Broker with a standard protocol for sending and receiving environmental data through a reliable communication.
 
-### Group III (Cicada Data Science):
+### <ins>Group III (Cicada Data Science):</ins>
 
 A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
