@@ -35,13 +35,21 @@ The project was divided into 3 groups to structure its development and allow res
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
-<b>Group I (Cicada DCP):           </b> Design of a low cost Datalogger and Sensors, integrated in a Data Collection Platform (Cicada DCP) with high reliability and freedom for adaptations.
+### Group I (Cicada DCP):
+
+Design of a low cost Datalogger and Sensors, integrated in a Data Collection Platform (Cicada DCP) with high reliability and freedom for adaptations.
 The Cicada DCP will be designed for native interoperability with the Cicada Broker.
 Fully documented and open-source hardware.
 
-<b>Group II (Cicada Broker):       </b> An IoT Broker with a standard protocol for sending and receiving environmental data through a reliable communication.
+What are these features? You should see the {% include doc.html name="Cicada DCP" path="docs/gi/gi-index" %}
 
-<b>Group III (Cicada Data Science):</b> A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
+### Group II (Cicada Broker):
+
+An IoT Broker with a standard protocol for sending and receiving environmental data through a reliable communication.
+
+### Group III (Cicada Data Science):
+
+A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
 
 
