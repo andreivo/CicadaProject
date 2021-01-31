@@ -35,7 +35,7 @@ The project was divided into 3 groups to structure its development and allow res
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
-### Group I (Cicada DCP):
+#### Group I (Cicada DCP):
 
 Design of a low cost Datalogger and Sensors, integrated in a Data Collection Platform (Cicada DCP) with high reliability and freedom for adaptations.
 The Cicada DCP will be designed for native interoperability with the Cicada Broker.
