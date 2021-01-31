@@ -35,7 +35,7 @@ The project was divided into 3 groups to structure its development and allow res
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
-### Group I (Cicada DCP):
+### <ins>Group I (Cicada DCP):</ins>
 
 Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integrated into a Data Collection Platform that has requirement high reliability and freedom for adaptations. The Cicada DCP was designed for native interoperability with the Cicada Broker, and all project is open-source and documented.
 
@@ -49,7 +49,7 @@ In practice, the Cicada DCP is a monoblock device with a built-in electronic sys
 
 <p align="center">
 	<script src="https://embed.github.com/view/3d/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl"></script>
-<br><br><b>Fig 3: Cicada DCP 3d View</b>
+<br><br><b>Fig 4: Cicada DCP 3d View</b>
 </p>
 
 
