@@ -52,9 +52,9 @@ In practice, the Cicada DCP is a monoblock device with a built-in electronic sys
 <br><br><b>Fig 4: Cicada DCP 3d View</b>
 </p>
 
-
-
 The body of the Cicada DCP was designed with a simple yet functional concept to serve the most varied audiences, which allows its construction through <b>3D printing</b> or industrial processes such as plastic injection.
+
+The entire project was developed as a case study of method <b>Fault INtegration-Driven System Engineering (FIND-SE)</b>, an extension of Model-Based System Engineering (MBSE).
 
 For more details, see the section {% include doc.html name="Cicada DCP" path="gi/gi-index" %}.
 
@@ -66,3 +66,5 @@ An IoT Broker with a standard protocol for sending and receiving environmental d
 
 A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
+
+Not started yet.
