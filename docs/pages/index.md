@@ -3,6 +3,13 @@ layout: page
 title: Cicada Project
 permalink: /
 ---
+
+<script>
+
+
+</script>
+
+
 <p align="center">
 	<img src="assets/img/logo/CemadenLogColor.png" align="center" height="100" width="100">
 </p>
@@ -48,7 +55,18 @@ In practice, the Cicada DCP is a monoblock device with a built-in electronic sys
 </p>
 
 <p align="center">
-	<iframe height='420' width='95%' frameborder='0' src='https://render.githubusercontent.com/view/3d?url=https://raw.githubusercontent.com/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl' title='00-cicadadcp.stl'></iframe>
+	<script>
+		function getHeightRender() {
+			width = window.innerWidth*0.95;
+			height = width*0.67;
+		   	return Math.min(420, height);
+		}
+
+		document.getElementById("demo").innerHTML = getHeightRender();
+
+
+		document.write("<iframe height=\'"+getHeightRender()+"\' width=\'95%\' frameborder=\'0\' src=\'https://render.githubusercontent.com/view/3d?url=https://raw.githubusercontent.com/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl\' title=\'00-cicadadcp.stl\'><\/iframe>")
+	</script>
 <br><br><b>Fig 4: Cicada DCP 3d View</b>
 </p>
 
