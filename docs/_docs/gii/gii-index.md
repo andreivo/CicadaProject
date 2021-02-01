@@ -12,7 +12,7 @@ The project was developed to send data through the MQTT protocol. In this projec
 Cicada Broker was also developed using FIND-SE's best practices and proposed a standard protocol for sending and receiving environmental data. 
 
 <p align="center">
-	<img src="assets/img/CicadaBroker.png" align="center" height="auto" width="100%" style="max-width:600px">
+	<img src="../../assets/img/CicadaBroker.png" align="center" height="auto" width="100%" style="max-width:600px">
 <br><br><b>Fig 1: Cicada Broker</b>
 </p>
 
