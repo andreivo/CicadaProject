@@ -18,16 +18,39 @@ For more details, see the section {% include doc.html name="The Project" path="c
 
 ## Our Team
 
+<style>
+
+.circular--portrait {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.circular--portrait img {
+  width: 100%;
+  height: auto;
+}
+
+</style>
 
 <div class="container-fluid mx-sm-5">
 	<div class="row">
 		<div class="col-12 col-sm-4 order-sm-2">
-			<img src="../assets/img/Andre.png" align="center" style="width: 200px; height: 200px; border-radius:50%">
+			<div class="circular--portrait">
+				<img src="../assets/img/Andre.png" align="center">
+			</div>
 		</div>
 		<div class="col-12 col-sm-4 order-sm-2">
-			<img src="../assets/img/Rogerio.png" align="center" style="width: 200px; height: 200px; border-radius:50%">
+			<div class="circular--portrait">
+				<img src="../assets/img/Rogerio.png" align="center" style="width: 200px; height: 200px; border-radius:50%">
+			</div>
 		</div>
 		<div class="col-12 col-sm-4 order-sm-2">
+			<div class="circular--portrait">
+				<img src="../assets/img/Rogerio.png" align="center" style="width: 200px; height: 200px; border-radius:50%">
+			</div>
 		</div>
 	</div>
 </div>
