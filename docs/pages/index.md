@@ -38,7 +38,7 @@ The Cicada Project is a broad concept that can create the new management and ope
 The project was divided into 3 groups to structure its development and allow research to be developed in a segmented way. Figure 2 shows the division of the groups.
 
 <p align="center">
-	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="55%" max-width="725px">
+	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="60%" max-width="725px">
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
@@ -49,8 +49,8 @@ Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integra
 In practice, the Cicada DCP is a monoblock device with a built-in electronic system that allows the integration of sensors for monitoring the environment and actuators, e.g., alarm sirens. By default, Cicada DCP has humidity, temperature, and rainfall sensors, as shown in Fig. 3.
 
 <p align="center">
-	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="25%">
-	<img src="assets/img/CicadaDCPCut.png" align="center" height="auto" width="35%">
+	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="25%" max-width="200px">
+	<img src="assets/img/CicadaDCPCut.png" align="center" height="auto" width="35%" max-width="200px">
 <br><br><b>Fig 3: Cicada DCP Body Design</b>
 </p>
 
@@ -80,7 +80,7 @@ The project was developed to send data through the MQTT protocol. In this projec
 Cicada Broker was also developed using FIND-SE's best practices and proposed a standard protocol for sending and receiving environmental data. 
 
 <p align="center">
-	<img src="assets/img/CicadaBroker.png" align="center" height="auto" width="75%">
+	<img src="assets/img/CicadaBroker.png" align="center" height="auto" width="75%" max-width="600px">
 <br><br><b>Fig 5: Cicada Broker</b>
 </p>
 
@@ -92,3 +92,5 @@ A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge 
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
 
 Not started yet.
+
+For more details, see the section {% include doc.html name="Cicada Data Science" path="giii/giii-index" %}.
