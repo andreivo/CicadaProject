@@ -50,7 +50,7 @@ For more details, see the section {% include doc.html name="The Project" path="c
 		</div>
 		<div class="col-12 col-sm-4 order-sm-2">
 			<div class="circular--portrait">
-				<img src="../assets/img/Rogerio.png" align="center">
+				<img src="../assets/img/Arlindo.png" align="center">
 			</div>
 		</div>
 	</div>
