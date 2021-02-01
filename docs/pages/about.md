@@ -44,13 +44,10 @@ For more details, see the section {% include doc.html name="The Project" path="c
 				<img src="../assets/img/Andre.png" align="center">
 			</div>
 			<p align="center">
-				André Ivo
-			</p>
-			<p align="center">
-				Cemaden
-			</p>
-			<p align="center">
-				andre.ivo@gmail.com
+				<b>André Ivo</b><br>
+				Cemaden<br>
+				<a href = "mailto:andre.ivo@cemaden.gov.br?subject = Cigarra = Message">andre.ivo@cemaden.gov.br</a><br>
+				<a href = "mailto:ndre.ivo@gmail.com?subject = Cigarra = Message">ndre.ivo@gmail.com</a><br>
 			</p>
 
 		</div>
