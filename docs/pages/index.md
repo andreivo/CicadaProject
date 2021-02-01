@@ -21,7 +21,7 @@ Cemaden has an Observational network with more than 5000 Data Collection Platfor
 The Cicada Project is a broad concept that can create the new management and operation model for the Cemaden observational network, based mainly on the decentralization of management authority under the DCPs that make up the network. This new concept creates a collaborative model that promotes the development of a private network of Cicada DCPs. To enable this decentralization, DCPs must follow a standard model and have the lowest possible cost of acquisition and operation, resulting in a significant reduction in the cost of maintenance and encouraging the expansion of the network.
 
 <p align="center">
-	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="70%">
+	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="100%" style="max-width:700px">
 <br><br><b>Fig 1: Cicada CONOPs</b>
 </p>
 
@@ -32,7 +32,7 @@ The Cicada Project is a broad concept that can create the new management and ope
 The project was divided into 3 groups to structure its development and allow research to be developed in a segmented way. Figure 2 shows the division of the groups.
 
 <p align="center">
-	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="60%" style="max-width:725px">
+	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="100%" style="max-width:725px">
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
@@ -43,8 +43,8 @@ Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integra
 In practice, the Cicada DCP is a monoblock device with a built-in electronic system that allows the integration of sensors for monitoring the environment and actuators, e.g., alarm sirens. By default, Cicada DCP has humidity, temperature, and rainfall sensors, as shown in Fig. 3.
 
 <p align="center">
-	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="25%" style="max-width:200px">
-	<img src="assets/img/CicadaDCPCut.png" align="center" height="auto" width="35%" style="max-width:200px">
+	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="100%" style="max-width:300">
+	<img src="assets/img/CicadaDCPCut.png" align="center" height="auto" width="100%" style="max-width:500px">
 <br><br><b>Fig 3: Cicada DCP Body Design</b>
 </p>
 
@@ -74,7 +74,7 @@ The project was developed to send data through the MQTT protocol. In this projec
 Cicada Broker was also developed using FIND-SE's best practices and proposed a standard protocol for sending and receiving environmental data. 
 
 <p align="center">
-	<img src="assets/img/CicadaBroker.png" align="center" height="auto" width="75%" style="max-width:600px">
+	<img src="assets/img/CicadaBroker.png" align="center" height="auto" width="100%" style="max-width:600px">
 <br><br><b>Fig 5: Cicada Broker</b>
 </p>
 
