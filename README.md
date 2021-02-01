@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="assets/img/logo/CemadenLogColor.png" align="center" height="100" width="100">
+	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/logo.png" align="center" height="100" width="100">
 </p>
 
 <h1 align="center" style="color:#00055B;">Cicada Project</h1>
@@ -15,7 +15,7 @@ Cemaden has an Observational network with more than 5000 Data Collection Platfor
 The Cicada Project is a broad concept that can create the new management and operation model for the Cemaden observational network, based mainly on the decentralization of management authority under the DCPs that make up the network. This new concept creates a collaborative model that promotes the development of a private network of Cicada DCPs. To enable this decentralization, DCPs must follow a standard model and have the lowest possible cost of acquisition and operation, resulting in a significant reduction in the cost of maintenance and encouraging the expansion of the network.
 
 <p align="center">
-	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="100%" style="max-width:700px">
+	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="100%" style="max-width:700px">
 <br><br><b>Fig 1: Cicada CONOPs</b>
 </p>
 
@@ -26,7 +26,7 @@ The Cicada Project is a broad concept that can create the new management and ope
 The project was divided into 3 groups to structure its development and allow research to be developed in a segmented way. Figure 2 shows the division of the groups.
 
 <p align="center">
-	<img src="assets/img/CicadaProjectParts.png" align="center" height="auto" width="100%" style="max-width:725px">
+	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/CicadaProjectParts.png" align="center" height="auto" width="100%" style="max-width:725px">
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
