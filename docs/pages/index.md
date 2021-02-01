@@ -87,7 +87,7 @@ In addiction, the environmental information should be accessed in a web platform
 
 For more details, see the section {% include doc.html name="Cicada Data Science" path="giii/giii-index" %}.
 
-<b>Not started yet.</b> You would like to collaborate with the project? Please contact us. For more details, contact our team in {% include doc.html name="About" path="../about" %}.
+<b>Not started yet.</b> You would like to collaborate with the project? Please contact our team in {% include doc.html name="About" path="../about" %}.
 
 
 # Our Team
