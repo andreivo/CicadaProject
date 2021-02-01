@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/logo.png" align="center" height="100" width="100">
+	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/CemadenLogColor.png" align="center" height="100" width="100">
 </p>
 
 <h1 align="center" style="color:#00055B;">Cicada Project</h1>
@@ -37,21 +37,13 @@ Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integra
 In practice, the Cicada DCP is a monoblock device with a built-in electronic system that allows the integration of sensors for monitoring the environment and actuators, e.g., alarm sirens. By default, Cicada DCP has humidity, temperature, and rainfall sensors, as shown in Fig. 3.
 
 <p align="center">
-	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="40%" style="max-width:250px">
-	<img src="assets/img/CicadaDCPCut.png" align="center" height="auto" width="58%" style="max-width:350px">
+	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/CicadaDCP.png" align="center" height="auto" width="40%" style="max-width:250px">
+	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/CicadaDCPCut.png" align="center" height="auto" width="58%" style="max-width:350px">
 <br><br><b>Fig 3: Cicada DCP Body Design</b>
 </p>
 
 <p align="center">
-	<script>
-		function getHeightRender() {
-			width = window.innerWidth*0.95;
-			height = width*0.67;
-		   	return Math.min(420, height);
-		}
-
-		document.write("<iframe height=\'"+getHeightRender()+"\' width=\'95%\' frameborder=\'0\' src=\'https://render.githubusercontent.com/view/3d?url=https://raw.githubusercontent.com/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl\' title=\'00-cicadadcp.stl\'><\/iframe>")
-	</script>
+	<script src="https://embed.github.com/view/3d/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl"></script>
 <br><br><b>Fig 4: Cicada DCP 3d View</b>
 </p>
 
@@ -68,7 +60,7 @@ The project was developed to send data through the MQTT protocol. In this projec
 Cicada Broker was also developed using FIND-SE's best practices and proposed a standard protocol for sending and receiving environmental data. 
 
 <p align="center">
-	<img src="assets/img/CicadaBroker.png" align="center" height="auto" width="100%" style="max-width:600px">
+	<img src="https://github.com/andreivo/CicadaProject/blob/main/docs/assets/img/CicadaBroker.png" align="center" height="auto" width="100%" style="max-width:600px">
 <br><br><b>Fig 5: Cicada Broker</b>
 </p>
 
