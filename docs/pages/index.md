@@ -62,9 +62,6 @@ In practice, the Cicada DCP is a monoblock device with a built-in electronic sys
 		   	return Math.min(420, height);
 		}
 
-		document.getElementById("demo").innerHTML = getHeightRender();
-
-
 		document.write("<iframe height=\'"+getHeightRender()+"\' width=\'95%\' frameborder=\'0\' src=\'https://render.githubusercontent.com/view/3d?url=https://raw.githubusercontent.com/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl\' title=\'00-cicadadcp.stl\'><\/iframe>")
 	</script>
 <br><br><b>Fig 4: Cicada DCP 3d View</b>
