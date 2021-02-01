@@ -79,6 +79,11 @@ For more details, see the section {% include doc.html name="Cicada DCP" path="gi
 The project was developed to send data through the MQTT protocol. In this project, the RabbitMQ server was used as the basis for Cicada Broker.
 Cicada Broker was also developed using FIND-SE's best practices and proposed a standard protocol for sending and receiving environmental data. 
 
+<p align="center">
+	<img src="assets/img/CicadaBroker.png" align="center" height="auto" width="80%">
+<br><br><b>Fig 5: Cicada Broker</b>
+</p>
+
 For more details, see the section {% include doc.html name="Cicada Broker" path="gii/gii-index" %}.
 
 ### <ins>Group III (Cicada Data Science):</ins>
