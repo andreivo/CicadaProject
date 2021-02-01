@@ -46,8 +46,8 @@ For more details, see the section {% include doc.html name="The Project" path="c
 			<p align="center">
 				<b>André Ivo</b><br>
 				Cemaden<br>
-				<a href = "mailto:andre.ivo@cemaden.gov.br?subject = Cigarra = Message">andre.ivo@cemaden.gov.br</a><br>
-				<a href = "mailto:ndre.ivo@gmail.com?subject = Cigarra = Message">ndre.ivo@gmail.com</a><br>
+				<a href = "mailto:andre.ivo@cemaden.gov.br?subject=CicadaProject&body=Message">andre.ivo@cemaden.gov.br</a><br>
+				<a href = "mailto:andre.ivo@gmail.com?subject=CicadaProject&body=Message">andre.ivo@gmail.com</a><br>
 			</p>
 
 		</div>
@@ -55,11 +55,21 @@ For more details, see the section {% include doc.html name="The Project" path="c
 			<div class="circular--portrait">
 				<img src="../assets/img/Rogerio.png" align="center">
 			</div>
+			<p align="center">
+				<b>Rogério Ishibashi</b><br>
+				Cemaden<br>
+				<a href = "mailto:rogerio.ishibashi@cemaden.gov.br?subject=CicadaProject&body=Message">rogerio.ishibashi@cemaden.gov.br</a><br>				
+			</p>
 		</div>
 		<div class="col-12 col-sm-4 order-sm-2">
 			<div class="circular--portrait">
 				<img src="../assets/img/Arlindo.png" align="center">
 			</div>
+			<p align="center">
+				<b>Arlindo Conceição</b><br>
+				Unifesp<br>
+				<a href = "mailto:arlindo.conceicao@unifesp.br?subject=CicadaProject&body=Message">arlindo.conceicao@unifesp.br</a><br>				
+			</p>
 		</div>
 	</div>
 </div>
