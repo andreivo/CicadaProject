@@ -22,11 +22,12 @@ For more details, see the section {% include doc.html name="The Project" path="c
 
 .circular--portrait {
   position: relative;
-  width: 200px;
-  height: 200px;
+  width: 150px;
+  height: 150px;
   overflow: hidden;
   border-radius: 50%;
   border:4px solid #000;
+  margin: auto;
 }
 
 .circular--portrait img {
@@ -36,12 +37,22 @@ For more details, see the section {% include doc.html name="The Project" path="c
 
 </style>
 
-<div class="container-fluid mx-sm-5">
+<div class="container-fluid">
 	<div class="row">
 		<div class="col-12 col-sm-4 order-sm-2">
 			<div class="circular--portrait">
 				<img src="../assets/img/Andre.png" align="center">
 			</div>
+			<p align="center">
+				André Ivo
+			</p>
+			<p align="center">
+				Cemaden
+			</p>
+			<p align="center">
+				andre.ivo@gmail.com
+			</p>
+
 		</div>
 		<div class="col-12 col-sm-4 order-sm-2">
 			<div class="circular--portrait">
