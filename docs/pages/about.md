@@ -22,7 +22,7 @@ For more details, see the section {% include doc.html name="The Project" path="c
 <div class="container-fluid mx-sm-5">
 	<div class="row">
 		<div class="col-12 col-sm-4 order-sm-2">
-			<img src="../assets/img/Andre.png" align="center" height="100" width="100" border-radius: 50%;>
+			<img src="../assets/img/Andre.png" align="center" height="100" width="100" border-radius="50%">
 		</div>
 		<div class="col-12 col-sm-4 order-sm-2">
 		</div>
