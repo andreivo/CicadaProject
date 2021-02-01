@@ -76,8 +76,5 @@ For more details, see the section {% include doc.html name="The Project" path="c
 
 
 
-
-
-
-If you need help, please don't hesitate to [open an issue](https://www.github.com/{{ site.github_user }}/{{ site.github_repo }}).
+You would like to collaborate with the project; please don't hesitate to contact us, or [open an issue](https://www.github.com/{{ site.github_user }}/{{ site.github_repo }}).
 
