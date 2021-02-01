@@ -90,6 +90,6 @@ For more details, see the section {% include doc.html name="Cicada Data Science"
 <b>Not started yet.</b> You would like to collaborate with the project; please contact us. For more details, contact our team in {% include doc.html name="About" path="../about" %}.
 
 
-## Our Team
+# Our Team
 
 For more details about our Team, see the section {% include doc.html name="About" path="../about" %}.
