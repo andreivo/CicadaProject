@@ -26,6 +26,7 @@ For more details, see the section {% include doc.html name="The Project" path="c
   height: 200px;
   overflow: hidden;
   border-radius: 50%;
+  border:4px solid #000;
 }
 
 .circular--portrait img {
