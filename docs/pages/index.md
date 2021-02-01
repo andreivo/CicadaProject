@@ -4,12 +4,6 @@ title: Cicada Project
 permalink: /
 ---
 
-<script>
-
-
-</script>
-
-
 <p align="center">
 	<img src="assets/img/logo/CemadenLogColor.png" align="center" height="100" width="100">
 </p>
