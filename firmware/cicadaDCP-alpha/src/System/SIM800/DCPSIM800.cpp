@@ -389,6 +389,7 @@ void DCPSIM800::revalidateConnection() {
                         turnOff();
                     }
                     nextSlotToRevalidateConn();
+                    break;
                 }
                 attempts = attempts + 1;
                 delay(SIM_ATTEMPTS_DELAY);
