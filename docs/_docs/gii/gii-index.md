@@ -15,4 +15,3 @@ Cicada Broker was also developed using FIND-SE's best practices and proposed a s
 	<img src="../../assets/img/CicadaBroker.png" align="center" height="auto" width="100%" style="max-width:600px">
 <br><br><b>Fig 1: Cicada Broker</b>
 </p>
-
