@@ -22,6 +22,7 @@ public:
     void readDHT();
     String printDHT();
     void updateNextSlot();
+    void printNextSlot();
 private:
     String codeTemp;
     String typeTemp;

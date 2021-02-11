@@ -34,7 +34,9 @@ public:
     void blueBlink();
     void blueBlink(int times);
     void blueBlink(int times, int delaytime);
+    boolean timeToBlinkStatus();
     void blinkStatusOk();
+    void blinkStatusError();
 private:
     boolean redOn = false;
     boolean greenOn = false;

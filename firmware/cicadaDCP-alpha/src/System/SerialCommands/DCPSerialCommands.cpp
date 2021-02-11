@@ -79,6 +79,8 @@ void DCPSerialCommands::readSerialCommands(xTaskHandle coreTask) {
             rebootComm();
         } else if (mandatoryCommand == "time") {
             timeComm(serialCommand);
+        } else if (mandatoryCommand == "nextslottime") {
+            nextslottimeComm();
         } else if (mandatoryCommand == "status") {
             statusComm();
         } else if (mandatoryCommand == "factoryreset") {
@@ -103,8 +105,6 @@ void DCPSerialCommands::readSerialCommands(xTaskHandle coreTask) {
             fsstatusComm();
         } else if (mandatoryCommand == "deloldfiles") {
             serialSDCard.deleteOldFiles();
-        } else if (mandatoryCommand == "deloldlogs") {
-            serialSDCard.deleteOldFiles("log");
         } else if (mandatoryCommand == "weather") {
             weatherComm(serialCommand);
         } else {
@@ -139,6 +139,7 @@ void DCPSerialCommands::printCommands() {
     Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("reboot             Reboot system."));
     Serial.println(F("time               Print the current system datetime."));
+    Serial.println(F("nextslottime       Prints when the next read slot."));
     Serial.println(F("   -s \"[value]\"    Set a new system datetime. Format value YYYY-mm-ddTHH:MM:SSZ."));
     Serial.println(F("status             Print the current system status to serial monitor including,"));
     Serial.println(F("                     wifi connectivity, Sim connectivity, etc."));
@@ -175,13 +176,10 @@ void DCPSerialCommands::printCommands() {
     Serial.println(F("\nWeather files commands:"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.println(F("ls                 Print the current weather file list."));
-    Serial.println(F("   -l              Print the log file list."));
     Serial.println(F("   -u              Print the update file list."));
     Serial.println(F("cat -f \"[file]\"    Print the file content."));
     Serial.println(F("                   Print the file content e.g 1: cat -f \"20210106.dht\""));
-    Serial.println(F("                   Print the log content  e.g 2: cat -f \"log/20210106.log\""));
     Serial.println(F("deloldfiles        Delete files older than 1 year."));
-    Serial.println(F("deloldlogs         Delete logs older than 1 year."));
     Serial.println(F("fsformat           Format weather file system. (WARNING: cannot be undone)"));
     Serial.println(F("fsstatus           Print the current weather file system status."));
 
@@ -228,6 +226,16 @@ void DCPSerialCommands::timeComm(String serialCommand) {
             Serial.println(madatoryArg);
         }
     }
+}
+
+void DCPSerialCommands::nextslottimeComm() {
+    Serial.println(F("\nNEXT READ SLOT"));
+    Serial.println(F("----------------------------------------------------------"));
+    serialDHT.printNextSlot();
+    serialdcpRainGauge.printNextSlot();
+    serialdcpVoltage.printNextVccInSlot();
+    serialdcpVoltage.printNextVccSolSlot();
+    serialMQTT.printNextSlot();
 }
 
 void DCPSerialCommands::factoryresetComm(xTaskHandle coreTask) {
@@ -769,11 +777,7 @@ void DCPSerialCommands::lsComm(String serialCommand) {
         String madatoryArg = getArguments(args, 0, ' ');
         String value = getArguments(args, 1, ' ');
         value = getArguments(value, 1, '"');
-        if (madatoryArg == "l") {
-            Serial.println(F("\nLOG FILES LIST"));
-            Serial.println(F("----------------------------------------------------------"));
-            serialSDCard.printDirectory("log");
-        } else if (madatoryArg == "u") {
+        if (madatoryArg == "u") {
             Serial.println(F("\nUPDATE FILES LIST"));
             Serial.println(F("----------------------------------------------------------"));
             serialSDCard.printDirectory("update");

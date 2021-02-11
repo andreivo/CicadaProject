@@ -19,10 +19,7 @@ void taskTransmitLoop(void * pvParameters ){
   cicadaDcpSystem.taskTransmitLoop(); 
 }
 
-void setup() {
-  //Disable Log on initialization
-  logDisable();
-  
+void setup() { 
   // PreInitialization
   cicadaDcpSystem.preInitSystem();
   
@@ -49,9 +46,6 @@ void setup() {
      change the trigger time to 240 seconds.*/
   esp_task_wdt_init(240, true);
   esp_task_wdt_add(NULL);
-
-  //Enable Log after initialization
-  logEnable();
 }
 
 void loop() {

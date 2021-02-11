@@ -37,6 +37,7 @@ public:
     String sendAT(String comm);
 
     int nextTimeSlotToRevalidateConn;
+    boolean modemOn = false;
     boolean enableRevalidate = true;
     void nextSlotToRevalidateConn();
     boolean onTimeToRevalidateConn();

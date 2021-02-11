@@ -33,23 +33,15 @@ void giveSerialMutex() {
 //Mutex
 SemaphoreHandle_t CommunicationMutex = xSemaphoreCreateMutex();
 
-boolean takeCommunicationMutex() {
-    //CIC_DEBUG("Get CommunicationMutex");
+boolean takeCommunicationMutex(String x) {
+    //CIC_DEBUG_("Get CommunicationMutex: ");
+    //CIC_DEBUG(x);
     return (xSemaphoreTake(CommunicationMutex, (TickType_t) 1) == pdTRUE);
 }
 
-boolean takeCommunicationMutexWait() {
-    //CIC_DEBUG("Get CommunicationMutex");
-    return (xSemaphoreTake(CommunicationMutex, portMAX_DELAY) == pdTRUE);
-}
-
-void giveCommunicationMutex() {
-    //CIC_DEBUG("Give CommunicationMutex");
-    xSemaphoreGive(CommunicationMutex);
-}
-
-void giveCommunicationMutexWait() {
-    //CIC_DEBUG("Give CommunicationMutex");
+void giveCommunicationMutex(String x) {
+    //CIC_DEBUG_("Give CommunicationMutex: ");
+    //CIC_DEBUG(x);
     xSemaphoreGive(CommunicationMutex);
 }
 
@@ -113,27 +105,9 @@ DCPRTC cicadaRTC;
 
 DCPSDCard cicadaSDCard;
 
-DCPSDCard logSDCard;
-
 DCPMQTT cicadaMQTT;
 
 DCPSelfUpdate selfUpdate;
-
-boolean enableLog = false;
-
-void logEnable() {
-    enableLog = true;
-}
-
-void logDisable() {
-    enableLog = false;
-}
-
-void cic_log(String msg, boolean ln) {
-    if (enableLog) {
-        logSDCard.writeLog(msg, ln);
-    }
-};
 
 /**
  * Sensor configurations
@@ -180,40 +154,54 @@ void DCPSystem::preInitSystem() {
 
     DCPCommands.initSerialCommands(FIRMWARE_VERSION, FIRMWARE_DATE);
 
+    cicadaLeds.redTurnOn();
+    cicadaLeds.greenBlink(2);
+
     // Init the Serial
     CIC_DEBUG_SETUP(CIC_SYSTEM_BAUDRATE);
     CIC_DEBUG_(F("\n\nCICADA DCP FIRMWARE (Version "));
     CIC_DEBUG_(getFwmVersion());
     CIC_DEBUG(F(")"));
 
+    cicadaLeds.greenBlink(2);
+
     //inicia o SDCard
-    logSDCard.setupSDCardModule();
     cicadaSDCard.setupSDCardModule();
     cicadaSDCard.printDirectory("/");
 
+    cicadaLeds.greenBlink(2);
+
     // Get Station ID from file system or create the file with
     initStationID();
+    cicadaLeds.greenBlink(2);
 
     // Get Station Name
     initStationName();
+    cicadaLeds.greenBlink(2);
 
     // Get Station PWD
     initStationPWD();
+    cicadaLeds.greenBlink(2);
 
     // Register Firmware Version
     initFirmwareVersion();
+    cicadaLeds.greenBlink(2);
 
     // Get Station Latitude and Longitude
     initStationCoordinates();
+    cicadaLeds.greenBlink(2);
 
     // Get Station Calibrated Bucket Volume
     initBucketVolume();
+    cicadaLeds.greenBlink(2);
 
     // Get Time slot to store metadata
     initSlotStoreMetadata();
+    cicadaLeds.greenBlink(2);
 
     //Show all config
     printConfiguration();
+    cicadaLeds.redTurnOff();
 }
 
 boolean DCPSystem::initCommunication(boolean startPromptOnFail) {
@@ -222,6 +210,7 @@ boolean DCPSystem::initCommunication(boolean startPromptOnFail) {
             if (startPromptOnFail) {
                 return networkFailureBoot();
             }
+            cicadaLeds.redTurnOn();
             return false;
         } else {
             cicadaRTC.setupRTCModule(dcpSIM800.getNetworkDate());
@@ -229,6 +218,7 @@ boolean DCPSystem::initCommunication(boolean startPromptOnFail) {
     } else {
         cicadaRTC.setupRTCModule(dcpWifi.getNetworkDate());
     }
+    cicadaLeds.redTurnOn();
     return true;
 }
 
@@ -350,20 +340,28 @@ void DCPSystem::setupWizard(xTaskHandle coreTask) {
 void DCPSystem::initSystem(xTaskHandle coreTask) {
 
     initSensorsConfig();
+    cicadaLeds.greenBlink(2);
     nextSlotToSaveMetadata();
+    cicadaLeds.greenBlink(2);
     initMQTT();
+    cicadaLeds.greenBlink(2);
     initSelfUpdate();
+    cicadaLeds.greenBlink(2);
 
     cicadaLeds.redTurnOff();
     cicadaLeds.greenTurnOff();
     cicadaLeds.blueTurnOff();
 
+    cicadaSDCard.cleanOlderFiles();
+
     CIC_DEBUG_(F("\nStartup completed on: "));
     printNowDate();
+    cicadaLeds.greenBlink(20);
+    cicadaLeds.greenTurnOff();
+    cicadaLeds.redTurnOff();
 }
 
 void DCPSystem::printNowDate() {
-
     CIC_DEBUG(cicadaRTC.now());
 }
 
@@ -377,10 +375,20 @@ void DCPSystem::updateStatus() {
     if (!inTransmitionData) {
         if (dcpWifi.revalidateConnection()) {
             dcpSIM800.turnOff();
+        } else {
+            dcpSIM800.revalidateConnection();
         }
-        dcpSIM800.revalidateConnection();
+
+        if (cicadaLeds.timeToBlinkStatus()) {
+            if (dcpWifi.isConnected()) {
+                cicadaLeds.blinkStatusOk();
+            } else if (dcpSIM800.isConnected()) {
+                cicadaLeds.blinkStatusOk();
+            } else {
+                cicadaLeds.blinkStatusError();
+            }
+        }
     }
-    cicadaLeds.blinkStatusOk();
 }
 
 void DCPSystem::readSensors() {
@@ -389,11 +397,13 @@ void DCPSystem::readSensors() {
         dcpRainGauge.readRG();
         dcpVoltage.readVccIn();
         dcpVoltage.readVccSol();
+        storeMetadados();
     } else {
         dcpDHT.updateNextSlot();
         dcpRainGauge.updateNextSlot();
         dcpVoltage.updateNextSlotIn();
         dcpVoltage.updateNextSlotSol();
+        updateNextSlotMetadados();
     }
 }
 
@@ -512,7 +522,7 @@ void DCPSystem::initBucketVolume() {
     }
 
     CIC_DEBUG_(F("STATION BUCKET VOLUME: "));
-    CIC_DEBUG(CIC_STATION_BUCKET_VOLUME);
+    CIC_DEBUG(String(CIC_STATION_BUCKET_VOLUME));
 }
 
 /**
@@ -532,7 +542,7 @@ void DCPSystem::initSlotStoreMetadata() {
     }
 
     CIC_DEBUG_(F("TIME SLOT TO STORE METADATA: "));
-    CIC_DEBUG_(CIC_STATION_STOREMETADATA);
+    CIC_DEBUG_(String(CIC_STATION_STOREMETADATA));
     CIC_DEBUG(" hours");
 }
 
@@ -743,17 +753,15 @@ void DCPSystem::taskTransmitLoop() {
     /* Inspect our own high water mark on entering the task. */
     UBaseType_t uxHighWaterMark = uxTaskGetStackHighWaterMark(NULL);
     CIC_DEBUG_("Allocated stack: ");
-    CIC_DEBUG(uxHighWaterMark);
+    CIC_DEBUG(String(uxHighWaterMark));
 
     while (true) {
         vTaskDelay(20);
         if (!getInDownload() && !getInUpdate()) {
-            storeMetadados();
             transmiteData();
             selfUpdate.updateFirmware();
         } else {
             updateAllSlots();
-            updateNextSlotMetadados();
         }
     }
 }
@@ -768,11 +776,14 @@ void updateAllSlots() {
 
 void DCPSystem::transmiteData() {
     inTransmitionData = true;
-    if (!cicadaMQTT.sendAllMessagesDataWifi()) {
-        if (!cicadaMQTT.sendAllMessagesDataSim(dcpSIM800.getModem())) {
-            if (!initCommunication(false)) {
-                CIC_DEBUG(F("Communication failure. Operating without network!"));
-            }
+    if (cicadaMQTT.onTimeToSend()) {
+        if (dcpWifi.isConnected()) {
+            cicadaMQTT.sendAllMessagesDataWifi();
+        } else if (dcpSIM800.isConnected()) {
+            cicadaMQTT.sendAllMessagesDataSim(dcpSIM800.getModem());
+            cicadaMQTT.updateNextSlot();
+        } else if (!initCommunication(false)) {
+            CIC_DEBUG(F("Communication failure. Operating without network!"));
         }
     }
     inTransmitionData = false;
@@ -795,7 +806,7 @@ void DCPSystem::nextSlotToSaveMetadata() {
     }
     nextTimeSlotToSaveMetadata = nextSlot;
     CIC_DEBUG_(F("Next slot to Save Metadata: "));
-    CIC_DEBUG_(nextTimeSlotToSaveMetadata);
+    CIC_DEBUG_(String(nextTimeSlotToSaveMetadata));
     CIC_DEBUG(F(" min."));
 }
 
@@ -813,64 +824,63 @@ void DCPSystem::updateNextSlotMetadados() {
 void DCPSystem::storeMetadados() {
     if (onTimeToSaveMetadata()) {
         CIC_DEBUG_HEADER(F("STORE METADATA"));
-        cicadaLeds.redTurnOn();
         updateCommunicationStatus();
         cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY, FIRMWARE_VERSION, FIRMWARE_DATE);
         nextSlotToSaveMetadata();
-        cicadaLeds.redTurnOff();
-
         cicadaSDCard.cleanOlderFiles();
     }
 }
 
 void DCPSystem::updateCommunicationStatus() {
-    CIC_DEBUG_HEADER(F("UPDATE COMMUNICATION STATUS"));
+    if (!inTransmitionData) {
+        CIC_DEBUG_HEADER(F("UPDATE COMMUNICATION STATUS"));
 
-    if (dcpWifi.isConnected()) {
-        COM_TYPE = "WIFI";
-        CIC_DEBUG_(F("Conection Type:"));
-        CIC_DEBUG(COM_TYPE);
+        if (dcpWifi.isConnected()) {
+            COM_TYPE = "WIFI";
+            CIC_DEBUG_(F("Conection Type:"));
+            CIC_DEBUG(COM_TYPE);
 
-        SIM_ICCID = "";
-        CIC_DEBUG_(F("CCID:"));
-        CIC_DEBUG(SIM_ICCID);
+            SIM_ICCID = "";
+            CIC_DEBUG_(F("CCID:"));
+            CIC_DEBUG(SIM_ICCID);
 
-        SIM_OPERA = "";
-        CIC_DEBUG(F("Operator:"));
-        CIC_DEBUG(SIM_OPERA);
+            SIM_OPERA = "";
+            CIC_DEBUG(F("Operator:"));
+            CIC_DEBUG(SIM_OPERA);
 
-        IPAddress local = dcpWifi.getLocalIP();
-        COM_LOCAL_IP = IpAddress2String(local);
-        CIC_DEBUG_(F("Local IP:"));
-        CIC_DEBUG(COM_LOCAL_IP);
+            IPAddress local = dcpWifi.getLocalIP();
+            COM_LOCAL_IP = IpAddress2String(local);
+            CIC_DEBUG_(F("Local IP:"));
+            CIC_DEBUG(COM_LOCAL_IP);
 
-        COM_SIGNAL_QUALITTY = dcpWifi.getSignalQuality();
-        CIC_DEBUG_(F("Signal quality:"));
-        CIC_DEBUG_(COM_SIGNAL_QUALITTY);
-        CIC_DEBUG(F("%"));
-    } else {
+            COM_SIGNAL_QUALITTY = dcpWifi.getSignalQuality();
+            CIC_DEBUG_(F("Signal quality:"));
+            CIC_DEBUG_(COM_SIGNAL_QUALITTY);
+            CIC_DEBUG(F("%"));
+        } else {
 
-        COM_TYPE = "SIM";
-        CIC_DEBUG_(F("Conection Type:"));
-        CIC_DEBUG(COM_TYPE);
+            COM_TYPE = "SIM";
+            CIC_DEBUG_(F("Conection Type:"));
+            CIC_DEBUG(COM_TYPE);
 
-        SIM_ICCID = dcpSIM800.getSimCCID();
-        CIC_DEBUG_(F("CCID:"));
-        CIC_DEBUG(SIM_ICCID);
+            SIM_ICCID = dcpSIM800.getSimCCID();
+            CIC_DEBUG_(F("CCID:"));
+            CIC_DEBUG(SIM_ICCID);
 
-        SIM_OPERA = dcpSIM800.getOperator();
-        CIC_DEBUG_(F("Operator:"));
-        CIC_DEBUG(SIM_OPERA);
+            SIM_OPERA = dcpSIM800.getOperator();
+            CIC_DEBUG_(F("Operator:"));
+            CIC_DEBUG(SIM_OPERA);
 
-        IPAddress local = dcpSIM800.getLocalIP();
-        COM_LOCAL_IP = IpAddress2String(local);
-        CIC_DEBUG_(F("Local IP:"));
-        CIC_DEBUG(COM_LOCAL_IP);
+            IPAddress local = dcpSIM800.getLocalIP();
+            COM_LOCAL_IP = IpAddress2String(local);
+            CIC_DEBUG_(F("Local IP:"));
+            CIC_DEBUG(COM_LOCAL_IP);
 
-        COM_SIGNAL_QUALITTY = dcpSIM800.getSignalQuality();
-        CIC_DEBUG_(F("Signal quality:"));
-        CIC_DEBUG_(COM_SIGNAL_QUALITTY);
-        CIC_DEBUG(F("%"));
+            COM_SIGNAL_QUALITTY = dcpSIM800.getSignalQuality();
+            CIC_DEBUG_(F("Signal quality:"));
+            CIC_DEBUG_(COM_SIGNAL_QUALITTY);
+            CIC_DEBUG(F("%"));
+        }
     }
 }
 
@@ -879,4 +889,69 @@ String DCPSystem::IpAddress2String(const IPAddress& ipAddress) {
  String(ipAddress[1]) + String(".") +\
  String(ipAddress[2]) + String(".") +\
  String(ipAddress[3]);
+}
+
+/******************************************************************************/
+void CIC_DEBUG_(String text) {
+    int attempts = 0;
+    while (attempts <= SERIAL_ATTEMPTS) {
+        if (takeSerialMutex()) {
+            Serial.print((text));
+            giveSerialMutex();
+            break;
+        }
+        attempts = attempts + 1;
+        delay(SERIAL_ATTEMPTS_DELAY);
+    }
+}
+
+void CIC_DEBUG_HEADER(String text) {
+    int attempts = 0;
+    while (attempts <= SERIAL_ATTEMPTS) {
+        if (takeSerialMutex()) {
+            Serial.println(F("\n"));
+            Serial.println((text));
+            Serial.println(F("==========================================="));
+            giveSerialMutex();
+            break;
+        }
+        attempts = attempts + 1;
+        delay(SERIAL_ATTEMPTS_DELAY);
+    }
+}
+
+void CIC_DEBUG(String text) {
+    int attempts = 0;
+    while (attempts <= SERIAL_ATTEMPTS) {
+        if (takeSerialMutex()) {
+            Serial.print((text));
+            Serial.print(F(" (Core: "));
+            Serial.print(xPortGetCoreID());
+            Serial.println(F(")"));
+            giveSerialMutex();
+            break;
+        }
+        attempts = attempts + 1;
+        delay(SERIAL_ATTEMPTS_DELAY);
+    }
+}
+
+void CIC_DEBUGWRITE(char cc) {
+    int attempts = 0;
+    while (attempts <= SERIAL_ATTEMPTS) {
+        if (takeSerialMutex()) {
+            Serial.write(cc);
+            giveSerialMutex();
+            break;
+        }
+        attempts = attempts + 1;
+        delay(SERIAL_ATTEMPTS_DELAY);
+    }
+}
+
+// Serial debug
+
+void CIC_DEBUG_SETUP(int baudrate) {
+    Serial.begin((baudrate));
+    delay(200);
 }

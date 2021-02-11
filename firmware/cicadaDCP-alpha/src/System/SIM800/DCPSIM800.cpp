@@ -37,10 +37,11 @@ DCPSIM800::DCPSIM800() {
 void DCPSIM800::turnOn() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("turnOn")) {
             digitalWrite(PIN_MODEM_TURNON, HIGH);
             simDCPLeds.redBlink(40, 500);
-            giveCommunicationMutex();
+            modemOn = true;
+            giveCommunicationMutex("turnOn");
             break;
         } else {
             CIC_DEBUG(F("Waiting to modem turnOn ..."));
@@ -53,9 +54,10 @@ void DCPSIM800::turnOn() {
 void DCPSIM800::turnOff() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("turnOff")) {
             digitalWrite(PIN_MODEM_TURNON, LOW);
-            giveCommunicationMutex();
+            modemOn = false;
+            giveCommunicationMutex("turnOff");
             break;
         } else {
             CIC_DEBUG(F("Waiting to modem turnOff ..."));
@@ -164,7 +166,7 @@ boolean DCPSIM800::setupSIM800Module() {
 String DCPSIM800::getNetworkDate() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("getNetworkDate")) {
             if (modemGSM.isGprsConnected()) {
                 int year = 0;
                 int month = 0;
@@ -184,19 +186,19 @@ String DCPSIM800::getNetworkDate() {
                     if (modemGSM.getNetworkTime(&year, &month, &day, &hour, &min, &sec,
                             &timezone)) {
                         CIC_DEBUG_(F("Year: "));
-                        CIC_DEBUG_(year);
+                        CIC_DEBUG_(String(year));
                         CIC_DEBUG_(F(" Month: "));
-                        CIC_DEBUG_(month);
+                        CIC_DEBUG_(String(month));
                         CIC_DEBUG_(F(" Day: "));
-                        CIC_DEBUG_(day);
+                        CIC_DEBUG_(String(day));
                         CIC_DEBUG_(F(" Hour: "));
-                        CIC_DEBUG_(hour);
+                        CIC_DEBUG_(String(hour));
                         CIC_DEBUG_(F(" Minute: "));
-                        CIC_DEBUG_(min);
+                        CIC_DEBUG_(String(min));
                         CIC_DEBUG_(F(" Second: "));
-                        CIC_DEBUG_(sec);
+                        CIC_DEBUG_(String(sec));
                         CIC_DEBUG_(F(" Timezone: "));
-                        CIC_DEBUG(timezone);
+                        CIC_DEBUG(String(timezone));
 
                         //Setting to universal Time
                         hour = hour + ((-1) * timezone);
@@ -204,19 +206,20 @@ String DCPSIM800::getNetworkDate() {
                         String result = String(year) + "-" + String(month) + "-" + String(day) + "T" + String(hour) + ":" + String(min) + ":" + String(sec) + "Z";
                         simDCPLeds.redTurnOff();
                         simDCPLeds.greenTurnOff();
-                        giveCommunicationMutex();
+                        giveCommunicationMutex("getNetworkDate");
                         return result;
                     } else {
                         CIC_DEBUG(F("Couldn't get network time, retrying in 1s."));
                         delay(1000L);
                     }
                 }
-                giveCommunicationMutex();
+                giveCommunicationMutex("getNetworkDate");
                 return "";
             }
-            giveCommunicationMutex();
+            giveCommunicationMutex("getNetworkDate");
             return "";
         } else {
+
             CIC_DEBUG(F("Waiting to modem getNetworkDate ..."));
         }
         attempts = attempts + 1;
@@ -226,17 +229,19 @@ String DCPSIM800::getNetworkDate() {
 }
 
 TinyGsmSim800 DCPSIM800::getModem() {
+
     return modemGSM;
 }
 
 String DCPSIM800::getSimCCID() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("getSimCCID")) {
             String result = modemGSM.getSimCCID();
-            giveCommunicationMutex();
+            giveCommunicationMutex("getSimCCID");
             return result;
         } else {
+
             CIC_DEBUG(F("Waiting to modem getSimCCID ..."));
         }
         attempts = attempts + 1;
@@ -248,11 +253,12 @@ String DCPSIM800::getSimCCID() {
 String DCPSIM800::getOperator() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("getOperator")) {
             String result = modemGSM.getOperator();
-            giveCommunicationMutex();
+            giveCommunicationMutex("getOperator");
             return result;
         } else {
+
             CIC_DEBUG(F("Waiting to modem getOperator ..."));
         }
         attempts = attempts + 1;
@@ -264,11 +270,12 @@ String DCPSIM800::getOperator() {
 IPAddress DCPSIM800::getLocalIP() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("getLocalIP")) {
             IPAddress result = modemGSM.localIP();
-            giveCommunicationMutex();
+            giveCommunicationMutex("getLocalIP");
             return result;
         } else {
+
             CIC_DEBUG(F("Waiting to modem getLocalIP ..."));
         }
         attempts = attempts + 1;
@@ -280,11 +287,12 @@ IPAddress DCPSIM800::getLocalIP() {
 String DCPSIM800::getSignalQuality() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("getSignalQuality")) {
             String result = String(getCSQasQuality(modemGSM.getSignalQuality()));
-            giveCommunicationMutex();
+            giveCommunicationMutex("getSignalQuality");
             return result;
         } else {
+
             CIC_DEBUG(F("Waiting to modem getSignalQuality ..."));
         }
         attempts = attempts + 1;
@@ -298,6 +306,7 @@ int DCPSIM800::getCSQasQuality(int CSQ) {
     int quality = 0;
     quality = (CSQ * 100) / 31;
     if (quality > 100) {
+
         quality = 0;
     }
 
@@ -307,11 +316,12 @@ int DCPSIM800::getCSQasQuality(int CSQ) {
 String DCPSIM800::getIMEI() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("getIMEI")) {
             String result = String(modemGSM.getIMEI());
-            giveCommunicationMutex();
+            giveCommunicationMutex("getIMEI");
             return result;
         } else {
+
             CIC_DEBUG(F("Waiting to modem getSignalQuality ..."));
         }
         attempts = attempts + 1;
@@ -324,11 +334,12 @@ String DCPSIM800::getIMEI() {
 String DCPSIM800::getIMSI() {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("getIMSI")) {
             String result = String(modemGSM.getIMSI());
-            giveCommunicationMutex();
+            giveCommunicationMutex("getIMSI");
             return result;
         } else {
+
             CIC_DEBUG(F("Waiting to modem getSignalQuality ..."));
         }
         attempts = attempts + 1;
@@ -339,17 +350,20 @@ String DCPSIM800::getIMSI() {
 }
 
 boolean DCPSIM800::isConnected() {
-    int attempts = 0;
-    while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
-            boolean result = modemGSM.isGprsConnected();
-            giveCommunicationMutex();
-            return result;
-        } else {
-            CIC_DEBUG(F("Waiting to modem isConnected ..."));
-        }
-        attempts = attempts + 1;
-        delay(SIM_ATTEMPTS_DELAY);
+    if (modemOn) {
+        //int attempts = 0;
+        //while (attempts <= SIM_ATTEMPTS) {
+        //    if (takeCommunicationMutex("isConnected")) {
+        boolean result = modemGSM.isGprsConnected();
+        //        giveCommunicationMutex("isConnected");
+
+        return result;
+        //    } else {
+        //        CIC_DEBUG(F("Waiting to modem isConnected ..."));
+        //    }
+        //    attempts = attempts + 1;
+        //    delay(SIM_ATTEMPTS_DELAY);
+        //}
     }
     return false;
 }
@@ -367,6 +381,7 @@ void DCPSIM800::nextSlotToRevalidateConn() {
 
     int nextSlot = iSlot*CIC_REVALIDATE_CONN;
     if (nextSlot >= 60) {
+
         nextSlot = nextSlot - 60;
     }
     nextTimeSlotToRevalidateConn = nextSlot;
@@ -374,32 +389,37 @@ void DCPSIM800::nextSlotToRevalidateConn() {
 
 boolean DCPSIM800::onTimeToRevalidateConn() {
     int actualSeconds = simRTC.now("%M").toInt();
+
     return actualSeconds == nextTimeSlotToRevalidateConn;
 }
 
 void DCPSIM800::revalidateConnection() {
     if (enableRevalidate) {
         if (onTimeToRevalidateConn()) {
-            int attempts = 0;
-            while (attempts <= SIM_ATTEMPTS) {
-                if (takeCommunicationMutex()) {
-                    boolean result = modemGSM.isGprsConnected();
-                    giveCommunicationMutex();
-                    if (!result) {
-                        turnOff();
+            if (modemOn) {
+                int attempts = 0;
+                while (attempts <= SIM_ATTEMPTS) {
+                    if (takeCommunicationMutex("revalidateConnection")) {
+                        boolean result = modemGSM.isGprsConnected();
+                        giveCommunicationMutex("revalidateConnection");
+                        if (!result) {
+                            turnOff();
+                        }
+                        nextSlotToRevalidateConn();
+
+                        break;
                     }
-                    nextSlotToRevalidateConn();
-                    break;
+                    attempts = attempts + 1;
+                    delay(SIM_ATTEMPTS_DELAY);
                 }
-                attempts = attempts + 1;
-                delay(SIM_ATTEMPTS_DELAY);
+                nextSlotToRevalidateConn();
             }
-            nextSlotToRevalidateConn();
         }
     }
 }
 
 void DCPSIM800::resetConfig() {
+
     simSpiffsManager.deleteSettings(F("SIM  Carrier APN Pwd"), DIR_SIMCARD_APN);
     simSpiffsManager.deleteSettings(F("SIM Carrier APN User"), DIR_SIMCARD_USER);
     simSpiffsManager.deleteSettings(F("SIM  Carrier APN Pwd"), DIR_SIMCARD_PWD);
@@ -407,23 +427,26 @@ void DCPSIM800::resetConfig() {
 
 void DCPSIM800::setAPN(String apn) {
     // Get SIM APN
+
     simSpiffsManager.saveSettings("SIM Carrier APN", DIR_SIMCARD_APN, FILE_SIMCARD_APN, apn);
 }
 
 void DCPSIM800::setUSER(String user) {
     // Get SIM User
+
     simSpiffsManager.saveSettings("SIM Carrier APN User", DIR_SIMCARD_USER, user);
 }
 
 void DCPSIM800::setPWD(String pwd) {
     // Get SIM Password
+
     simSpiffsManager.saveSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, FILE_SIMCARD_PWD, pwd);
 }
 
 String DCPSIM800::sendAT(String comm) {
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("sendAT")) {
             modemGSM.sendAT(comm);
 
             String res = "";
@@ -431,7 +454,7 @@ String DCPSIM800::sendAT(String comm) {
                 res = F("TIMEOUT");
             }
             res.trim();
-            giveCommunicationMutex();
+            giveCommunicationMutex("sendAT");
             return res;
         } else {
             CIC_DEBUG(F("Waiting to sendAT ..."));

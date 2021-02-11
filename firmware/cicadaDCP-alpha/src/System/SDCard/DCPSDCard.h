@@ -20,12 +20,10 @@
 
 #if SPI_DRIVER_SELECT == 2  // Must be set in SdFat/SdFatConfig.h
 
-// SD_FAT_TYPE = 0 for SdFat/File as defined in SdFatConfig.h,
-// 1 for FAT16/FAT32, 2 for exFAT, 3 for FAT16/FAT32 and exFAT.
-#define SD_FAT_TYPE 1
-
 #define SD_ATTEMPTS 3
 #define SD_ATTEMPTS_DELAY 500
+
+#define SD_WRITE_DELAY 10
 
 /** year part of FAT directory date field
  * \param[in] fatDate Date in packed dir format.
@@ -117,22 +115,6 @@ private:
     String padL(int len, String inS);
     String padR(int len, String inS);
     boolean printSDError();
-
-#if SD_FAT_TYPE == 0
-    SdFat sd;
-    File file;
-#elif SD_FAT_TYPE == 1
-    SdFat32 sd;
-    File32 file;
-#elif SD_FAT_TYPE == 2
-    SdExFat sd;
-    ExFile file;
-#elif SD_FAT_TYPE == 3
-    SdFs sd;
-    FsFile file;
-#else  // SD_FAT_TYPE
-#error Invalid SD_FAT_TYPE
-#endif  // SD_FAT_TYPE
 };
 
 #else  // SPI_DRIVER_SELECT

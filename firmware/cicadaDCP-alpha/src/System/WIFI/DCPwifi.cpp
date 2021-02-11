@@ -71,7 +71,7 @@ boolean DCPwifi::setupWiFiModule() {
 
         while (count++ < WIFI_CONN_COUNTER) {
             CIC_DEBUG_(F("Connection attempt: "));
-            CIC_DEBUG(count);
+            CIC_DEBUG(String(count));
             wifiDCPLeds.redBlink();
 
             ssid = wifiSpiffsManager.getSettings("SSID", DIR_WIFI_SSID, false);

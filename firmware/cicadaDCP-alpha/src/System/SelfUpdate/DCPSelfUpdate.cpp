@@ -36,7 +36,7 @@ boolean DCPSelfUpdate::setupSelfUpdate(int timeToCheck, String _host, String _ho
 
     TIME_TO_CHECK = timeToCheck;
     CIC_DEBUG_(F("Time to check update: "));
-    CIC_DEBUG_(TIME_TO_CHECK);
+    CIC_DEBUG_(String(TIME_TO_CHECK));
     CIC_DEBUG(F(":00 hour"));
 
     host = _host;
@@ -203,7 +203,7 @@ boolean DCPSelfUpdate::startUpdate(String filename) {
             setInUpdate(false);
             return true;
         } else {
-            CIC_DEBUGWL("Waiting to start update firmware...");
+            CIC_DEBUG("Waiting to start update firmware...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SU_ATTEMPTS_DELAY));
@@ -217,7 +217,7 @@ String DCPSelfUpdate::getHeaderValue(String header, String headerName) {
 boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath, int port, String filename, String saveAs) {
     int attempts = 0;
     while (attempts <= SU_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("downloadFile")) {
             setInDownload(true);
             long contentLength = 0;
 
@@ -240,7 +240,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                     if (millis() - timeout > DOWNLOAD_TIMEOUT) {
                         CIC_DEBUG(F("Client Timeout !"));
                         client->stop();
-                        giveCommunicationMutex();
+                        giveCommunicationMutex("downloadFile");
                         setInDownload(false);
                         return false;
                     }
@@ -268,7 +268,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                         if (line.indexOf("200") < 0) {
                             CIC_DEBUG(F("Got a non 200 status code from server."));
                             CIC_DEBUG(line);
-                            giveCommunicationMutex();
+                            giveCommunicationMutex("downloadFile");
                             setInDownload(false);
                             return false;
                         }
@@ -284,7 +284,7 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
             } else {
                 // Probably a choppy network?
                 CIC_DEBUG("Connection to " + String(host) + " failed. Please check your setup");
-                giveCommunicationMutex();
+                giveCommunicationMutex("downloadFile");
                 setInDownload(false);
                 return false;
             }
@@ -343,21 +343,21 @@ boolean DCPSelfUpdate::downloadFile(Client* client, String host, String hostPath
                 client->stop();
 
                 CIC_DEBUG_(F("\nRemote content-length: "));
-                CIC_DEBUG_(contentLength);
+                CIC_DEBUG_(String(contentLength));
                 CIC_DEBUG(F(" bytes"));
                 CIC_DEBUG_(F("Local content-length:  "));
-                CIC_DEBUG_(readLength);
+                CIC_DEBUG_(String(readLength));
                 CIC_DEBUG(F(" bytes"));
                 if (readLength == contentLength) {
                     CIC_DEBUG(F("Download is DONE!"));
                     Serial.println(F(""));
-                    giveCommunicationMutex();
+                    giveCommunicationMutex("downloadFile");
                     setInDownload(false);
                     return true;
                 } else {
                     CIC_DEBUG(F("Download is FAIL!"));
                     Serial.println(F(""));
-                    giveCommunicationMutex();
+                    giveCommunicationMutex("downloadFile");
                     setInDownload(false);
                     return false;
                 }
@@ -376,20 +376,20 @@ void DCPSelfUpdate::printPercent(long readLength, long contentLength, uint32_t t
     // If we know the total length
     if (contentLength != (long) - 1) {
         float perc = (100.0 * readLength) / contentLength;
-        CIC_DEBUGWL_(perc);
-        CIC_DEBUGWL_(F("%"));
+        CIC_DEBUG_(String(perc));
+        CIC_DEBUG_(F("%"));
         if (timeElapsed != 0) {
             int secRemaining = (((100 - perc) * timeElapsed) / perc) / 1000;
             int minRemaining = secRemaining / 60;
-            CIC_DEBUGWL_(F(" - "));
-            CIC_DEBUGWL_(minRemaining);
-            CIC_DEBUGWL_(F(" minutes ("));
-            CIC_DEBUGWL_(secRemaining);
-            CIC_DEBUGWL(F(" seconds) remaining..."));
+            CIC_DEBUG_(F(" - "));
+            CIC_DEBUG_(String(minRemaining));
+            CIC_DEBUG_(F(" minutes ("));
+            CIC_DEBUG_(String(secRemaining));
+            CIC_DEBUG(F(" seconds) remaining..."));
         } else {
-            CIC_DEBUGWL(F(""));
+            CIC_DEBUG(F(""));
         }
     } else {
-        CIC_DEBUGWL(readLength);
+        CIC_DEBUG(String(readLength));
     }
 }

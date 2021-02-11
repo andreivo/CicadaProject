@@ -1,0 +1,34 @@
+12:30:00.778 -> READ INPUT VCC
+12:30:00.778 -> ===========================================
+12:30:00.778 -> 2021-02-09T14:30:00Z - Write file: 20210209.vcc (Core: 1)
+12:30:00.778 -> content: "measures":[{"snsEC":40,"dtT":"vccin","colDT":"2021-02-09 14:30:00Z","val":"9.35"}] (Core: 1)
+12:30:00.811 -> Store INPUT VCC Data! (Core: 1)
+12:30:00.811 -> Next slot to read Input Vcc: 35 min. (Core: 1)
+12:30:01.143 -> Publishing messages from file 20210209.vcc (Core: 0)
+12:30:01.143 -> Message #1: Published successful (Core: 0)
+12:30:01.143 -> Message #2: Published successful (Core: 0)
+12:30:01.773 -> Delete file error: 20210209.vcc (Core: 0)
+12:30:02.370 -> Mqtt publish failed (Core: 0)
+12:30:02.370 -> SD errorCode: SD_CARD_ERROR_STOP_TRAN = 30 (Core: 0)
+12:30:02.370 -> SD errorData = 229 (Core: 0)
+12:30:03.364 -> ets Jun  8 2016 00:22:57
+12:30:03.398 -> 
+12:30:03.398 -> rst:0xc (SW_CPU_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+12:30:03.398 -> configsip: 0, SPIWP:0xee
+12:30:03.398 -> clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+12:30:03.398 -> mode:DIO, clock div:1
+12:30:03.398 -> load:0x3fff0018,len:4
+12:30:03.398 -> load:0x3fff001c,len:1216
+12:30:03.398 -> ho 0 tail 12 room 4
+12:30:03.398 -> load:0x40078000,len:9720
+12:30:03.398 -> ho 0 tail 12 room 4
+12:30:03.398 -> load:0x40080400,len:6352
+12:30:03.398 -> entry 0x400806b8
+12:30:04.359 -> 
+12:30:04.359 -> 
+12:30:04.359 -> CICADA DCP FIRMWARE (Version 0.0.1-alpha) (Core: 1)
+12:30:04.790 -> begin() failed
+12:30:04.790 -> Do not reformat the SD.
+12:30:04.790 -> No card, wrong chip select pin, or wiring error?
+12:30:04.790 -> SdError: 0X1,0X0
+

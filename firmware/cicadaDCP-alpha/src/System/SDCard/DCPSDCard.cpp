@@ -16,6 +16,10 @@ SoftSpiDriver<PIN_SDCARD_MISO, PIN_SDCARD_MOSI, PIN_SDCARD_SCK> softSpi;
 
 DCPRTC sdRTC;
 
+DCPLeds sdLeds;
+
+SdFat32 sd;
+
 //Mutex
 SemaphoreHandle_t SDMutex = xSemaphoreCreateMutex();
 
@@ -62,33 +66,31 @@ void dateTime(uint16_t* date, uint16_t* time, uint8_t* ms10) {
  * Setup SDCARD module
  */
 boolean DCPSDCard::setupSDCardModule() {
+
+    pinMode(PIN_SDCARD_CHIP_SELECT, INPUT_PULLUP);
+    pinMode(PIN_SDCARD_MOSI, INPUT_PULLUP);
+    pinMode(PIN_SDCARD_MISO, INPUT_PULLUP);
+    pinMode(PIN_SDCARD_SCK, INPUT_PULLUP);
+
     if (!sd.begin(SD_CONFIG)) {
         sd.initErrorHalt();
-        CIC_DEBUGWL(F("initialization failed!"));
+        CIC_DEBUG(F("initialization failed!"));
         return false;
     }
 
     FsDateTime::setCallback(dateTime);
 
-    if (!sd.exists("log")) {
-        if (!sd.mkdir("log")) {
-            CIC_DEBUGWL(F("Create log folder failed"));
-            printSDError();
-            return false;
-        }
-    }
-
     if (!sd.exists("update")) {
         if (!sd.mkdir("update")) {
-            CIC_DEBUGWL(F("Create update folder failed"));
-            printSDError();
+            CIC_DEBUG(F("Create update folder failed"));
+            //printSDError();
             return false;
         }
     }
 
-    CIC_DEBUG_HEADERWL(F("Initializing SD card..."));
+    CIC_DEBUG_HEADER(F("Initializing SD card..."));
 
-    CIC_DEBUGWL(F("initialization done."));
+    CIC_DEBUG(F("initialization done."));
     return true;
 }
 
@@ -99,7 +101,7 @@ void DCPSDCard::printDirectory(String path) {
 
     // Open root directory
     if (!dir.open(path.c_str())) {
-        CIC_DEBUGWL(F("Error dir.open failed"));
+        CIC_DEBUG(F("Error dir.open failed"));
     }
     dir.rewindDirectory();
 
@@ -109,21 +111,22 @@ void DCPSDCard::printDirectory(String path) {
         myFile.getName(fileName, sizeof (fileName));
         if (myFile.isDir()) {
             // Indicate a directory.
-            Serial.write('/');
+            CIC_DEBUGWRITE('/');
             len = 14;
         }
 
-        CIC_DEBUGWL_(padR(len, fileName));
+        CIC_DEBUG_(padR(len, fileName));
         myFile.printModifyDateTime(&Serial);
-        CIC_DEBUGWL_(" ");
+        CIC_DEBUG_(" ");
         myFile.printFileSize(&Serial);
-        CIC_DEBUGWL(" bytes");
+        CIC_DEBUG(" bytes");
 
         myFile.close();
     }
 
     if (dir.getError()) {
-        CIC_DEBUGWL(F("OpenNext failed"));
+        CIC_DEBUG(F("OpenNext failed"));
+        printSDError();
     }
 }
 
@@ -139,22 +142,22 @@ boolean DCPSDCard::writeFile(String filename, String content) {
                 myFile.println(content);
                 // close the file:
                 myFile.close();
-                CIC_DEBUGWL_(sdRTC.now());
-                CIC_DEBUGWL_(F(" - Write file: "));
-                CIC_DEBUGWL(filename);
-                CIC_DEBUGWL_("content: ");
-                CIC_DEBUGWL(content);
+                CIC_DEBUG_(sdRTC.now());
+                CIC_DEBUG_(F(" - Write file: "));
+                CIC_DEBUG(filename);
+                CIC_DEBUG_("content: ");
+                CIC_DEBUG(content);
                 giveSDMutex("writeFile");
                 return true;
             } else {
                 // if the file didn't open, print an error:
-                CIC_DEBUGWL_(F("Error opening "));
-                CIC_DEBUGWL(filename);
+                CIC_DEBUG_(F("Error opening "));
+                CIC_DEBUG(filename);
             }
             giveSDMutex("writeFile");
         } else {
 
-            CIC_DEBUGWL("Waiting to write File...");
+            CIC_DEBUG("Waiting to write File...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -179,13 +182,13 @@ boolean DCPSDCard::writeBinFile(String filename, uint8_t buff[128], int len) {
                 return true;
             } else {
                 // if the file didn't open, print an error:
-                CIC_DEBUGWL_(F("Error opening "));
-                CIC_DEBUGWL(filename);
+                CIC_DEBUG_(F("Error opening "));
+                CIC_DEBUG(filename);
             }
             giveSDMutex("writeBINFile");
         } else {
 
-            CIC_DEBUGWL("Waiting to write BIN File...");
+            CIC_DEBUG("Waiting to write BIN File...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -201,7 +204,7 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
             File32 myFile;
             // Open root directory
             if (!dir.open("/")) {
-                CIC_DEBUGWL(F("Dir. open failed"));
+                CIC_DEBUG(F("Dir. open failed"));
             }
 
             dir.rewindDirectory();
@@ -213,12 +216,12 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
 
                     if (readPublishFile(fileName, callback, _clientPub, tknDCP, pwdDCP, TOPIC)) {
                         if (!dir.remove(fileName)) {
-                            CIC_DEBUGWL_("Delete file error: ");
-                            CIC_DEBUGWL(fileName);
+                            CIC_DEBUG_("Delete file error: ");
+                            CIC_DEBUG(fileName);
                         }
                     } else {
-                        CIC_DEBUGWL_(F("Error on Mqtt publish: "));
-                        CIC_DEBUGWL(fileName);
+                        CIC_DEBUG_(F("Error on Mqtt publish: "));
+                        CIC_DEBUG(fileName);
                     }
                 } else {
                     myFile.close();
@@ -227,7 +230,8 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
 
             boolean result = false;
             if (dir.getError()) {
-                CIC_DEBUGWL(F("Mqtt publish failed"));
+                CIC_DEBUG(F("Mqtt publish failed"));
+                printSDError();
                 result = false;
             } else {
                 result = true;
@@ -238,7 +242,7 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
 
         } else {
 
-            CIC_DEBUGWL("Waiting to mqttPublishFiles...");
+            CIC_DEBUG("Waiting to mqttPublishFiles...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -246,8 +250,8 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
 }
 
 boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String msg, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC), PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC) {
-    CIC_DEBUGWL_(F("Publishing messages from file "));
-    CIC_DEBUGWL(filename.c_str());
+    CIC_DEBUG_(F("Publishing messages from file "));
+    CIC_DEBUG(filename.c_str());
     File32 myFile;
     if (myFile.open(filename.c_str(), O_RDONLY)) {
         // read from the file until there's nothing else in it:
@@ -257,9 +261,9 @@ boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String ms
             char cMsg = (char) myFile.read();
             if (cMsg == '\n') {
                 msgNumber += 1;
-                CIC_DEBUGWL_(F("Message #"));
-                CIC_DEBUGWL_(msgNumber);
-                CIC_DEBUGWL_(F(": "));
+                CIC_DEBUG_(F("Message #"));
+                CIC_DEBUG_(String(msgNumber));
+                CIC_DEBUG_(F(": "));
                 (*callback)(msg, _clientPub, tknDCP, pwdDCP, TOPIC);
                 msg = "";
             } else {
@@ -271,8 +275,8 @@ boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String ms
         return true;
     } else {
         // if the file didn't open, print an error:
-        CIC_DEBUGWL_(F("Error opening "));
-        CIC_DEBUGWL(filename);
+        CIC_DEBUG_(F("Error opening "));
+        CIC_DEBUG(filename);
 
         return false;
     }
@@ -296,15 +300,15 @@ String DCPSDCard::readFile(String filename) {
 
             } else {
                 // if the file didn't open, print an error:
-                CIC_DEBUGWL_(F("Error opening: "));
-                CIC_DEBUGWL(filename);
+                CIC_DEBUG_(F("Error opening: "));
+                CIC_DEBUG(filename);
             }
             giveSDMutex("readFile");
             return result;
         } else {
 
-            CIC_DEBUGWL_(F("Waiting to read File: "));
-            CIC_DEBUGWL(filename);
+            CIC_DEBUG_(F("Waiting to read File: "));
+            CIC_DEBUG(filename);
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -321,20 +325,20 @@ void DCPSDCard::printContentFile(String filename) {
             if (myFile.open(filename.c_str(), O_RDONLY)) {
                 // read from the file until there's nothing else in it:
                 while (myFile.available()) {
-                    CIC_DEBUGWL_((char) myFile.read());
+                    CIC_DEBUG_(String((char) myFile.read()));
                 }
                 // close the file:
                 myFile.close();
             } else {
                 // if the file didn't open, print an error:
-                CIC_DEBUGWL_(F("Error opening "));
-                CIC_DEBUGWL(filename);
+                CIC_DEBUG_(F("Error opening "));
+                CIC_DEBUG(filename);
             }
             giveSDMutex("printContentFile");
             break;
         } else {
 
-            CIC_DEBUGWL("Waiting to read File...");
+            CIC_DEBUG("Waiting to read File...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -344,34 +348,34 @@ void DCPSDCard::printContentFile(String filename) {
 boolean DCPSDCard::deleteFile(String filename) {
     int attempts = 0;
     while (attempts <= SD_ATTEMPTS) {
-        CIC_DEBUGWL_(F("Delete file "));
-        CIC_DEBUGWL(filename);
+        CIC_DEBUG_(F("Delete file "));
+        CIC_DEBUG(filename);
         if (takeSDMutex("deleteFile")) {
             if (!sd.chdir("/")) {
-                CIC_DEBUGWL("Error chdir to root failed.\n");
+                CIC_DEBUG("Error chdir to root failed.\n");
             }
 
             if (sd.exists(filename.c_str())) {
                 if (!sd.remove(filename.c_str())) {
-                    CIC_DEBUGWL_("Error remove file: ");
-                    CIC_DEBUGWL(filename);
+                    CIC_DEBUG_("Error remove file: ");
+                    CIC_DEBUG(filename);
                     giveSDMutex("deleteFile");
                     return false;
                 } else {
-                    CIC_DEBUGWL_(F("Delete file successful "));
-                    CIC_DEBUGWL(filename);
+                    CIC_DEBUG_(F("Delete file successful "));
+                    CIC_DEBUG(filename);
                     giveSDMutex("deleteFile");
                     return true;
                 }
             } else {
-                CIC_DEBUGWL_(F("Delete fail: File not exists: "));
-                CIC_DEBUGWL(filename);
+                CIC_DEBUG_(F("Delete fail: File not exists: "));
+                CIC_DEBUG(filename);
                 giveSDMutex("deleteFile");
             }
         } else {
 
-            CIC_DEBUGWL_("Waiting to delete File: ");
-            CIC_DEBUGWL(filename);
+            CIC_DEBUG_("Waiting to delete File: ");
+            CIC_DEBUG(filename);
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -384,16 +388,16 @@ void DCPSDCard::deleteOldFiles(String path) {
     if (path != "/") {
         text = path;
     }
-    CIC_DEBUGWL_(F("Delete "));
-    CIC_DEBUGWL_(text);
-    CIC_DEBUGWL(F(" older than 1 year."));
+    CIC_DEBUG_(F("Delete "));
+    CIC_DEBUG_(text);
+    CIC_DEBUG(F(" older than 1 year."));
     while (attempts <= SD_ATTEMPTS) {
         if (takeSDMutex("deleteOldFiles")) {
             File32 myDir;
             File32 myFile;
             // Open root directory
             if (!myDir.open(path.c_str())) {
-                CIC_DEBUGWL(F("Error dir.open failed"));
+                CIC_DEBUG(F("Error dir.open failed"));
             }
             myDir.rewindDirectory();
 
@@ -416,11 +420,11 @@ void DCPSDCard::deleteOldFiles(String path) {
 
                     if (ttFile < ttOlder) {
                         if (myDir.remove(fileName)) {
-                            CIC_DEBUGWL_(F("Old file delete: "));
-                            CIC_DEBUGWL(fileName);
+                            CIC_DEBUG_(F("Old file delete: "));
+                            CIC_DEBUG(fileName);
                         } else {
-                            CIC_DEBUGWL_(F("Delete file error: "));
-                            CIC_DEBUGWL(fileName);
+                            CIC_DEBUG_(F("Delete file error: "));
+                            CIC_DEBUG(fileName);
                         }
                     }
                 } else {
@@ -429,14 +433,15 @@ void DCPSDCard::deleteOldFiles(String path) {
             }
 
             if (myDir.getError()) {
-                CIC_DEBUGWL(F("deleteOldFiles: OpenNext failed"));
+                CIC_DEBUG(F("deleteOldFiles: OpenNext failed"));
+                printSDError();
             }
             myDir.close();
             giveSDMutex("deleteOldFiles");
             break;
         } else {
 
-            CIC_DEBUGWL(F("Waiting to deleteOldFiles..."));
+            CIC_DEBUG(F("Waiting to deleteOldFiles..."));
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -445,7 +450,6 @@ void DCPSDCard::deleteOldFiles(String path) {
 
 void DCPSDCard::cleanOlderFiles() {
     deleteOldFiles();
-    deleteOldFiles("log");
 }
 
 boolean DCPSDCard::deleteUpdate() {
@@ -453,16 +457,16 @@ boolean DCPSDCard::deleteUpdate() {
     boolean result = true;
     String path = "update";
 
-    CIC_DEBUGWL_(F("Delete "));
-    CIC_DEBUGWL_(path);
-    CIC_DEBUGWL(F(" files."));
+    CIC_DEBUG_(F("Delete "));
+    CIC_DEBUG_(path);
+    CIC_DEBUG(F(" files."));
     while (attempts <= SD_ATTEMPTS) {
         if (takeSDMutex("deleteUpdate")) {
             File32 myDir;
             File32 myFile;
             // Open root directory
             if (!myDir.open(path.c_str())) {
-                CIC_DEBUGWL(F("Error dir.open failed"));
+                CIC_DEBUG(F("Error dir.open failed"));
             }
             myDir.rewindDirectory();
 
@@ -473,11 +477,11 @@ boolean DCPSDCard::deleteUpdate() {
                     myFile.close();
 
                     if (myDir.remove(fileName)) {
-                        CIC_DEBUGWL_(F("Delete file: "));
-                        CIC_DEBUGWL(fileName);
+                        CIC_DEBUG_(F("Delete file: "));
+                        CIC_DEBUG(fileName);
                     } else {
-                        CIC_DEBUGWL_(F("Delete file error: "));
-                        CIC_DEBUGWL(fileName);
+                        CIC_DEBUG_(F("Delete file error: "));
+                        CIC_DEBUG(fileName);
                         result = false;
                     }
 
@@ -487,14 +491,15 @@ boolean DCPSDCard::deleteUpdate() {
             }
 
             if (myDir.getError()) {
-                CIC_DEBUGWL(F("deleteUpdate: OpenNext failed"));
+                CIC_DEBUG(F("deleteUpdate: OpenNext failed"));
+                printSDError();
             }
             myDir.close();
             giveSDMutex("deleteUpdate");
             break;
         } else {
 
-            CIC_DEBUGWL(F("Waiting to deleteUpdate..."));
+            CIC_DEBUG(F("Waiting to deleteUpdate..."));
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -513,7 +518,11 @@ String DCPSDCard::prepareData(String sensorCode, String dataType, String collect
 
 boolean DCPSDCard::storeData(String sensor, String measures) {
     String content = "\"measures\":[" + measures + "]";
-    String filename = sdRTC.now("%Y%m%d") + "." + sensor;
+
+    time_t tt = sdRTC.nowEpoch();
+    String filename = String(int32_t(tt)) + "." + sensor;
+    CIC_DEBUG_("StoreDataFile: ");
+    CIC_DEBUG(filename);
     writeFile(filename, content);
 
     return true;
@@ -528,9 +537,12 @@ String DCPSDCard::prepareDataMetadata(String dataType, String collectionDate, St
 }
 
 boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware) {
-    CIC_DEBUGWL(F("Store Metadata!"));
+    CIC_DEBUG(F("Store Metadata!"));
 
-    String filename = sdRTC.now("%Y%m%d") + ".mtd";
+    time_t tt = sdRTC.nowEpoch();
+    String filename = String(int32_t(tt)) + ".mtd";
+    CIC_DEBUG_("StoreDataFile: ");
+    CIC_DEBUG(filename);
 
     String collectionDate = sdRTC.now("%Y-%m-%d %H:%M:%SZ");
 
@@ -575,8 +587,7 @@ void DCPSDCard::formatSD(boolean ask) {
             giveSDMutex("formatSD");
             break;
         } else {
-
-            Serial.println(F("Waiting to formatSD..."));
+            CIC_DEBUG(F("Waiting to formatSD..."));
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));
@@ -727,7 +738,7 @@ String DCPSDCard::dmpVol() {
     String result = "";
 
     if (!sd.cardBegin(SD_CONFIG)) {
-        Serial.println(F(
+        CIC_DEBUG(F(
                 "\nSD initialization failed.\n"
                 "Do not reformat the card!\n"
                 "Is the card correctly inserted?\n"
@@ -738,12 +749,12 @@ String DCPSDCard::dmpVol() {
 
 
     if (!sd.volumeBegin()) {
-        Serial.println(F("\nvolumeBegin failed. Is the card formatted?"));
+        CIC_DEBUG(F("\nvolumeBegin failed. Is the card formatted?"));
         printSDError();
         return result;
     }
 
-    Serial.println(F("Scanning FAT, please wait."));
+    CIC_DEBUG(F("Scanning FAT, please wait."));
 
     result += F("\nVolume Info\n");
     result += F("----------------------------------------------------------\n");
@@ -837,12 +848,17 @@ String DCPSDCard::padR(int len, String inS) {
 boolean DCPSDCard::printSDError() {
     if (sd.sdErrorCode()) {
 
-        Serial.print(F("SD errorCode: "));
+        CIC_DEBUG_(F("SD errorCode: "));
         printSdErrorSymbol(&Serial, sd.sdErrorCode());
-        Serial.print(F(" = "));
-        Serial.println(int(sd.sdErrorCode()));
-        Serial.print(F("SD errorData = "));
-        Serial.println(int(sd.sdErrorData()));
+        CIC_DEBUG_(F(" = "));
+        CIC_DEBUG(String(int(sd.sdErrorCode())));
+        CIC_DEBUG_(F("SD errorData = "));
+        CIC_DEBUG(String(int(sd.sdErrorData())));
+
+        sdLeds.redTurnOn();
+        delay(1000);
+        ESP.restart();
+
     }
 }
 
@@ -859,7 +875,7 @@ boolean DCPSDCard::writeLog(String log, boolean ln) {
 
             // Change volume working directory to root.
             if (!sd.chdir()) {
-                Serial.println(F("chdir failed for root Folder."));
+                CIC_DEBUG(F("chdir failed for root Folder."));
                 printSDError();
                 giveSDMutex("writeLog");
                 return false;
@@ -867,7 +883,7 @@ boolean DCPSDCard::writeLog(String log, boolean ln) {
 
             if (!sd.exists("log")) {
                 if (!sd.mkdir("log")) {
-                    Serial.println(F("Create log folder failed"));
+                    CIC_DEBUG(F("Create log folder failed"));
                     printSDError();
                     giveSDMutex("writeLog");
                     return false;
@@ -876,7 +892,7 @@ boolean DCPSDCard::writeLog(String log, boolean ln) {
 
             // Change volume working directory to log.
             if (!sd.chdir("log")) {
-                Serial.println(F("chdir failed for log Folder."));
+                CIC_DEBUG(F("chdir failed for log Folder."));
                 printSDError();
                 giveSDMutex("writeLog");
                 return false;
@@ -905,7 +921,7 @@ boolean DCPSDCard::writeLog(String log, boolean ln) {
                 myFile.close();
                 // Change volume working directory to root.
                 if (!sd.chdir()) {
-                    Serial.println(F("chdir failed for root Folder."));
+                    CIC_DEBUG(F("chdir failed for root Folder."));
                     printSDError();
                     giveSDMutex("writeLog");
                     return false;
@@ -915,8 +931,8 @@ boolean DCPSDCard::writeLog(String log, boolean ln) {
                 return true;
             } else {
                 // if the file didn't open, print an error:
-                Serial.print(F("Error opening log "));
-                Serial.println(filename);
+                CIC_DEBUG_(F("Error opening log "));
+                CIC_DEBUG(filename);
                 printSDError();
                 // close the file:
                 myFile.close();
@@ -926,12 +942,12 @@ boolean DCPSDCard::writeLog(String log, boolean ln) {
 
             // Change volume working directory to root.
             if (!sd.chdir()) {
-                Serial.print(F("chdir failed for root Folder."));
+                CIC_DEBUG_(F("chdir failed for root Folder."));
                 printSDError();
             }
             giveSDMutex("writeLog");
         } else {
-            //Serial.println("Waiting to writeLog...");
+            //CIC_DEBUG("Waiting to writeLog...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SD_ATTEMPTS_DELAY));

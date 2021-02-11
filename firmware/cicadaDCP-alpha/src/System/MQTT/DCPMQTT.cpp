@@ -28,7 +28,7 @@ boolean DCPMQTT::setupMQTTModule(int timeToSend, String _DEVICE_ID, String _MQTT
 
     TIME_TO_SEND = timeToSend;
     CIC_DEBUG_(F("Slot Time to send: "));
-    CIC_DEBUG_(TIME_TO_SEND);
+    CIC_DEBUG_(String(TIME_TO_SEND));
     CIC_DEBUG(F(" min."));
 
     nextSlotTimeToSend();
@@ -62,7 +62,7 @@ void DCPMQTT::nextSlotTimeToSend() {
 
     nextSlotToSend = nextSlot;
     CIC_DEBUG_(F("Next slot to send: "));
-    CIC_DEBUG_(nextSlotToSend);
+    CIC_DEBUG_(String(nextSlotToSend));
     CIC_DEBUG(F(" min."));
 }
 
@@ -73,19 +73,14 @@ boolean DCPMQTT::onTimeToSend() {
 
 boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
     if (onTimeToSend()) {
-        if (mqttSIM800.isConnected()) {
-            mqttLeds.greenTurnOn();
-            TinyGsmClient _clientTransport(modem);
-            PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
-            clientPub = &_clientPub;
-            clientPub->setSocketTimeout(20);
-            sendMessagesData();
-            mqttLeds.greenTurnOff();
-            return true;
-        } else {
-            nextSlotTimeToSend();
-            return false;
-        }
+        mqttLeds.blueTurnOn();
+        TinyGsmClient _clientTransport(modem);
+        PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
+        clientPub = &_clientPub;
+        clientPub->setSocketTimeout(20);
+        sendMessagesData();
+        mqttLeds.blueTurnOff();
+        return true;
     } else {
         return true;
     }
@@ -93,18 +88,14 @@ boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
 
 boolean DCPMQTT::sendAllMessagesDataWifi() {
     if (onTimeToSend()) {
-        if (mqttWifi.isConnected()) {
-            mqttLeds.greenTurnOn();
-            WiFiClient _clientTransport;
-            PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
-            clientPub = &_clientPub;
-            clientPub->setSocketTimeout(20);
-            sendMessagesData();
-            mqttLeds.greenTurnOff();
-            return true;
-        } else {
-            return false;
-        }
+        mqttLeds.blueTurnOn();
+        WiFiClient _clientTransport;
+        PubSubClient _clientPub(MQTT_SERVER.c_str(), MQTT_PORT.toInt(), _clientTransport);
+        clientPub = &_clientPub;
+        clientPub->setSocketTimeout(5);
+        sendMessagesData();
+        mqttLeds.blueTurnOff();
+        return true;
     } else {
         return true;
     }
@@ -115,7 +106,7 @@ void DCPMQTT::sendMessagesData() {
     CIC_DEBUG_("Time: ");
     CIC_DEBUG(mqttRTC.now());
     CIC_DEBUG_("On core: ");
-    CIC_DEBUG(xPortGetCoreID());
+    CIC_DEBUG(String(xPortGetCoreID()));
 
     if (connectMQTTServer()) {
         if (!mqttSdCard.mqttPublishFiles(publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
@@ -124,7 +115,7 @@ void DCPMQTT::sendMessagesData() {
             CIC_DEBUG(F("Successful MQTT messages publication."));
         }
     } else {
-        CIC_DEBUG(F("MQTT Server connection failure!"))
+        CIC_DEBUG(F("MQTT Server connection failure!"));
     }
 
     nextSlotTimeToSend();
@@ -135,25 +126,28 @@ boolean DCPMQTT::connectMQTTServer() {
     CIC_DEBUG("Connecting to MQTT Server...");
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("connectMQTTServer")) {
             if (!clientPub->connected()) {
-                int attemptsConn = 0;
-                while (attemptsConn <= 3) {
+                int attemptsConn = 1;
+                while (attemptsConn <= 5) {
                     if (clientPub->connect(DEVICE_ID.c_str(), MQTT_USER.c_str(), MQTT_PWD.c_str())) {
                         CIC_DEBUG("Connected!");
-                        giveCommunicationMutex();
+                        giveCommunicationMutex("connectMQTTServer");
                         return true;
                     } else {
                         CIC_DEBUG_("Error: ");
-                        CIC_DEBUG(clientPub->state());
+                        CIC_DEBUG(String(clientPub->state()));
+                        mqttLeds.redTurnOff();
+                        mqttLeds.redBlink(2, 200);
+                        mqttLeds.redTurnOff();
                     }
                     attemptsConn = attemptsConn + 1;
                 }
-                giveCommunicationMutex();
+                giveCommunicationMutex("connectMQTTServer");
                 return false;
             } else {
                 CIC_DEBUG("Connected!");
-                giveCommunicationMutex();
+                giveCommunicationMutex("connectMQTTServer");
                 return true;
             }
         } else {
@@ -179,25 +173,25 @@ boolean publishMessage(String sendMessage, PubSubClient* _clientPub, String tknD
     String pkgMsg = prepareMessage(sendMessage, tknDCP, pwdDCP);
     int attempts = 0;
     while (attempts <= SIM_ATTEMPTS) {
-        if (takeCommunicationMutex()) {
+        if (takeCommunicationMutex("publishMessage")) {
             int status = _clientPub->publish(TOPIC.c_str(), pkgMsg.c_str());
             if (status == 1) {
-                CIC_DEBUGWL(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
-                giveCommunicationMutex();
+                CIC_DEBUG(F("Published successful")); //Status 1 se sucesso ou 0 se deu erro
+                giveCommunicationMutex("publishMessage");
                 return true;
             } else {
-                CIC_DEBUGWL_(F("Published unsuccessful! Error status: "));
-                CIC_DEBUGWL(String(status)); //Status 1 se sucesso ou 0 se deu erro
-                giveCommunicationMutex();
+                CIC_DEBUG_(F("Published unsuccessful! Error status: "));
+                CIC_DEBUG(String(status)); //Status 1 se sucesso ou 0 se deu erro
+                giveCommunicationMutex("publishMessage");
                 return false;
             }
         } else {
-            CIC_DEBUGWL("Waiting modem to publishMessage ...");
+            CIC_DEBUG("Waiting modem to publishMessage ...");
         }
         attempts = attempts + 1;
         vTaskDelay(pdMS_TO_TICKS(SIM_ATTEMPTS_DELAY));
     }
-    CIC_DEBUGWL("Published unsuccessful!");
+    CIC_DEBUG("Published unsuccessful!");
     return false;
 }
 
@@ -205,4 +199,10 @@ void DCPMQTT::updateNextSlot() {
     if (onTimeToSend()) {
         nextSlotTimeToSend();
     }
+}
+
+void DCPMQTT::printNextSlot() {
+    Serial.print(F("Next slot to send: "));
+    Serial.print(nextSlotToSend);
+    Serial.println(F(" Min."));
 }

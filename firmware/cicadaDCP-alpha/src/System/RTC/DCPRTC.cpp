@@ -24,7 +24,7 @@ void DCPRTC::setupRTCModule(String calTimestamp) {
     setupRTCModule(tt);
 
     CIC_DEBUG_("Unix Time: ");
-    CIC_DEBUG(tt);
+    CIC_DEBUG(String(tt));
     CIC_DEBUG_("Before RTC: ");
     CIC_DEBUG(printTime(tt));
 

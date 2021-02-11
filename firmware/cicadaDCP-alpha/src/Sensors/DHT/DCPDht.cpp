@@ -32,7 +32,7 @@ void DCPDht::initDHTSensor(String _codeTemp, String _typeTemp, String _codeHum, 
     TIME_TO_READ_DHT = timeSlotDHT;
 
     CIC_DEBUG_(F("Slot Time DHT: "));
-    CIC_DEBUG_(TIME_TO_READ_DHT);
+    CIC_DEBUG_(String(TIME_TO_READ_DHT));
     CIC_DEBUG(F(" min."));
 
     nextSlotTimeToRead();
@@ -54,7 +54,7 @@ void DCPDht::nextSlotTimeToRead() {
     }
     nextSlotDHT = nextSlot;
     CIC_DEBUG_(F("Next slot to read DHT: "));
-    CIC_DEBUG_(nextSlotDHT);
+    CIC_DEBUG_(String(nextSlotDHT));
     CIC_DEBUG(F(" min."));
 }
 
@@ -107,4 +107,10 @@ void DCPDht::updateNextSlot() {
     if (timeToReadDHT()) {
         nextSlotTimeToRead();
     }
+}
+
+void DCPDht::printNextSlot() {
+    Serial.print(F("Next slot to read DHT: "));
+    Serial.print(nextSlotDHT);
+    Serial.println(F(" Min."));
 }

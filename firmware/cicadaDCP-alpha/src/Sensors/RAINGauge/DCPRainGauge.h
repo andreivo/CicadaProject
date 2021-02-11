@@ -25,6 +25,7 @@ public:
     void readRG();
     String printTipBucket();
     void updateNextSlot();
+    void printNextSlot();
 private:
     String codeRG;
     String typeRG;

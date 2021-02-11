@@ -47,7 +47,7 @@ void DCPVoltage::initVccInSensor(String _codeVccIn, String _typeVccIn, int timeS
     TIME_TO_READ_VCCIN = timeSlotVccIn;
 
     CIC_DEBUG_(F("Slot Time Input Vcc read: "));
-    CIC_DEBUG_(TIME_TO_READ_VCCIN);
+    CIC_DEBUG_(String(TIME_TO_READ_VCCIN));
     CIC_DEBUG(F(" min."));
 
     nextVccInSlotTimeToRead();
@@ -65,7 +65,7 @@ void DCPVoltage::initVccSolarCellSensor(String _codeVccSol, String _typeVccSol, 
     TIME_TO_READ_VCCSOL = timeSlotVccSol;
 
     CIC_DEBUG_(F("Slot Time Solar Cell Vcc read: "));
-    CIC_DEBUG_(TIME_TO_READ_VCCSOL);
+    CIC_DEBUG_(String(TIME_TO_READ_VCCSOL));
     CIC_DEBUG(F(" min."));
 
     nextVccSolSlotTimeToRead();
@@ -91,14 +91,14 @@ int DCPVoltage::nextSlotTimeToRead(int TIME_TO_READ) {
 void DCPVoltage::nextVccInSlotTimeToRead() {
     nextSlotVccIn = nextSlotTimeToRead(TIME_TO_READ_VCCIN);
     CIC_DEBUG_(F("Next slot to read Input Vcc: "));
-    CIC_DEBUG_(nextSlotVccIn);
+    CIC_DEBUG_(String(nextSlotVccIn));
     CIC_DEBUG(F(" min."));
 }
 
 void DCPVoltage::nextVccSolSlotTimeToRead() {
     nextSlotVccSol = nextSlotTimeToRead(TIME_TO_READ_VCCSOL);
     CIC_DEBUG_(F("Next slot to read Solar Cell Vcc: "));
-    CIC_DEBUG_(nextSlotVccSol);
+    CIC_DEBUG_(String(nextSlotVccSol));
     CIC_DEBUG(F(" min."));
 }
 
@@ -120,7 +120,7 @@ void DCPVoltage::readVccIn() {
 
         String collectionDate = vccRTC.now("%Y-%m-%d %H:%M:%SZ");
         String dataContent = vccSdCard.prepareData(codeVccIn, typeVccIn, collectionDate, String(vccin));
-        if (!vccSdCard.storeData("vcc", dataContent)) {
+        if (!vccSdCard.storeData("vin", dataContent)) {
             CIC_DEBUG(F("Error store INPUT VCC Data!"));
         } else {
             CIC_DEBUG(F("Store INPUT VCC Data!"));
@@ -138,7 +138,7 @@ void DCPVoltage::readVccSol() {
 
         String collectionDate = vccRTC.now("%Y-%m-%d %H:%M:%SZ");
         String dataContent = vccSdCard.prepareData(codeVccSol, typeVccSol, collectionDate, String(vccin));
-        if (!vccSdCard.storeData("vcc", dataContent)) {
+        if (!vccSdCard.storeData("vso", dataContent)) {
             CIC_DEBUG(F("Error store SOLAR CELL VCC Data!"));
         } else {
             CIC_DEBUG(F("Store SOLAR CELL VCC Data!"));
@@ -170,4 +170,16 @@ void DCPVoltage::updateNextSlotSol() {
     if (timeToReadVccSol()) {
         nextVccSolSlotTimeToRead();
     }
+}
+
+void DCPVoltage::printNextVccInSlot() {
+    Serial.print(F("Next slot to read Input Vcc: "));
+    Serial.print(nextSlotVccIn);
+    Serial.println(F(" Min."));
+}
+
+void DCPVoltage::printNextVccSolSlot() {
+    Serial.print(F("Next slot to read Solar Cell Vcc: "));
+    Serial.print(nextSlotVccSol);
+    Serial.println(F(" Min."));
 }

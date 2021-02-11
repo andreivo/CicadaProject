@@ -52,7 +52,7 @@ void DCPRainGauge::initRGSensor(String _codeRG, String _typeRG, int timeSlotRG) 
     TIME_TO_READ_RG = timeSlotRG;
 
     CIC_DEBUG_(F("Slot Time Rain Gauge: "));
-    CIC_DEBUG_(TIME_TO_READ_RG);
+    CIC_DEBUG_(String(TIME_TO_READ_RG));
     CIC_DEBUG(F(" min."));
 
     nextSlotTimeToRead();
@@ -74,7 +74,7 @@ void DCPRainGauge::nextSlotTimeToRead() {
     }
     nextSlotRG = nextSlot;
     CIC_DEBUG_(F("Next slot to read Rain Gauge: "));
-    CIC_DEBUG_(nextSlotRG);
+    CIC_DEBUG_(String(nextSlotRG));
     CIC_DEBUG(F(" min."));
 }
 
@@ -127,4 +127,10 @@ void DCPRainGauge::updateNextSlot() {
     if (timeToReadRG()) {
         nextSlotTimeToRead();
     }
+}
+
+void DCPRainGauge::printNextSlot() {
+    CIC_DEBUG_(F("Next slot to read Rain Gauge: "));
+    CIC_DEBUG_(String(nextSlotRG));
+    CIC_DEBUG(F(" Min."));
 }

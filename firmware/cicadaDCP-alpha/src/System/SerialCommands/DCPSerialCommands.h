@@ -22,7 +22,6 @@ public:
 
     void initSerialCommands(String firmware, String firmwareDate);
     void readSerialCommands(xTaskHandle coreTask);
-
 private:
     String FIRMWARE;
     String FIRMWARE_DATE;
@@ -50,6 +49,7 @@ private:
     String padL(int len, String inS);
     void forceUpdateComm(String serialCommand);
     void initSelfUpdate();
+    void nextslottimeComm();
 
 };
 

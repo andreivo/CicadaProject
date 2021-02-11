@@ -105,14 +105,28 @@ void DCPLeds::blueBlink(int times, int delaytime) {
 }
 
 void DCPLeds::blinkStatusOk() {
+    greenTurnOff();
+    greenTurnOn();
+    delay(200);
+    greenTurnOff();
+    lastEpoch = ledsRTC.nowEpoch();
+}
+
+boolean DCPLeds::timeToBlinkStatus() {
+    int32_t actualEpoch = ledsRTC.nowEpoch();
+    int32_t periodEpoch = actualEpoch - lastEpoch;
+    return (periodEpoch >= TIME_TO_STATUS_BLINK);
+}
+
+void DCPLeds::blinkStatusError() {
     int32_t actualEpoch = ledsRTC.nowEpoch();
     int32_t periodEpoch = actualEpoch - lastEpoch;
 
     if (periodEpoch >= TIME_TO_STATUS_BLINK) {
-        greenTurnOff();
-        greenTurnOn();
+        redTurnOff();
+        redTurnOn();
         delay(200);
-        greenTurnOff();
+        redTurnOff();
         lastEpoch = ledsRTC.nowEpoch();
     }
 

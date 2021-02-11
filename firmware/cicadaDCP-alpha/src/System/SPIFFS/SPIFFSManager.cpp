@@ -473,7 +473,7 @@ void SPIFFSManager::FSPrintFileList() {
     int fc = 0;
     while (file) {
         ++fc;
-        CIC_DEBUG_(fc);
+        CIC_DEBUG_(String(fc));
         CIC_DEBUG_(" - ");
         CIC_DEBUG(file.name());
         file = dir.openNextFile();
@@ -500,7 +500,7 @@ void SPIFFSManager::FSFormat() {
     if (SPIFFS.format()) {
         CIC_DEBUG(F("SUCCESS: File system formatted successfully."));
         CIC_DEBUG_(F("Total time: "));
-        CIC_DEBUG_((millis() - start));
+        CIC_DEBUG_(String((millis() - start)));
         CIC_DEBUG(F(" ms"));
     } else {
 
