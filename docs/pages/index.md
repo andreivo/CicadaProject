@@ -78,6 +78,8 @@ Cicada Broker was also developed using FIND-SE's best practices and proposed a s
 <br><br><b>Fig 5: Cicada Broker</b>
 </p>
 
+<b>Working in progress.</b> You would like to collaborate with the project? Please contact our team in {% include doc.html name="About" path="../about" %}.
+
 For more details, see the section {% include doc.html name="Cicada Broker" path="gii/gii-index" %}.
 
 ### <ins>Group III (Cicada Data Science):</ins>

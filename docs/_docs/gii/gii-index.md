@@ -15,3 +15,12 @@ Cicada Broker was also developed using FIND-SE's best practices and proposed a s
 	<img src="../../assets/img/CicadaBroker.png" align="center" height="auto" width="100%" style="max-width:600px">
 <br><br><b>Fig 1: Cicada Broker</b>
 </p>
+
+## Working in progress.
+
+The Cicada Broker project was started with the primary objective of subsidizing the development of Cicada DCP.
+In this way, the Integrator Mediator component was implemented in the form of a prototype and still needs new developments to make it robust enough to Cicada Project.
+
+To learn more about the Integrator Mediator, see the section {% include doc.html name="Getting Start Cicada Broker" path="gii/gii-getting-started" %}.
+
+You would like to collaborate with the project? Please contact our team in {% include doc.html name="About" path="../about" %}.
