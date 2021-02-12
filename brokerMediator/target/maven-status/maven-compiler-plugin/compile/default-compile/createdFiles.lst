@@ -1,0 +1,17 @@
+com/fibase/mqtt/MQTTProcessor.class
+com/fibase/QueueIdentity.class
+com/fibase/amqp/MainReceiveMessage$1.class
+com/fibase/amqp/MainReceiveMessage.class
+com/fibase/mediator/Ontology.class
+com/fibase/mqtt/MQTTProcessorThread.class
+com/fibase/datapackage/DataPackage$LocalDateTimeAdapter.class
+com/fibase/Constants.class
+com/fibase/amqp/DataProcessor.class
+com/fibase/datapackage/DataPackage.class
+com/fibase/mqtt/TestThread.class
+com/fibase/mediator/DataPackageNormalizer.class
+com/fibase/mqtt/TaskMQTT.class
+com/fibase/datapackage/MeasuresDtp.class
+com/fibase/datapackage/MetadataDtp.class
+com/fibase/mqtt/Task.class
+com/fibase/database/WriteDataPackage.class

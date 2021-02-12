@@ -1,0 +1,13 @@
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/datapackage/MeasuresDtp.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/datapackage/MetadataDtp.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/QueueIdentity.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/datapackage/DataPackage.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/mqtt/TestThread.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/mediator/DataPackageNormalizer.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/amqp/DataProcessor.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/mediator/Ontology.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/database/WriteDataPackage.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/amqp/MainReceiveMessage.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/Constants.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/mqtt/MQTTProcessor.java
+/dados/projetos/projetos.pessoais/bitbucket/doutorado-2/Tese/06_Artigo/Estudo-de-Caso/github/FINDSE-Case-Study/source.codes/Mediator/src/main/java/com/fibase/mqtt/MQTTProcessorThread.java

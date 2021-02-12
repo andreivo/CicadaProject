@@ -68,7 +68,8 @@ void DCPMQTT::nextSlotTimeToSend() {
 
 boolean DCPMQTT::onTimeToSend() {
     int actualMinutes = mqttRTC.now("%M").toInt();
-    return actualMinutes == nextSlotToSend;
+    int actualSeconds = mqttRTC.now("%S").toInt();
+    return (actualMinutes == nextSlotToSend) && (actualSeconds >= 30) && (actualSeconds <= 59);
 }
 
 boolean DCPMQTT::sendAllMessagesDataSim(TinyGsmSim800 modem) {
