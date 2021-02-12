@@ -823,8 +823,8 @@ void DCPSystem::updateNextSlotMetadados() {
 
 void DCPSystem::storeMetadados() {
     if (onTimeToSaveMetadata()) {
-        CIC_DEBUG_HEADER(F("STORE METADATA"));
         updateCommunicationStatus();
+        CIC_DEBUG_HEADER(F("STORE METADATA"));
         cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY, FIRMWARE_VERSION, FIRMWARE_DATE);
         nextSlotToSaveMetadata();
         cicadaSDCard.cleanOlderFiles();

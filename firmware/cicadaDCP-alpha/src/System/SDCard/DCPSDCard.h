@@ -114,7 +114,7 @@ private:
     boolean readPublishFile(String filename, boolean(*callback)(String msg, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC), PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC);
     String padL(int len, String inS);
     String padR(int len, String inS);
-    boolean printSDError();
+    boolean printSDError(boolean restart = false);
 };
 
 #else  // SPI_DRIVER_SELECT

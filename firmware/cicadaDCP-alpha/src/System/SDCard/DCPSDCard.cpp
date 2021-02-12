@@ -229,9 +229,17 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
                     myFile.close();
 
                     if (readPublishFile(fileName, callback, _clientPub, tknDCP, pwdDCP, TOPIC)) {
-                        if (!dir.remove(fileName)) {
-                            CIC_DEBUG_("Delete file error: ");
-                            CIC_DEBUG(fileName);
+                        int attemptsDelete = 0;
+                        while (attemptsDelete <= SD_ATTEMPTS) {
+                            dir.flush();
+                            if (!dir.remove(fileName)) {
+                                CIC_DEBUG_("Delete file error: ");
+                                CIC_DEBUG(fileName);
+                            } else {
+                                break;
+                            }
+                            vTaskDelay(pdMS_TO_TICKS(SD_WRITE_DELAY));
+                            attemptsDelete += 1;
                         }
                     } else {
                         CIC_DEBUG_(F("Error on Mqtt publish: "));
@@ -246,11 +254,12 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
             boolean result = false;
             if (dir.getError()) {
                 CIC_DEBUG(F("Mqtt publish failed"));
-                printSDError();
+                printSDError(false);
                 result = false;
             } else {
                 result = true;
             }
+            dir.flush();
             dir.close();
             giveSDMutex("mqttPublishFiles");
             return result;
@@ -451,6 +460,7 @@ void DCPSDCard::deleteOldFiles(String path) {
                     myFile.close();
 
                     if (ttFile < ttOlder) {
+                        myDir.flush();
                         if (myDir.remove(fileName)) {
                             CIC_DEBUG_(F("Old file delete: "));
                             CIC_DEBUG(fileName);
@@ -469,6 +479,7 @@ void DCPSDCard::deleteOldFiles(String path) {
                 CIC_DEBUG(F("deleteOldFiles: OpenNext failed"));
                 printSDError();
             }
+            myDir.flush();
             myDir.close();
             giveSDMutex("deleteOldFiles");
             break;
@@ -509,7 +520,7 @@ boolean DCPSDCard::deleteUpdate() {
                     myFile.getName(fileName, sizeof (fileName));
                     myFile.flush();
                     myFile.close();
-
+                    myDir.flush();
                     if (myDir.remove(fileName)) {
                         CIC_DEBUG_(F("Delete file: "));
                         CIC_DEBUG(fileName);
@@ -529,6 +540,7 @@ boolean DCPSDCard::deleteUpdate() {
                 CIC_DEBUG(F("deleteUpdate: OpenNext failed"));
                 printSDError();
             }
+            myDir.flush();
             myDir.close();
             giveSDMutex("deleteUpdate");
             break;
@@ -880,7 +892,7 @@ String DCPSDCard::padR(int len, String inS) {
 }
 
 /******************************************************************************/
-boolean DCPSDCard::printSDError() {
+boolean DCPSDCard::printSDError(boolean restart) {
     if (sd.sdErrorCode()) {
 
         CIC_DEBUG_(F("SD errorCode: "));
@@ -893,9 +905,11 @@ boolean DCPSDCard::printSDError() {
         if (!sd.begin(SD_CONFIG)) {
             CIC_DEBUG(F("re-initialization failed!"));
             //sd.initErrorHalt();
-            sdLeds.redTurnOn();
-            delay(1000);
-            ESP.restart();
+            if (restart) {
+                sdLeds.redTurnOn();
+                delay(1000);
+                ESP.restart();
+            }
         } else {
             cleanOlderFiles();
         }
