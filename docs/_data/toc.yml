@@ -18,7 +18,7 @@
     - title: "Group II - Cicada Broker"
       url: "docs/gii/gii-index"
       children:
-        - title: Getting Start Cicada Broker
+        - title: Getting Start
           url: "docs/gii/gii-getting-started"
     - title: "Group III - Cicada Data Science"
       url: "docs/giii/giii-index"
