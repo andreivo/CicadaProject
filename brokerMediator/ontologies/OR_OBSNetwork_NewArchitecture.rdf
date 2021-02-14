@@ -1,0 +1,1572 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#"
+     xml:base="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture"
+     xmlns:qu="http://purl.org/NET/ssnx/qu/qu#"
+     xmlns:geo="http://www.w3.org/2003/01/geo/wgs84_pos#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+     xmlns:ssn="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#"
+     xmlns:xml="http://www.w3.org/XML/1998/namespace"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:iot-lite="http://purl.oclc.org/NET/UNIS/fiware/iot-lite#"
+     xmlns:or_obsnertwork="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#">
+    <owl:Ontology rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Object Properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.oclc.org/NET/UNIS/fiware/iot-lite#isSubSystemOf -->
+
+    <owl:ObjectProperty rdf:about="http://purl.oclc.org/NET/UNIS/fiware/iot-lite#isSubSystemOf">
+        <owl:inverseOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#hasSubSystem"/>
+        <rdfs:domain rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <rdfs:comment xml:lang="en">This defines that a devices system is a subsystem of another system. For example, a multi-sensor device is a subsystem of a smart building testbed. This is the inverse of the SSN object property &quot;hasSubSystem&quot;. It allows a graph to start from a subsystem. This is useful for resource-centric graphs.</rdfs:comment>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#hasSubSystem -->
+
+    <owl:ObjectProperty rdf:about="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#hasSubSystem">
+        <rdfs:domain rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#communicatesAlert -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#communicatesAlert">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasActuator -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasActuator">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://purl.oclc.org/NET/UNIS/fiware/iot-lite#ActuatingDevice"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasAlertIssuing -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasAlertIssuing">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AlertIssuing"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasBattery -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasBattery">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#BatteryPowerSystem"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDC -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDC">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCPowerSystem"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDCP -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDCP">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDataProcess -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDataProcess">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDatabase -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDatabase">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDevicesDataTypesManager -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasDevicesDataTypesManager">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DevicesDataTypesManager"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasFTPServer -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasFTPServer">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#FTPServer"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasGateway -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasGateway">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasIntegrationMediator -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasIntegrationMediator">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasMQTTClient -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasMQTTClient">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MQTTClient"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasMQTTServer -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasMQTTServer">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MQTTServer"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasManagerSystem -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasManagerSystem">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasMobileApps -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasMobileApps">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MobileApps"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasNOSQL -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasNOSQL">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#No-SQL"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasNormalizeData -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasNormalizeData">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NormalizeData"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasObservacionalNetwork -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasObservacionalNetwork">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasOntologyModel -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasOntologyModel">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModel"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasOntologyModelManager -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasOntologyModelManager">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModelManager"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasOntologyQueryService -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasOntologyQueryService">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyQueryService"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasPostgres -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasPostgres">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Postgres"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasPowerSystem -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasPowerSystem">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasProductProducer -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasProductProducer">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ProductProducer"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSatelliteModem -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSatelliteModem">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SatelliteModem"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSpecialistPerson -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSpecialistPerson">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSuspectQualifier -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSuspectQualifier">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSuspiciousDataQualifier -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSuspiciousDataQualifier">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspiciousDataQualifier"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSuspiciousMetadataQualifier -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSuspiciousMetadataQualifier">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspiciousMetadataQualifier"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSystem -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSystem">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasTelecomModem -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasTelecomModem">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TelecomModem"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasTransportLayer -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasTransportLayer">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasUserProducts -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasUserProducts">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasWebService -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasWebService">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebService"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasWebSite -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasWebSite">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebSite"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasWifi -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasWifi">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Wifi"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#processData -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#processData">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ProductProducer"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#processFeedback -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#processFeedback">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ProductProducer"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#producesAlert -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#producesAlert">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AlertIssuing"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Alert"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#producesData -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#producesData">
+        <rdfs:domain rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#readDatabase -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#readDatabase">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#receiveAlert -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#receiveAlert">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AutomaticWarningSiren"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Alert"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#receiveData -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#receiveData">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sendAlert -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sendAlert">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AlertIssuing"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Alert"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sendData -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sendData">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#turnsOn -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#turnsOn">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManualWarningSiren"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#writeDatabase -->
+
+    <owl:ObjectProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#writeDatabase">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+        <rdfs:range rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Data properties
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://www.w3.org/2003/01/geo/wgs84_pos#lat -->
+
+    <owl:DatatypeProperty rdf:about="http://www.w3.org/2003/01/geo/wgs84_pos#lat">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://www.w3.org/2003/01/geo/wgs84_pos#long -->
+
+    <owl:DatatypeProperty rdf:about="http://www.w3.org/2003/01/geo/wgs84_pos#long">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#address -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#address">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#colDT -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#colDT">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#collectDateTime"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTimeStamp"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#collectDateTime -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#collectDateTime">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#measurementDateTime"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dataType -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dataType">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dtT"/>
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#type"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dataValue -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dataValue">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#measure"/>
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#val"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dcpExternalCode -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dcpExternalCode">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dtT -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#dtT">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#endpointClient -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#endpointClient">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+        <rdfs:comment>Endpoint of the service. It is usually a URL where the service is available.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#endpointServer -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#endpointServer">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#anyURI"/>
+        <rdfs:comment>Endpoint of the service. It is usually a URL where the service is available.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#interfaceTypeClient -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#interfaceTypeClient">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment xml:lang="en">Defines the type of interface of the service endpoint, e.g. RESTful, NGSI-9, MQTT, CoAP etc.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#measure -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#measure">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#measurementDateTime -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#measurementDateTime">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#passwdClient -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#passwdClient">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment xml:lang="en">Define FTP passwd.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#passwdServer -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#passwdServer">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment xml:lang="en">Define FTP passwd.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#passwdStation -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#passwdStation">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#pwdDCP"/>
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#serverPasswd"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#pwdDCP -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#pwdDCP">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#quantityKind -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#quantityKind">
+        <rdfs:domain rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#resolution -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#resolution">
+        <rdfs:domain rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#float"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sensorCode -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sensorCode">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sensorExternalCode"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sensorExternalCode -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sensorExternalCode">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#snsEC"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sentDateTime -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sentDateTime">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sntDT"/>
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#transmissionDateTime"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTimeStamp"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#serverPasswd -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#serverPasswd">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#snsEC -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#snsEC">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sntDT -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#sntDT">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTimeStamp"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#stationCode -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#stationCode">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#tokenStation"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#tknDCP -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#tknDCP">
+        <owl:equivalentProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#tokenStation"/>
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#tokenStation -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#tokenStation">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#transmissionDateTime -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#transmissionDateTime">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#type -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#type">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#unit -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#unit">
+        <rdfs:domain rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#userClient -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#userClient">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment xml:lang="en">Define FTP user.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#userServer -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#userServer">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:comment xml:lang="en">Define FTP user.</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#val -->
+
+    <owl:DatatypeProperty rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#val">
+        <rdfs:domain rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://purl.oclc.org/NET/UNIS/fiware/iot-lite#ActuatingDevice -->
+
+    <owl:Class rdf:about="http://purl.oclc.org/NET/UNIS/fiware/iot-lite#ActuatingDevice">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Device"/>
+        <owl:disjointWith rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#SensingDevice"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem"/>
+        <rdfs:comment xml:lang="en">Device that can actuate over an object or QuantityKind.</rdfs:comment>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Device -->
+
+    <owl:Class rdf:about="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Device">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#SensingDevice -->
+
+    <owl:Class rdf:about="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#SensingDevice">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Device"/>
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor -->
+
+    <owl:Class rdf:about="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor">
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Alert"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:Class>
+    
+
+
+    <!-- http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System -->
+
+    <owl:Class rdf:about="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System">
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Alert"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Acqua -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Acqua">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Agrometeorological"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Automatic"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Geological"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Hydrological"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Agrometeorological -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Agrometeorological">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NetRadiometers"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Automatic"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Geological"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Hydrological"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Alert -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Alert">
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AlertIssuing -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AlertIssuing">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ProductProducer"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Automatic -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Automatic">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Geological"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Hydrological"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AutomaticWarningSiren -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#AutomaticWarningSiren">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WarningSiren"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#BatteryPowerSystem -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#BatteryPowerSystem">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#CurrentSensor -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#CurrentSensor">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#InternalHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NetRadiometers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PhotographicCamera"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Pluviometer"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#SensingDevice"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasTransportLayer"/>
+                <owl:minQualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">2</owl:minQualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#CurrentSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#InternalHumidityTemperatureSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Pluviometer"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCPowerSystem -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCPowerSystem">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Data">
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DevicesDataTypesManager -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DevicesDataTypesManager">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModelManager"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#FTPServer -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#FTPServer">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MQTTServer"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Geological -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Geological">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Hydrological"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#GovernmentAgency">
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Hydrological -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Hydrological">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DCP"/>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PhotographicCamera"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+        <rdfs:subClassOf>
+            <owl:Restriction>
+                <owl:onProperty rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#hasSensor"/>
+                <owl:qualifiedCardinality rdf:datatype="http://www.w3.org/2001/XMLSchema#nonNegativeInteger">1</owl:qualifiedCardinality>
+                <owl:onClass rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor"/>
+            </owl:Restriction>
+        </rdfs:subClassOf>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#InternalHumidityTemperatureSensor -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#InternalHumidityTemperatureSensor">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NetRadiometers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PhotographicCamera"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Pluviometer"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MQTTClient -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MQTTClient">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NormalizeData"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyQueryService"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MQTTServer -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MQTTServer">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Gateway"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManualWarningSiren -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManualWarningSiren">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WarningSiren"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MobileApps -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MobileApps">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebService"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebSite"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#MunicipalityAgency">
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NetRadiometers -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NetRadiometers">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PhotographicCamera"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Pluviometer"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#No-SQL -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#No-SQL">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModel"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Postgres"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NormalizeData -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#NormalizeData">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyQueryService"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ObservacionalNetwork">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModel -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModel">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Postgres"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModelManager -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyModelManager">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ManagerSystem"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyQueryService -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#OntologyQueryService">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#IntegrationMediator"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PhotographicCamera -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PhotographicCamera">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Pluviometer"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Pluviometer -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Pluviometer">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Postgres -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Postgres">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Database"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#PowerSystem">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Device"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ProductProducer -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#ProductProducer">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#DataProcess"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Radiometers">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#RiverLevelSensor">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SatelliteModem -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SatelliteModem">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TelecomModem"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Wifi"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SoilHumidityTemperatureSensor">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SpecialistPerson"/>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspiciousDataQualifier -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspiciousDataQualifier">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspiciousMetadataQualifier"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspiciousMetadataQualifier -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspiciousMetadataQualifier">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#SuspectQualifier"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TelecomModem -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TelecomModem">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Wifi"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#System"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#VoltageSensor">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WarningSiren -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WarningSiren">
+        <rdfs:subClassOf rdf:resource="http://purl.oclc.org/NET/UNIS/fiware/iot-lite#ActuatingDevice"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebService -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebService">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+        <owl:disjointWith rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebSite"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebSite -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WebSite">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#UserProducts"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Wifi -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#Wifi">
+        <rdfs:subClassOf rdf:resource="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#TransportLayers"/>
+    </owl:Class>
+    
+
+
+    <!-- https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor -->
+
+    <owl:Class rdf:about="https://github.com/andreivo/FIBASE-Case-Study/ontologies/OR_OBSNertwork_NewArchitecture#WindDirectionSensor">
+        <rdfs:subClassOf rdf:resource="http://www.w3.org/2005/Incubator/ssn/ssnx/ssn#Sensor"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 4.5.9.2019-02-01T07:24:44Z) https://github.com/owlcs/owlapi -->
+
