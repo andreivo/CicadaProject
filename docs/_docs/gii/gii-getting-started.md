@@ -26,6 +26,19 @@ In this way, the Integration Mediator component was implemented in the form of a
 
 <b>NOTE: Use at your own risk!</b>
 
+## Messaging Server
+
+We strongly recommend using RabbitMQ as the messaging server. Remember that RabbitMQ uses AMQP as the standard protocol. For it to work correctly with the Cicada DCP, the MQTT plugin must be active.
+
+There are several commercial messaging servers based on RabbitMQ, such as CloudAMPQ.
+
+If you choose to install your own RabbitMQ message server, see the official website <a href="https://www.rabbitmq.com/" target="_blank">www.rabbitmq.com</a>.
+
+To install, see <a href="https://www.rabbitmq.com/download.html" target="_blank">www.rabbitmq.com/download.html</a>.
+
+To activate the MQTT plugin, see <a href="https://www.rabbitmq.com/mqtt.html" target="_blank">www.rabbitmq.com/mqtt.html</a>.
+
+
 
 
 
