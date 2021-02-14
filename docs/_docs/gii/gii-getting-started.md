@@ -41,6 +41,7 @@ To activate the MQTT plugin, see <a href="https://www.rabbitmq.com/mqtt.html" ta
 ## Integration Mediator
 
 The Integration Mediator's main objective is to consume the data in the message server queue and translate the communication between Cicada DCP to perform the recording in the Database standard.
+The first version in the form of a prototype was developed in Java, and its source code can be found in our repositories <a href="https://github.com/andreivo/CicadaProject/tree/main/brokerMediator" target="_blank">GitHub</a>.
 
 
 ## Message Format
