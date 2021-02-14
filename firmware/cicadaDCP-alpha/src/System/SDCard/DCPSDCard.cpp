@@ -103,8 +103,10 @@ void DCPSDCard::printDirectory(String path) {
     File32 myFile;
 
     // Open root directory
+    dir.flush();
     if (!dir.open(path.c_str())) {
         CIC_DEBUG(F("Error dir.open failed"));
+        printSDError(false);
     }
     dir.rewindDirectory();
 
@@ -125,6 +127,7 @@ void DCPSDCard::printDirectory(String path) {
         CIC_DEBUG(" bytes");
         myFile.flush();
         myFile.close();
+        dir.flush();
     }
 
     if (dir.getError()) {
@@ -215,9 +218,11 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
         if (takeSDMutex("mqttPublishFiles")) {
             File32 dir;
             File32 myFile;
+            dir.flush();
             // Open root directory
             if (!dir.open("/")) {
                 CIC_DEBUG(F("Dir. open failed"));
+                printSDError(false);
             }
 
             dir.rewindDirectory();
@@ -227,7 +232,7 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
                 if (!myFile.isDirectory()) {
                     myFile.flush();
                     myFile.close();
-
+                    dir.flush();
                     if (readPublishFile(fileName, callback, _clientPub, tknDCP, pwdDCP, TOPIC)) {
                         int attemptsDelete = 0;
                         while (attemptsDelete <= SD_ATTEMPTS) {
@@ -249,6 +254,7 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
                     myFile.flush();
                     myFile.close();
                 }
+                dir.flush();
             }
 
             boolean result = false;
@@ -277,6 +283,7 @@ boolean DCPSDCard::readPublishFile(String filename, boolean(*callback)(String ms
     CIC_DEBUG_(F("Publishing messages from file "));
     CIC_DEBUG(filename.c_str());
     File32 myFile;
+    myFile.flush();
     if (myFile.open(filename.c_str(), O_RDONLY)) {
         // read from the file until there's nothing else in it:
         String msg = "";
@@ -435,9 +442,11 @@ void DCPSDCard::deleteOldFiles(String path) {
         if (takeSDMutex("deleteOldFiles")) {
             File32 myDir;
             File32 myFile;
+            myDir.flush();
             // Open root directory
             if (!myDir.open(path.c_str())) {
-                CIC_DEBUG(F("Error dir.open failed"));
+                CIC_DEBUG(F("Error dir. open failed"));
+                printSDError(false);
             }
             myDir.rewindDirectory();
 
@@ -511,6 +520,7 @@ boolean DCPSDCard::deleteUpdate() {
             // Open root directory
             if (!myDir.open(path.c_str())) {
                 CIC_DEBUG(F("Error dir.open failed"));
+                printSDError(false);
             }
             myDir.rewindDirectory();
 
