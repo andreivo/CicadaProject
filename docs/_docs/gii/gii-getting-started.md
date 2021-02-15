@@ -86,7 +86,8 @@ public class Constants {
     public static final String DATAPATH = "../DATA/";
 }
 ``` 
-<b>PS:</b> DATAPATH refers to the path where the files will be saved in CSV format with the messages that will be received. It is a simplified simulation of data persistence.
+
+{% include alert.html type="warning" content="DATAPATH refers to the path where the files will be saved in CSV format with the messages that will be received. It is a simplified simulation of data persistence." %}
 
 ## Message Format
 
