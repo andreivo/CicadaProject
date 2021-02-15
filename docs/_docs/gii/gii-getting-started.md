@@ -43,7 +43,7 @@ To activate the MQTT plugin, see <a href="https://www.rabbitmq.com/mqtt.html" ta
 The Integration Mediator's main objective is to consume the data in the message server queue and translate the communication between Cicada DCP to perform the recording in the Database standard.
 The first version in the form of a prototype was developed in Java, and its source code can be found in our repositories <a href="https://github.com/andreivo/CicadaProject/tree/main/brokerMediator" target="_blank">GitHub</a>.
 
-If you want to use this integration mediator, download the source code and create the file "./brokerMediator/src/main/java/com/fibase/QueueIdentity.java".
+If you want to use this integration mediator, download the source code and create the file <b>"./brokerMediator/src/main/java/com/fibase/QueueIdentity.java"</b>.
 The QueueIdentity.java file contains the identities of access to the Message Servers, which must follow the following format:
 
 ```java
@@ -56,11 +56,20 @@ The QueueIdentity.java file contains the identities of access to the Message Ser
     public static String EXCHANGE_NAME = "exchangename";
     public static String ROUTINGKEY = "routingkey";
 
-    //IoT server identification For sending messages. This service is optional and used for the data to be published on an MQTT server prepared to display on a Dashboard, such as Ubidots.
+    //IoT server identification to simulating messages replication in another gateway. This service is optional and used for the publish on an MQTT server prepared to display on a Dashboard, like Ubidots.com.
     public static String MQTTTOKEN = "mqtttoken";
     public static String MQTTBROKERURL = "mqtthost";
     public static String MQTTTOPIC = "topic";
 ``` 
+
+### Ontologies use
+
+This project was developed based on the system engineering approaches proposed by FIND-SE, which presents semantic integration techniques for heterogeneous systems.
+
+The observational network formed by the Cicada Project is firmly based on the composition of heterogeneous systems with operational independence. It is in this context that semantic conflicts or the difficulties that arise from this fact may occur. Semantic conflicts occur when systems use different meanings for the same elements: when the elements appear to have the same meaning but do not.
+
+To solve this fact, the Mediator's project was built based on ontologies to define semantic mappings.
+
 
 
 ## Message Format
