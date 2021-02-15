@@ -47,6 +47,7 @@ If you want to use this integration mediator, download the source code and creat
 The QueueIdentity.java file contains the identities of access to the Message Servers, which must follow the following format:
 
 ```java
+public class QueueIdentity {
     //Identification of the message server that will be consumed. The keys are in the RabbitMQ standard. 
     public static String QUEUEUSERNAME = "username";
     public static String QUEUEVIRTUALHOST = "virtualhost";
@@ -60,6 +61,7 @@ The QueueIdentity.java file contains the identities of access to the Message Ser
     public static String MQTTTOKEN = "mqtttoken";
     public static String MQTTBROKERURL = "mqtthost";
     public static String MQTTTOPIC = "topic";
+}
 ``` 
 
 ### Ontologies use
@@ -72,6 +74,15 @@ To solve this fact, the Mediator's project was built based on ontologies to defi
 
 An ontology was built in the mediator's project using the <a href="https://protege.stanford.edu/" target="_blank">Protégé</a> software and found on our <a href="https://github.com/andreivo/CicadaProject/tree/main/brokerMediator/ontologies" target="_blank">GitHub</a>.
 
+Do not forget to update the path where the ontology can be found in the <b>"./brokerMediator/src/main/java/com/fibase/Constants.java"</b> file, as follows:
+
+```java
+public class Constants {
+    public static final String ONTOLOGYPATH = "../ontologies/OR_OBSNetwork_NewArchitecture.rdf";
+    public static final String DATAPATH = "../DATA/";
+}
+``` 
+<b>PS:</b> DATAPATH refers to the path where the files will be saved in CSV format with the messages that will be received. It is a simplified simulation of data persistence.
 
 ## Message Format
 
