@@ -70,6 +70,7 @@ The observational network formed by the Cicada Project is firmly based on the co
 
 To solve this fact, the Mediator's project was built based on ontologies to define semantic mappings.
 
+An ontology was built in the mediator's project using the <a href="https://protege.stanford.edu/" target="_blank">Protégé</a> software and found on our <a href="https://github.com/andreivo/CicadaProject/tree/main/brokerMediator/ontologies" target="_blank">GitHub</a>.
 
 
 ## Message Format
