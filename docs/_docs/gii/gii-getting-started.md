@@ -47,18 +47,19 @@ If you want to use this integration mediator, download the source code and creat
 The QueueIdentity.java file contains the identities of access to the Message Servers, which must follow the following format:
 
 ```java
-    public static String QUEUEUSERNAME = "tcsezysb";
-    public static String QUEUEVIRTUALHOST = "tcsezysb";
-    public static String QUEUEPASSWORD = "7dUNxiB9DCQgvcKkon-sDcDZIVhkCtFN";
-    public static String QUEUEHOST = "jackal.rmq.cloudamqp.com";
-    public static String QUEUE_NAME = "DCPPluvio";
-    public static String EXCHANGE_NAME = "fibase";
-    public static String ROUTINGKEY = "DCPRouting";
+    //Identification of the message server that will be consumed. The keys are in the RabbitMQ standard. 
+    public static String QUEUEUSERNAME = "username";
+    public static String QUEUEVIRTUALHOST = "virtualhost";
+    public static String QUEUEPASSWORD = "passwd";
+    public static String QUEUEHOST = "hostname";
+    public static String QUEUE_NAME = "queuename";
+    public static String EXCHANGE_NAME = "exchangename";
+    public static String ROUTINGKEY = "routingkey";
 
-    //Ubidots
-    public static String MQTTTOKEN = "BBFF-Mx2qHkrUPmyGfoVPtCCW9ClVpxTVxs";
-    public static String MQTTBROKERURL = "tcp://things.ubidots.com:1883";
-    public static String MQTTTOPIC = "/v1.6/devices/";
+    //IoT server identification For sending messages. This service is optional and used for the data to be published on an MQTT server prepared to display on a Dashboard, such as Ubidots.
+    public static String MQTTTOKEN = "mqtttoken";
+    public static String MQTTBROKERURL = "mqtthost";
+    public static String MQTTTOPIC = "topic";
 ``` 
 
 
