@@ -43,6 +43,24 @@ To activate the MQTT plugin, see <a href="https://www.rabbitmq.com/mqtt.html" ta
 The Integration Mediator's main objective is to consume the data in the message server queue and translate the communication between Cicada DCP to perform the recording in the Database standard.
 The first version in the form of a prototype was developed in Java, and its source code can be found in our repositories <a href="https://github.com/andreivo/CicadaProject/tree/main/brokerMediator" target="_blank">GitHub</a>.
 
+If you want to use this integration mediator, download the source code and create the file "./brokerMediator/src/main/java/com/fibase/QueueIdentity.java".
+The QueueIdentity.java file contains the identities of access to the Message Servers, which must follow the following format:
+
+```java
+    public static String QUEUEUSERNAME = "tcsezysb";
+    public static String QUEUEVIRTUALHOST = "tcsezysb";
+    public static String QUEUEPASSWORD = "7dUNxiB9DCQgvcKkon-sDcDZIVhkCtFN";
+    public static String QUEUEHOST = "jackal.rmq.cloudamqp.com";
+    public static String QUEUE_NAME = "DCPPluvio";
+    public static String EXCHANGE_NAME = "fibase";
+    public static String ROUTINGKEY = "DCPRouting";
+
+    //Ubidots
+    public static String MQTTTOKEN = "BBFF-Mx2qHkrUPmyGfoVPtCCW9ClVpxTVxs";
+    public static String MQTTBROKERURL = "tcp://things.ubidots.com:1883";
+    public static String MQTTTOPIC = "/v1.6/devices/";
+``` 
+
 
 ## Message Format
 
