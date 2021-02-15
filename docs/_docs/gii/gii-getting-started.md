@@ -48,7 +48,8 @@ The QueueIdentity.java file contains the identities of access to the Message Ser
 
 ```java
 public class QueueIdentity {
-    //Identification of the message server that will be consumed. The keys are in the RabbitMQ standard. 
+    //Identification of the message server that will be consumed. 
+    //The keys are in the RabbitMQ standard. 
     public static String QUEUEUSERNAME = "username";
     public static String QUEUEVIRTUALHOST = "virtualhost";
     public static String QUEUEPASSWORD = "passwd";
@@ -57,7 +58,10 @@ public class QueueIdentity {
     public static String EXCHANGE_NAME = "exchangename";
     public static String ROUTINGKEY = "routingkey";
 
-    //IoT server identification to simulating messages replication in another gateway. This service is optional and used for the publish on an MQTT server prepared to display on a Dashboard, like Ubidots.com.
+    //IoT server identification to simulating messages 
+    // replication in another gateway. 
+    //This service is optional and used for the publish on an MQTT 
+    // server prepared to display on a Dashboard, like Ubidots.com.
     public static String MQTTTOKEN = "mqtttoken";
     public static String MQTTBROKERURL = "mqtthost";
     public static String MQTTTOPIC = "topic";
