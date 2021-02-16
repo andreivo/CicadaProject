@@ -66,7 +66,7 @@ The body of the Cicada DCP was designed with a simple yet functional concept to 
 
 The entire project was developed as a case study of <b>Fault & INtegration-Driven System Engineering (FIND-SE)</b>, a methodological approach to fault-tolerant systems engineering (SE). The approach extends the knowledge of Model-Based System Engineering (MBSE). It is based on the principle of guiding the developer in a design concerned with failures, and especially those related to interoperability in the system integration process, which must be tolerated and treated. FIND-SE's great advantage is the proposal of a new paradigm based on guiding development through a principle, the same concept used in the TDD (Test Driven Development) and BDD (Behavior Driven Development) techniques.
 
-For more details, see the section {% include doc.html name="Cicada DCP" path="gi/gi-index" %}.
+For more details, see the section {% include doc.html name="Cicada DCP" path="gi/gi-getting-started" %}.
 
 ### <ins>Cicada Broker (Group II):</ins>
 
@@ -78,7 +78,7 @@ Cicada Broker was also developed using FIND-SE's best practices and proposed a s
 <br><br><b>Fig 5: Cicada Broker</b>
 </p>
 
-For more details, see the section {% include doc.html name="Cicada Broker" path="gii/gii-index" %}.
+For more details, see the section {% include doc.html name="Cicada Broker" path="gii/gii-getting-started" %}.
 
 {% include alert.html type="warning" content="<b>Working in progress.</b>" %}
 
@@ -89,7 +89,7 @@ You would like to collaborate with the project? Please contact our team in {% in
 A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
 
-For more details, see the section {% include doc.html name="Cicada Data Science" path="giii/giii-index" %}.
+For more details, see the section {% include doc.html name="Cicada Data Science" path="giii/giii-getting-started" %}.
 
 {% include alert.html type="warning" content="<b>Not started yet.</b>" %}
 
