@@ -21,7 +21,7 @@ Among the applications of RabbitMQ are to make it possible to guarantee asynchro
 
 The Cicada Broker Project has 2 components, the Messaging Server(3-RabbitMQ) and the Integration Mediator(4). Messaging Server(3-RabbitMQ) is responsible for receiving the message and Integration Mediator(4) is responsible for consuming messages from the Messaging Server(3-RabbitMQ) queue and persisting them in the database.
 
-{% include alert.html type="danger" content="The Cicada Broker Project was started with the primary objective of subsidizing the development of Cicada DCP.
+{% include alert.html type="warning" content="The Cicada Broker Project was started with the primary objective of subsidizing the development of Cicada DCP.
 In this way, the Integration Mediator component was implemented in the form of a prototype and still needs new developments to make it robust enough to Cicada Project.<br><br>
 <b>NOTE: Use at your own risk!</b>" %}
 
