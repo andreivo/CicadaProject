@@ -2,10 +2,10 @@
   url: docs
   links:
     - title: "The Project"
-      url: "/"
+      url: ""
       children:
-        - title: Features
-          url: "docs/getting-started#getting-started"
+        - title: Welcome
+          url: "#welcome"
         - title: Development
           url: "docs/getting-started#development"
         - title: Customization
@@ -18,6 +18,8 @@
     - title: "Cicada Broker - Group II"
       url: "docs/gii/gii-getting-started"
       children:
+        - title: "Getting Started"
+          url: "docs/gii/gii-getting-started#cicada-broker---getting-started"
         - title: "Messaging Server"
           url: "docs/gii/gii-getting-started#messaging-server"
         - title: "Integration Mediator"
