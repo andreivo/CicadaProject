@@ -6,8 +6,8 @@
       children:
         - title: Welcome
           url: "#welcome"
-        - title: Development
-          url: "docs/getting-started#development"
+        - title: "The Project"
+          url: "#the-project"
         - title: Customization
           url: "docs/getting-started#customization"
     - title: "Cicada DCP - Group I"

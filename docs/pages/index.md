@@ -36,7 +36,7 @@ The project was divided into 3 groups to structure its development and allow res
 <br><br><b>Fig 2: Cicada Project Groups</b>
 </p>
 
-### <ins>Group I (Cicada DCP):</ins>
+### <ins>Cicada DCP (Group I):</ins>
 
 Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integrated into a Data Collection Platform that has requirement high reliability and freedom for adaptations. The Cicada DCP was designed for native interoperability with the Cicada Broker, and all project is open-source and documented.
 
@@ -68,7 +68,7 @@ The entire project was developed as a case study of <b>Fault & INtegration-Drive
 
 For more details, see the section {% include doc.html name="Cicada DCP" path="gi/gi-index" %}.
 
-### <ins>Group II (Cicada Broker):</ins>
+### <ins>Cicada Broker (Group II):</ins>
 
 The Cicada Broker project was developed to send data through the MQTT protocol. In this project, the RabbitMQ server was used as the basis for Cicada Broker.
 Cicada Broker was also developed using FIND-SE's best practices and proposed a standard protocol for sending and receiving environmental data. 
@@ -84,7 +84,7 @@ For more details, see the section {% include doc.html name="Cicada Broker" path=
 
 You would like to collaborate with the project? Please contact our team in {% include doc.html name="About" path="../about" %}.
 
-### <ins>Group III (Cicada Data Science):</ins>
+### <ins>Cicada Data Science (Group III):</ins>
 
 A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).
