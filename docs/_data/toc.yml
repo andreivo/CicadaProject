@@ -20,10 +20,8 @@
       children:
         - title: "Getting Start"
           url: "docs/gii/gii-getting-started"
-        - title: Development
-	  url: "docs/getting-started#development"
-        - title: Customization
-	  url: "docs/getting-started#customization"
+        - title: "Getting Start 2"
+          url: "docs/gii/gii-getting-started"
     - title: "Cicada Data Science - Group III"
       url: "docs/giii/giii-index"
       children:
