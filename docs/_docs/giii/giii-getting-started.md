@@ -1,5 +1,5 @@
 ---
-title: Cicada Data Science - Getting Started
+title: Cicada Data Science
 tags: 
  - Project
  - Data Science

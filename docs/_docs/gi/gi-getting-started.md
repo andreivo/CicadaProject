@@ -1,5 +1,5 @@
 ---
-title: Cicada DCP - Getting Started
+title: Cicada DCP
 tags: 
  - Project
  - DCP
