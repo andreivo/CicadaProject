@@ -18,11 +18,9 @@
     - title: "Cicada Broker - Group II"
       url: "docs/gii/gii-index"
       children:
-        - title: Getting Start
+        - title: "Getting Start"
           url: "docs/gii/gii-getting-started"
-	- title: "Messaging Server"
-          url: "docs/gii/gii-getting-started#messaging-server"
-	- title: Development
+        - title: Development
 	  url: "docs/getting-started#development"
         - title: Customization
 	  url: "docs/getting-started#customization"
