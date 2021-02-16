@@ -37,5 +37,7 @@
           url: "docs/giii/giii-getting-started#not-started-yet"    
     - title: "About"
       url: "about"
+    - title: "Publications"
+      url: "publications"
     - title: "News"
       url: "news"
