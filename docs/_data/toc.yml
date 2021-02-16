@@ -8,8 +8,12 @@
           url: "#welcome"
         - title: "The Project"
           url: "#the-project"
-        - title: Customization
-          url: "docs/getting-started#customization"
+        - title: "Cicada DCP"
+          url: "#cicada-dcp-group-i"
+        - title: "Cicada Broker"
+          url: "#cicada-broker-group-ii"
+        - title: "Cicada Data Science"
+          url: "#cicada-science-group-iii"
     - title: "Cicada DCP - Group I"
       url: "docs/gi/gi-getting-started"
       children:
