@@ -22,6 +22,10 @@
           url: "docs/gii/gii-getting-started"
         - title: "Messaging Server"
           url: "docs/gii/gii-getting-started#messaging-server"
+        - title: "Integration Mediator"
+          url: "docs/gii/gii-getting-started#integration-mediator"
+        - title: "Message Format"
+          url: "docs/gii/gii-getting-started#message-format"
     - title: "Cicada Data Science - Group III"
       url: "docs/giii/giii-index"
       children:
