@@ -3,7 +3,7 @@ title: Cicada Data Science - Getting Started
 tags: 
  - Project
  - Data Science
-description: Cicada Data Science - Getting Started
+description: Describes the Cicada Data Science
 ---
 
 # Cicada Data Science - Getting Started

@@ -3,7 +3,7 @@ title: Cicada Broker
 tags: 
  - Project
  - Broker
-description: Getting Started
+description: Describes the Cicada Broker
 ---
 
 # Cicada Broker - Getting Started
@@ -25,7 +25,7 @@ The Cicada Broker Project has 2 components, the Messaging Server(3-RabbitMQ) and
 In this way, the Integration Mediator component was implemented in the form of a prototype and still needs new developments to make it robust enough to Cicada Project.<br><br>
 <b>NOTE: Use at your own risk!</b>" %}
 
-### <b>Working in progress.</b>
+### <b>Working in progress</b>
 
 You would like to collaborate with the project? Please contact our team in {% include doc.html name="About" path="../about" %}.
 

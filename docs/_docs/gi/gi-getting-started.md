@@ -3,7 +3,7 @@ title: Cicada DCP - Getting Started
 tags: 
  - Project
  - DCP
-description: Cicada DCP - Getting Started
+description: Describes the Cicada DCP
 ---
 
 # Cicada DCP - Getting Started

@@ -11,7 +11,7 @@
         - title: Customization
           url: "docs/getting-started#customization"
     - title: "Cicada DCP - Group I"
-      url: "docs/gi/gi-index"
+      url: "docs/gi/gi-getting-started"
       children:
         - title: Getting Started
           url: "docs/gi/gi-getting-started"
@@ -25,10 +25,10 @@
         - title: "Message Format"
           url: "docs/gii/gii-getting-started#message-format"
     - title: "Cicada Data Science - Group III"
-      url: "docs/giii/giii-index"
+      url: "docs/giii/giii-getting-started"
       children:
-        - title: Getting Started
-          url: "docs/giii/giii-getting-started"    
+        - title: "Not Started Yet"
+          url: "docs/giii/giii-getting-started#not-started-yet"    
     - title: "About"
       url: "about"
     - title: "News"
