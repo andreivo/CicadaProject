@@ -16,10 +16,8 @@
         - title: Getting Started
           url: "docs/gi/gi-getting-started"
     - title: "Cicada Broker - Group II"
-      url: "docs/gii/gii-index"
+      url: "docs/gii/gii-getting-started"
       children:
-        - title: "Getting Start"
-          url: "docs/gii/gii-getting-started"
         - title: "Messaging Server"
           url: "docs/gii/gii-getting-started#messaging-server"
         - title: "Integration Mediator"
