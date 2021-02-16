@@ -2,18 +2,7 @@
   url: docs
   links:
     - title: "The Project"
-      url: ""
-      children:
-        - title: Welcome
-          url: "#welcome"
-        - title: "The Project"
-          url: "#the-project"
-        - title: "Cicada DCP"
-          url: "#cicada-dcp-group-i"
-        - title: "Cicada Broker"
-          url: "#cicada-broker-group-ii"
-        - title: "Cicada Data Science"
-          url: "#cicada-science-group-iii"
+      url: ""      
     - title: "Cicada DCP - Group I"
       url: "docs/gi/gi-getting-started"
       children:

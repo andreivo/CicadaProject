@@ -26,7 +26,6 @@ The Cicada Project is a broad concept that can create the new management and ope
 </p>
 
 
-
 ## The Project
 
 The project was divided into 3 groups to structure its development and allow research to be developed in a segmented way. Figure 2 shows the division of the groups.

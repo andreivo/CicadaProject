@@ -9,7 +9,7 @@ permalink: /publications/
 
 <h1 align="center" style="color:#00055B;">Cicada Project</h1>
 
-# Comming Son
+# Coming Soon...
 
 You would like to collaborate with the project? Please don't hesitate to contact us, or [open an issue](https://www.github.com/{{ site.github_user }}/{{ site.github_repo }}).
 
