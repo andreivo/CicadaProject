@@ -95,7 +95,7 @@ public class Constants {
 ## Message Format
 
 
-```JSONasjs
+```json
 {
    "tokenStation":"3335685A",
    "passwdStation":"PASSWD-DCP",
