@@ -1,5 +1,5 @@
 ---
-title: Group II - Cicada Broker
+title: Cicada Broker - Group II
 tags: 
  - Project
  - Broker

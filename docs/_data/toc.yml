@@ -10,17 +10,17 @@
           url: "docs/getting-started#development"
         - title: Customization
           url: "docs/getting-started#customization"
-    - title: "Group I - Cicada DCP"
+    - title: "Cicada DCP - Group I"
       url: "docs/gi/gi-index"
       children:
         - title: Getting Started
           url: "docs/gi/gi-getting-started"
-    - title: "Group II - Cicada Broker"
+    - title: "Cicada Broker - Group II"
       url: "docs/gii/gii-index"
       children:
         - title: Getting Start
           url: "docs/gii/gii-getting-started"
-    - title: "Group III - Cicada Data Science"
+    - title: "Cicada Data Science - Group III"
       url: "docs/giii/giii-index"
       children:
         - title: Getting Started

@@ -1,5 +1,5 @@
 ---
-title: Group I - Cicada DCP
+title: Cicada DCP - Group I
 tags: 
  - Project
  - DCP

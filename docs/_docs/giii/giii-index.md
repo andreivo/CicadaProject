@@ -1,5 +1,5 @@
 ---
-title: Group III - Cicada Data Science
+title: Cicada Data Science - Group III
 tags: 
  - Project
  - Data Science
