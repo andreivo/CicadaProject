@@ -6,4 +6,4 @@ tags:
 description: Describes the Cicada DCP
 ---
 
-# Cicada DCP - Getting Started
+# Cicada DCP

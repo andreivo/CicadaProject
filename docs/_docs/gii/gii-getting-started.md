@@ -6,7 +6,7 @@ tags:
 description: Describes the Cicada Broker
 ---
 
-# Cicada Broker - Getting Started
+# Cicada Broker
 
 The Cicada Broker Project was developed to send data through the MQTT protocol. In this project, the RabbitMQ server was used as the basis for Cicada Broker.
 
