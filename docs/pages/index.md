@@ -80,7 +80,9 @@ Cicada Broker was also developed using FIND-SE's best practices and proposed a s
 
 For more details, see the section {% include doc.html name="Cicada Broker" path="gii/gii-index" %}.
 
-{% include alert.html type="warning" content="<b>Working in progress.</b><br><br>You would like to collaborate with the project? Please contact our team in {% include doc.html name='About' path='../about' %}." %}
+{% include alert.html type="warning" content="<b>Working in progress.</b>" %}
+
+You would like to collaborate with the project? Please contact our team in {% include doc.html name="About" path="../about" %}.
 
 ### <ins>Group III (Cicada Data Science):</ins>
 
@@ -89,8 +91,10 @@ In addiction, the environmental information should be accessed in a web platform
 
 For more details, see the section {% include doc.html name="Cicada Data Science" path="giii/giii-index" %}.
 
-{% include alert.html type="warning" content="<b>Not started yet.</b><br><br>You would like to collaborate with the project? Please contact our team in {% include doc.html name='About' path='../about' %}." %}
+{% include alert.html type="warning" content="<b>Not started yet.</b>" %}
 
+
+You would like to collaborate with the project? Please contact our team in {% include doc.html name="About" path="../about" %}.
 
 # Our Team
 
