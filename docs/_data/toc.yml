@@ -20,9 +20,8 @@
       children:
         - title: "Getting Start"
           url: "docs/gii/gii-getting-started"
-	  children:
-            - title: "Messaging Server"
-              url: "docs/gii/gii-getting-started#messaging-server"
+        - title: "Messaging Server"
+          url: "docs/gii/gii-getting-started#messaging-server"
     - title: "Cicada Data Science - Group III"
       url: "docs/giii/giii-index"
       children:
