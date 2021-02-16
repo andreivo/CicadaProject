@@ -1,12 +1,12 @@
 ---
-title: Cicada Data Science - Group III
+title: Cicada Data Science
 tags: 
  - Project
  - Data Science
 description: Describes the Cicada Data Science
 ---
 
-# Group III - Cicada Data Science
+# Cicada Data Science
 
 A set of algorithms for Data Science (Cicada DS) to produce stats and knowledge about disaster risks.
 In addiction, the environmental information should be accessed in a web platform (Cicada Web) and in a mobile app (Cicada Mobile).

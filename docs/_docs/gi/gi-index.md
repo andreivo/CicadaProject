@@ -1,11 +1,11 @@
 ---
-title: Cicada DCP - Group I
+title: Cicada DCP
 tags: 
  - Project
  - DCP
 description: Describes the Cicada DCP
 ---
 
-# Group I - Cicada DCP
+# Cicada DCP
 
 
