@@ -95,6 +95,56 @@ public class Constants {
 ## Message Format
 
 
+```js
+{
+   "tokenStation":"3335685A",
+   "passwdStation":"PASSWD-DCP",
+   "sentDateTime":"2020-12-09 18:01:56Z",
+   "measures":[
+      {
+         "sensorExternalCode":20,
+         "dataType":"pluv",
+         "collectDateTime":"2020-12-09 18:01:56Z",
+         "dataValue":"8"
+      },
+      {
+         "sensorExternalCode":21,
+         "dataType":"vccin",
+         "collectDateTime":"2020-12-09 18:01:56Z",
+         "dataValue":"12.58"
+      },
+      {
+         "sensorExternalCode":21,
+         "dataType":"temp",
+         "collectDateTime":"2020-12-09 18:01:56Z",
+         "dataValue":"24"
+      },
+      {
+         "sensorExternalCode":21,
+         "dataType":"hum",
+         "collectDateTime":"2020-12-09 18:01:56Z",
+         "dataValue":"70"
+      }
+   ],
+   "metadata":[
+      {
+         "dataType":"la",
+         "collectDateTime":"2020-12-09 18:01:56Z",
+         "dataValue":"-23.7"
+      },
+      {
+         "dataType":"lo",
+         "collectDateTime":"2020-12-09 18:01:56Z",
+         "dataValue":"-44.7"
+      },
+      {
+         "dataType":"bkt",
+         "collectDateTime":"2020-12-09 18:01:56Z",
+         "dataValue":"3.14"
+      }
+   ]
+}
+``` 
 
 
 
