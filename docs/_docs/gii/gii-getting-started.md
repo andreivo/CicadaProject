@@ -171,10 +171,13 @@ The messages exchanged between Cicada DCP and the Integration Mediator follow a 
 The message is divided into 3 parts; the first is the body of the message, followed by a collection of measures, and finally, a collection of metadata. 
 The description of the Message Body fields is described below:
 
-| Key-field    | Required | Description   |
-| :---         | :---:    | :---          |
-| git status   | *        | git status    |
-| git diff     |          | git diff      |
+| Key-field      | Required | Description   |
+| :---           | :---:    | :---          |
+| tokenStation   | *        | Represents the unique DCP's identification. |
+| passwdStation  | *        | Represents the DCP's password to access AP wizard DCP and to the Integration Mediator accept data published. |
+| sentDateTime   | *        | Represents the date and time that DCP published the data. |
+| measures       | **       | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field metadata is present. |
+| metadata       | **       | Represents the **metadata** collection of the various sensors. This field is required but can be suppressed if the field measures is present.      |
  
 
 
