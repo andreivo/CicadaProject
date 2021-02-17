@@ -202,4 +202,29 @@ The message body "metadata" field also follows the JSON key-value standard. The 
 | dataType           | *        | Represents the system metadata data type. |
 | collectDateTime    | *        | Represents the date and time that metadata was collected. |
 | dataValue          | *        | Represents the metadata value was collected. |
+| context            |          | Represents a string to include general information about metadata. It is strongly recommended that this field is also filled with the key-value standard in JSON format. |
+
+### Equivalency Ontologic
+
+The Integration Mediator uses ontological equivalences keys in the JSON message to reduce the traffic size. 
+Cicada DCP uses the renamed keys when generating the messages that will be sent. Integration Mediator consumes messages and translates them by assessing ontological equivalences so that they can be understood and persisted in the database.
+
+The equivalences are presented below: 
+
+| Key-field renamed  | Message part  | Key-field          | 
+| :---               | :---          | :---               |
+| tknDCP             | Message Body  | tokenStation       |
+| pwdDCP             | Message Body  | passwdStation      |
+| sntDT              | Message Body  | sentDateTime       |
+| snsEC              | Measures      | sensorExternalCode |
+| dtT                | Measures      | dataType           |
+| colDT              | Measures      | collectDateTime    |
+| val                | Measures      | dataValue          |
+| dtT                | Metadata      | dataType           |
+| colDT              | Metadata      | collectDateTime    |
+| val                | Metadata      | dataType           |
+
+
+
+
 
