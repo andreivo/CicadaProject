@@ -97,53 +97,74 @@ public class Constants {
 
 ```json
 {
-   /* Indicates the unique identification for the PCD. (Required field) */
-   "tokenStation":"3335685A", 
-   "passwdStation":"PASSWD-DCP",
-   "sentDateTime":"2020-12-09 18:01:56Z",
-   "measures":[
-      {
-         "sensorExternalCode":20,
-         "dataType":"pluv",
-         "collectDateTime":"2020-12-09 18:01:56Z",
-         "dataValue":"8"
-      },
-      {
-         "sensorExternalCode":21,
-         "dataType":"vccin",
-         "collectDateTime":"2020-12-09 18:01:56Z",
-         "dataValue":"12.58"
-      },
-      {
-         "sensorExternalCode":21,
-         "dataType":"temp",
-         "collectDateTime":"2020-12-09 18:01:56Z",
-         "dataValue":"24"
-      },
-      {
-         "sensorExternalCode":21,
-         "dataType":"hum",
-         "collectDateTime":"2020-12-09 18:01:56Z",
-         "dataValue":"70"
-      }
-   ],
-   "metadata":[
-      {
-         "dataType":"la",
-         "collectDateTime":"2020-12-09 18:01:56Z",
-         "dataValue":"-23.7"
-      },
-      {
-         "dataType":"lo",
-         "collectDateTime":"2020-12-09 18:01:56Z",
-         "dataValue":"-44.7"
-      },
-      {
-         "dataType":"bkt",
-         "collectDateTime":"2020-12-09 18:01:56Z",
-         "dataValue":"3.14"
-      }
-   ]
+  "tokenStation": "22222222F",
+  "passwdStation": "PASSWD",
+  "sentDateTime": "2020-12-09 18:01:56Z",
+  "measures": [
+    {
+      "sensorExternalCode": 20,
+      "dataType": "pluv",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "8"
+    },
+    {
+      "sensorExternalCode": 21,
+      "dataType": "vin",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "12.58"
+    },
+    {
+      "sensorExternalCode": 22,
+      "dataType": "vso",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "12.58"
+    },
+    {
+      "sensorExternalCode": 23,
+      "dataType": "temp",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "24"
+    },
+    {
+      "sensorExternalCode": 24,
+      "dataType": "hum",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "70"
+    }
+  ],
+  "metadata": [
+    {
+      "dataType": "la",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "-23.7"
+    },
+    {
+      "dataType": "lo",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "-44.7"
+    },
+    {
+      "dataType": "bkt",
+      "collectDateTime": "2020-12-09 18:01:56Z",
+      "dataValue": "3.14"
+    },
+    {
+      "dtT": "cqs",
+      "colDT": "2021-02-17 12:10:00Z",
+      "val": "100",
+      "context": "{'cty':'WIFI','icc':'','lip':'192.168.0.160'}"
+    },
+    {
+      "dtT": "fmw",
+      "colDT": "2021-02-17 12:10:00Z",
+      "val": "0.0.1-alpha"
+    },
+    {
+      "dtT": "dfmw",
+      "colDT": "2021-02-17 12:10:00Z",
+      "val": "2021-01-01T10:10:00Z"
+    }
+  ]
 }
 ``` 
 
