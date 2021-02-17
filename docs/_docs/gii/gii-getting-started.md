@@ -224,7 +224,5 @@ The equivalences are presented below:
 | colDT              | Metadata      | collectDateTime    |
 | val                | Metadata      | dataType           |
 
-
-
-
+{% include alert.html type="info" content="It is worth mentioning that all equivalences are provided in the ontology file available on GitHub." %}
 
