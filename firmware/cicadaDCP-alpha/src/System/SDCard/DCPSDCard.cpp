@@ -593,7 +593,7 @@ String DCPSDCard::prepareDataMetadata(String dataType, String collectionDate, St
     return "{\"dtT\":\"" + dataType + "\",\"colDT\":\"" + collectionDate + "\",\"val\":\"" + value + "\"" + cxt + "}";
 }
 
-boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware) {
+boolean DCPSDCard::storeMetadadosStation(String oname, String oemail, String ophone, String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware) {
     CIC_DEBUG(F("Store Metadata!"));
 
     time_t tt = sdRTC.nowEpoch();
@@ -603,18 +603,29 @@ boolean DCPSDCard::storeMetadadosStation(String la, String lo, String bucket, St
 
     String collectionDate = sdRTC.now("%Y-%m-%d %H:%M:%SZ");
 
-    //part 1
-    String dataContent = prepareDataMetadata("la", collectionDate, la);
-    dataContent += "," + prepareDataMetadata("lo", collectionDate, lo);
+    //part 0 - Owner
+    String dataContent = prepareDataMetadata("oname", collectionDate, oname);
     String content = "\"metadata\":[" + dataContent + "]";
     writeFile(filename, content);
 
+    dataContent = prepareDataMetadata("oemail", collectionDate, oemail);
+    content = "\"metadata\":[" + dataContent + "]";
+    writeFile(filename, content);
+
+    dataContent = prepareDataMetadata("ophone", collectionDate, ophone);
+    content = "\"metadata\":[" + dataContent + "]";
+    writeFile(filename, content);
+
+    //part 1
+    dataContent = prepareDataMetadata("la", collectionDate, la);
+    dataContent += "," + prepareDataMetadata("lo", collectionDate, lo);
+    content = "\"metadata\":[" + dataContent + "]";
+    writeFile(filename, content);
 
     //part 2
     dataContent = prepareDataMetadata("bkt", collectionDate, bucket);
     content = "\"metadata\":[" + dataContent + "]";
     writeFile(filename, content);
-
 
     //part 3
     String context = "\"{'cty':'" + comType + "','icc':'" + simICCID + "','lip':'" + comLocalIP + "'}\"";

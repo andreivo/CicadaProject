@@ -24,6 +24,12 @@ const String DIR_STATION_SEPATH = "/stt/path";
 const String FILE_STATION_SEPATH = "pathserver";
 const String DIR_STATION_SEPORT = "/stt/port";
 const String DIR_STATION_SETIME = "/stt/tup";
+const String DIR_STATION_OWNAME = "/stt/owname";
+const String FILE_STATION_OWNAME = "owname";
+const String DIR_STATION_OWEMAIL = "/stt/owemail";
+const String FILE_STATION_OWEMAIL = "owemail";
+const String DIR_STATION_OWPHONE = "/stt/owphone";
+const String FILE_STATION_OWPHONE = "owphone";
 
 const String DIR_SENSOR_CODETEMP = "/sen/codetemp";
 const String DIR_SENSOR_CODEHUM = "/sen/codehum";

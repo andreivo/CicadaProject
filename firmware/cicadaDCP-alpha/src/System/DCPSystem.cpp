@@ -73,6 +73,11 @@ const String FIRMWARE_DATE = "2021-01-01T10:10:00Z";
 
 String STATION_ID = "CicadaDCP";
 const String STATION_ID_PREFIX = "CicadaDCP-";
+
+String STATION_OWNAME = "";
+String STATION_OWEMAIL = "";
+String STATION_OWPHONE = "";
+
 String STATION_NAME = "CicadaDCP";
 String STATION_PWD = "";
 String STATION_LONGITUDE = "";
@@ -173,6 +178,10 @@ void DCPSystem::preInitSystem() {
 
     // Get Station ID from file system or create the file with
     initStationID();
+    cicadaLeds.greenBlink(2);
+
+    // Get Owner Information
+    initOwner();
     cicadaLeds.greenBlink(2);
 
     // Get Station Name
@@ -492,6 +501,28 @@ void DCPSystem::initStationName() {
 }
 
 /**
+ * Initialize Owner Information
+ */
+void DCPSystem::initOwner() {
+
+    CIC_DEBUG_HEADER(F("INIT OWNER INFORMATION"));
+
+    // Get the previous Owner Name
+    STATION_OWNAME = spiffsManager.getSettings(DIR_STATION_OWNAME, true);
+    // Get the previous Owner Email
+    STATION_OWEMAIL = spiffsManager.getSettings(DIR_STATION_OWEMAIL, true);
+    // Get the previous Owner Phone
+    STATION_OWPHONE = spiffsManager.getSettings(DIR_STATION_OWPHONE, true);
+
+    CIC_DEBUG_(F("OWNER NAME: "));
+    CIC_DEBUG(STATION_OWNAME);
+    CIC_DEBUG_(F("OWNER EMAIL: "));
+    CIC_DEBUG(STATION_OWEMAIL);
+    CIC_DEBUG_(F("OWNER PHONE: "));
+    CIC_DEBUG(STATION_OWPHONE);
+}
+
+/**
  * Initialize Station Coordinates
  */
 void DCPSystem::initStationCoordinates() {
@@ -553,15 +584,15 @@ void DCPSystem::initMQTT() {
     CIC_DEBUG_HEADER(F("INIT MQTT Config"));
 
     // Get MQTT Host
-    String host = spiffsManager.getSettings("MQTT Host", DIR_MQTT_SERVER, true);
+    String host = spiffsManager.getSettings(DIR_MQTT_SERVER, true);
     // Get MQTT Port
-    String port = spiffsManager.getSettings("MQTT Port", DIR_MQTT_PORT, false);
+    String port = spiffsManager.getSettings(DIR_MQTT_PORT, false);
     // Get MQTT User
-    String user = spiffsManager.getSettings("MQTT User", DIR_MQTT_USER, false);
+    String user = spiffsManager.getSettings(DIR_MQTT_USER, false);
     // Get MQTT Password
-    String pass = spiffsManager.getSettings("MQTT Password", DIR_MQTT_PWD, true);
+    String pass = spiffsManager.getSettings(DIR_MQTT_PWD, true);
     // Get MQTT Topic
-    String topic = spiffsManager.getSettings("MQTT Topic", DIR_MQTT_TOPIC, false);
+    String topic = spiffsManager.getSettings(DIR_MQTT_TOPIC, false);
 
     String sttPass = spiffsManager.FSReadString(DIR_STATION_PASS);
     String timeToSend = spiffsManager.FSReadString(DIR_STATION_SENDTIMEINTERVAL);
@@ -582,11 +613,11 @@ void DCPSystem::initSelfUpdate() {
     CIC_DEBUG_HEADER(F("INIT SELF UPDATE"));
 
     // Get Host
-    String host = spiffsManager.getSettings("Self Up Host", DIR_STATION_SEHOST, true);
+    String host = spiffsManager.getSettings(DIR_STATION_SEHOST, true);
     // Get HostPath
-    String hostpath = spiffsManager.getSettings("Self Up Host Path", DIR_STATION_SEPATH, true);
+    String hostpath = spiffsManager.getSettings(DIR_STATION_SEPATH, true);
     // Get Port
-    String port = spiffsManager.getSettings("Self Up Port", DIR_STATION_SEPORT, false);
+    String port = spiffsManager.getSettings(DIR_STATION_SEPORT, false);
 
     String timeToCheckUp = spiffsManager.FSReadString(DIR_STATION_SETIME);
     if (timeToCheckUp == "") {
@@ -605,11 +636,11 @@ void DCPSystem::initSensorsConfig() {
 
     CIC_DEBUG_HEADER(F("INIT Sensor Config"));
 
-    String codetemp = spiffsManager.getSettings("Code temp", DIR_SENSOR_CODETEMP, false);
-    String codehum = spiffsManager.getSettings("Code hum", DIR_SENSOR_CODEHUM, false);
-    String codeplu = spiffsManager.getSettings("Code plu", DIR_SENSOR_CODEPLUV, false);
-    String codevin = spiffsManager.getSettings("Code vcc in", DIR_SENSOR_CODEVIN, false);
-    String codevso = spiffsManager.getSettings("Code vcc sol", DIR_SENSOR_CODEVSO, false);
+    String codetemp = spiffsManager.getSettings(DIR_SENSOR_CODETEMP, false);
+    String codehum = spiffsManager.getSettings(DIR_SENSOR_CODEHUM, false);
+    String codeplu = spiffsManager.getSettings(DIR_SENSOR_CODEPLUV, false);
+    String codevin = spiffsManager.getSettings(DIR_SENSOR_CODEVIN, false);
+    String codevso = spiffsManager.getSettings(DIR_SENSOR_CODEVSO, false);
 
     if (codetemp == "") {
         codetemp = "10";
@@ -641,11 +672,11 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_CODEVSO, codevso);
     }
 
-    String dttemp = spiffsManager.getSettings("Data Type temp", DIR_SENSOR_DATATYPETEMP, false);
-    String dthum = spiffsManager.getSettings("Data Type hum", DIR_SENSOR_DATATYPEHUM, false);
-    String dtplu = spiffsManager.getSettings("Data Type plu", DIR_SENSOR_DATATYPEPLUV, false);
-    String dtvin = spiffsManager.getSettings("Data Type vcc in", DIR_SENSOR_DATATYPEVIN, false);
-    String dtvso = spiffsManager.getSettings("Data Type vcc sol", DIR_SENSOR_DATATYPEVSO, false);
+    String dttemp = spiffsManager.getSettings(DIR_SENSOR_DATATYPETEMP, false);
+    String dthum = spiffsManager.getSettings(DIR_SENSOR_DATATYPEHUM, false);
+    String dtplu = spiffsManager.getSettings(DIR_SENSOR_DATATYPEPLUV, false);
+    String dtvin = spiffsManager.getSettings(DIR_SENSOR_DATATYPEVIN, false);
+    String dtvso = spiffsManager.getSettings(DIR_SENSOR_DATATYPEVSO, false);
 
     if (dttemp == "") {
         dttemp = "temp";
@@ -677,10 +708,10 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEVSO, dtvso);
     }
 
-    String collDHT = spiffsManager.getSettings("Coll. time interval DHT", DIR_SENSOR_COLLTINTDHT, false);
-    String collplu = spiffsManager.getSettings("Coll. time interval plu", DIR_SENSOR_COLLTINTPLUV, false);
-    String collvin = spiffsManager.getSettings("Coll. time interval vcc in", DIR_SENSOR_COLLTINTVIN, false);
-    String collvso = spiffsManager.getSettings("Coll. time interval vcc sol", DIR_SENSOR_COLLTINTVSO, false);
+    String collDHT = spiffsManager.getSettings(DIR_SENSOR_COLLTINTDHT, false);
+    String collplu = spiffsManager.getSettings(DIR_SENSOR_COLLTINTPLUV, false);
+    String collvin = spiffsManager.getSettings(DIR_SENSOR_COLLTINTVIN, false);
+    String collvso = spiffsManager.getSettings(DIR_SENSOR_COLLTINTVSO, false);
 
     if (collDHT == "") {
         collDHT = "10";
@@ -825,7 +856,8 @@ void DCPSystem::storeMetadados() {
     if (onTimeToSaveMetadata()) {
         updateCommunicationStatus();
         CIC_DEBUG_HEADER(F("STORE METADATA"));
-        cicadaSDCard.storeMetadadosStation(STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY, FIRMWARE_VERSION, FIRMWARE_DATE);
+
+        cicadaSDCard.storeMetadadosStation(STATION_OWNAME, STATION_OWEMAIL, STATION_OWPHONE, STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY, FIRMWARE_VERSION, FIRMWARE_DATE);
         nextSlotToSaveMetadata();
         cicadaSDCard.cleanOlderFiles();
     }

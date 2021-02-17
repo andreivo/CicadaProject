@@ -81,6 +81,7 @@ public:
 
 private:
     void setupTimeout();
+    void initOwner();
     void initStationID();
     void initStationName();
     void initStationPWD();

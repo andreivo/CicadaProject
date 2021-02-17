@@ -76,11 +76,11 @@ boolean DCPSIM800::setupSIM800Module() {
     enableRevalidate = false;
 
     // Get MQTT Host
-    String apn = simSpiffsManager.getSettings(F("SIM Carrier APN"), DIR_SIMCARD_APN, true);
+    String apn = simSpiffsManager.getSettings(DIR_SIMCARD_APN, true);
     // Get MQTT User
-    String user = simSpiffsManager.getSettings(F("SIM Carrier APN User"), DIR_SIMCARD_USER, false);
+    String user = simSpiffsManager.getSettings(DIR_SIMCARD_USER, false);
     // Get MQTT Password
-    String pwd = simSpiffsManager.getSettings(F("SIM  Carrier APN Pwd"), DIR_SIMCARD_PWD, true);
+    String pwd = simSpiffsManager.getSettings(DIR_SIMCARD_PWD, true);
 
     if (apn != "") {
         int count = 0;
@@ -420,27 +420,27 @@ void DCPSIM800::revalidateConnection() {
 
 void DCPSIM800::resetConfig() {
 
-    simSpiffsManager.deleteSettings(F("SIM  Carrier APN Pwd"), DIR_SIMCARD_APN);
-    simSpiffsManager.deleteSettings(F("SIM Carrier APN User"), DIR_SIMCARD_USER);
-    simSpiffsManager.deleteSettings(F("SIM  Carrier APN Pwd"), DIR_SIMCARD_PWD);
+    simSpiffsManager.deleteSettings(DIR_SIMCARD_APN);
+    simSpiffsManager.deleteSettings(DIR_SIMCARD_USER);
+    simSpiffsManager.deleteSettings(DIR_SIMCARD_PWD);
 }
 
 void DCPSIM800::setAPN(String apn) {
     // Get SIM APN
 
-    simSpiffsManager.saveSettings("SIM Carrier APN", DIR_SIMCARD_APN, FILE_SIMCARD_APN, apn);
+    simSpiffsManager.saveSettings(DIR_SIMCARD_APN, FILE_SIMCARD_APN, apn);
 }
 
 void DCPSIM800::setUSER(String user) {
     // Get SIM User
 
-    simSpiffsManager.saveSettings("SIM Carrier APN User", DIR_SIMCARD_USER, user);
+    simSpiffsManager.saveSettings(DIR_SIMCARD_USER, user);
 }
 
 void DCPSIM800::setPWD(String pwd) {
     // Get SIM Password
 
-    simSpiffsManager.saveSettings("SIM  Carrier APN Pwd", DIR_SIMCARD_PWD, FILE_SIMCARD_PWD, pwd);
+    simSpiffsManager.saveSettings(DIR_SIMCARD_PWD, FILE_SIMCARD_PWD, pwd);
 }
 
 String DCPSIM800::sendAT(String comm) {

@@ -52,9 +52,9 @@ boolean DCPwifi::setupWiFiModule() {
     enableRevalidate = false;
 
     // Get MQTT Host
-    String ssid = wifiSpiffsManager.getSettings("SSID", DIR_WIFI_SSID, false);
+    String ssid = wifiSpiffsManager.getSettings(DIR_WIFI_SSID, false);
     // Get MQTT User
-    String pwd = wifiSpiffsManager.getSettings("Password", DIR_WIFI_PWD, false);
+    String pwd = wifiSpiffsManager.getSettings(DIR_WIFI_PWD, false);
 
     if (ssid != "") {
 
@@ -74,8 +74,8 @@ boolean DCPwifi::setupWiFiModule() {
             CIC_DEBUG(String(count));
             wifiDCPLeds.redBlink();
 
-            ssid = wifiSpiffsManager.getSettings("SSID", DIR_WIFI_SSID, false);
-            pwd = wifiSpiffsManager.getSettings("Password", DIR_WIFI_PWD, false);
+            ssid = wifiSpiffsManager.getSettings(DIR_WIFI_SSID, false);
+            pwd = wifiSpiffsManager.getSettings(DIR_WIFI_PWD, false);
 
             WiFi.begin(ssid.c_str(), pwd.c_str());
             if (WiFi.status() == WL_CONNECTED) {
@@ -280,7 +280,7 @@ boolean DCPwifi::revalidateConnection() {
         if (onTimeToRevalidateConn()) {
             boolean result = false;
             if (!isConnected()) {
-                String ssid = wifiSpiffsManager.getSettings("SSID", DIR_WIFI_SSID, false);
+                String ssid = wifiSpiffsManager.getSettings(DIR_WIFI_SSID, false);
                 double RSSI = getRSSI(ssid.c_str());
                 int quality = getRSSIasQuality(RSSI);
                 if (quality > 30) {

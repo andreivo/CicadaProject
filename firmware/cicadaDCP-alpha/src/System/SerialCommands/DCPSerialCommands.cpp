@@ -279,131 +279,131 @@ void DCPSerialCommands::sconfigComm() {
     Serial.println(F("System"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Firmware                   : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_FIRMWARE_VERSION, false));
+    Serial.println(serialSpiffs.getSettings(DIR_FIRMWARE_VERSION, false));
     Serial.println(F(""));
 
     Serial.println(F("Station"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("ID                         : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_ID, false));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_ID, false));
     Serial.print(F("Name                       : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_NAME, false));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_NAME, false));
     Serial.print(F("Password                   : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_PASS, false));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_PASS, false));
     Serial.print(F("Latitude                   : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_LATITUDE, false));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_LATITUDE, false));
     Serial.print(F("Longitude                  : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_LONGITUDE, false));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_LONGITUDE, false));
     Serial.print(F("Bucket Calibration         : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_BUCKET_VOL, false));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_BUCKET_VOL, false));
     Serial.print(F("Time slot to send          : "));
-    Serial.print(serialSpiffs.getSettings(".", DIR_STATION_SENDTIMEINTERVAL, false));
+    Serial.print(serialSpiffs.getSettings(DIR_STATION_SENDTIMEINTERVAL, false));
     Serial.println(F(" minutes"));
     Serial.print(F("Time slot to store metadata: "));
-    Serial.print(serialSpiffs.getSettings(".", DIR_STATION_STOREMETADATA, false));
+    Serial.print(serialSpiffs.getSettings(DIR_STATION_STOREMETADATA, false));
     Serial.println(F(" minutes"));
     Serial.print(F("Self update-Host           : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEHOST, true));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_SEHOST, true));
     Serial.print(F("Self update-Path           : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEPATH, true));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_SEPATH, true));
     Serial.print(F("Self update-Port           : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_STATION_SEPORT, false));
+    Serial.println(serialSpiffs.getSettings(DIR_STATION_SEPORT, false));
     Serial.print(F("Self update-Daily Time     : "));
-    Serial.print(serialSpiffs.getSettings(".", DIR_STATION_SETIME, false));
+    Serial.print(serialSpiffs.getSettings(DIR_STATION_SETIME, false));
     Serial.println(F(":00 hours"));
 
     Serial.println(F(""));
     Serial.println(F("DHT Sensor"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Time slot to collection    : "));
-    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTDHT, false));
+    Serial.print(serialSpiffs.getSettings(DIR_SENSOR_COLLTINTDHT, false));
     Serial.println(F(" minutes"));
     Serial.print(F("Temperature Code           : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODETEMP, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODETEMP, false));
     Serial.print(F("Temperature Data Type      : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPETEMP, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPETEMP, false));
     Serial.print(F("Humidity Code              : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEHUM, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEHUM, false));
     Serial.print(F("Humidity Data Type         : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEHUM, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPEHUM, false));
 
     Serial.println(F(""));
     Serial.println(F("Pluviometer"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Code                       : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEPLUV, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEPLUV, false));
     Serial.print(F("Data Type      : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEPLUV, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPEPLUV, false));
     Serial.print(F("Time slot to collection    : "));
-    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTPLUV, false));
+    Serial.print(serialSpiffs.getSettings(DIR_SENSOR_COLLTINTPLUV, false));
     Serial.println(F(" minutes"));
 
     Serial.println(F(""));
     Serial.println(F("Input Battery Vcc"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Code                       : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEVIN, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEVIN, false));
     Serial.print(F("Data Type                  : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEVIN, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPEVIN, false));
     Serial.print(F("Time slot to collection    : "));
-    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTVIN, false));
+    Serial.print(serialSpiffs.getSettings(DIR_SENSOR_COLLTINTVIN, false));
     Serial.println(F(" minutes"));
 
     Serial.println(F(""));
     Serial.println(F("Solar Cell Vcc"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Code                       : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_CODEVSO, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEVSO, false));
     Serial.print(F("Data Type                  : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SENSOR_DATATYPEVSO, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPEVSO, false));
     Serial.print(F("Time slot to collection    : "));
-    Serial.print(serialSpiffs.getSettings(".", DIR_SENSOR_COLLTINTVSO, false));
+    Serial.print(serialSpiffs.getSettings(DIR_SENSOR_COLLTINTVSO, false));
     Serial.println(F(" minutes"));
 
     Serial.println(F(""));
     Serial.println(F("MQTT server"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("MQTT host server           : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_SERVER, true));
+    Serial.println(serialSpiffs.getSettings(DIR_MQTT_SERVER, true));
     Serial.print(F("MQTT port                  : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_PORT, false));
+    Serial.println(serialSpiffs.getSettings(DIR_MQTT_PORT, false));
     Serial.print(F("MQTT user                  : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_USER, false));
+    Serial.println(serialSpiffs.getSettings(DIR_MQTT_USER, false));
     Serial.print(F("MQTT password              : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_PWD, false));
+    Serial.println(serialSpiffs.getSettings(DIR_MQTT_PWD, false));
     Serial.print(F("MQTT password              : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_PWD, true));
+    Serial.println(serialSpiffs.getSettings(DIR_MQTT_PWD, true));
     Serial.print(F("MQTT Topic                 : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_MQTT_TOPIC, false));
+    Serial.println(serialSpiffs.getSettings(DIR_MQTT_TOPIC, false));
 
     Serial.println(F(""));
     Serial.println(F("SIM Card"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Carrier APN                : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SIMCARD_APN, true));
+    Serial.println(serialSpiffs.getSettings(DIR_SIMCARD_APN, true));
     Serial.print(F("Carrier APN User           : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SIMCARD_USER, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SIMCARD_USER, false));
     Serial.print(F("Carrier APN Password       : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_SIMCARD_PWD, true));
+    Serial.println(serialSpiffs.getSettings(DIR_SIMCARD_PWD, true));
 
     Serial.println(F(""));
     Serial.println(F("Wifi"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("SSID                       : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_WIFI_SSID, false));
+    Serial.println(serialSpiffs.getSettings(DIR_WIFI_SSID, false));
     Serial.print(F("Password                   : "));
-    Serial.println(serialSpiffs.getSettings(".", DIR_WIFI_PWD, false));
+    Serial.println(serialSpiffs.getSettings(DIR_WIFI_PWD, false));
 }
 
 void DCPSerialCommands::initSelfUpdate() {
     CIC_DEBUG_HEADER(F("INIT FORCE SELF UPDATE"));
 
     // Get Host
-    String host = commSpiffsManager.getSettings("Self Up Host", DIR_STATION_SEHOST, true);
+    String host = commSpiffsManager.getSettings(DIR_STATION_SEHOST, true);
     // Get HostPath
-    String hostpath = commSpiffsManager.getSettings("Self Up Host Path", DIR_STATION_SEPATH, true);
+    String hostpath = commSpiffsManager.getSettings(DIR_STATION_SEPATH, true);
     // Get Port
-    String port = commSpiffsManager.getSettings("Self Up Port", DIR_STATION_SEPORT, false);
+    String port = commSpiffsManager.getSettings(DIR_STATION_SEPORT, false);
 
     String sttName = commSpiffsManager.FSReadString(DIR_STATION_NAME);
 
@@ -469,8 +469,8 @@ void DCPSerialCommands::wizardComm(xTaskHandle coreTask) {
     delay(100);
 
     serialWizard.setDebugOutput(true);
-    String ssid = serialSpiffs.getSettings(".", DIR_STATION_ID, false);
-    String pwd = serialSpiffs.getSettings(".", DIR_STATION_PASS, false);
+    String ssid = serialSpiffs.getSettings(DIR_STATION_ID, false);
+    String pwd = serialSpiffs.getSettings(DIR_STATION_PASS, false);
     serialWizard.startWizardPortal(ssid.c_str(), pwd.c_str());
 }
 
@@ -702,17 +702,17 @@ void DCPSerialCommands::printSystemSimStatus() {
     }
 
     // Get MQTT Host
-    String apn = commSpiffsManager.getSettings(F("SIM Carrier APN"), DIR_SIMCARD_APN, true);
+    String apn = commSpiffsManager.getSettings(DIR_SIMCARD_APN, true);
     Serial.print(F("APN:                                   "));
     Serial.println(apn);
 
     // Get MQTT User
-    String user = commSpiffsManager.getSettings(F("SIM Carrier APN User"), DIR_SIMCARD_USER, false);
+    String user = commSpiffsManager.getSettings(DIR_SIMCARD_USER, false);
     Serial.print(F("USER:                                  "));
     Serial.println(user);
 
     // Get MQTT Password
-    String pwd = commSpiffsManager.getSettings(F("SIM  Carrier APN Pwd"), DIR_SIMCARD_PWD, true);
+    String pwd = commSpiffsManager.getSettings(DIR_SIMCARD_PWD, true);
     Serial.print(F("PWD:                                   "));
     Serial.println(pwd);
 }

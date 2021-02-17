@@ -531,27 +531,11 @@ float SPIFFSManager::bytesConverter(float bytes, char prefix) {
 /**
  * Get Settings
  */
-String SPIFFSManager::getSettings(String dsc, String DIR, boolean inContent) {
+String SPIFFSManager::getSettings(String DIR, boolean inContent) {
 
-    //    CIC_DEBUG_(F("\n\nGET "));
-    //    CIC_DEBUG(dsc);
-    //    CIC_DEBUG(F("==========================================="));
     String settings = FSReadString(DIR);
     if (inContent) {
         settings = FSReadToFile(DIR, settings);
-    }
-
-    //    CIC_DEBUG_(F("Getting "));
-    //    CIC_DEBUG_(dsc);
-    //    CIC_DEBUG("....");
-
-    if (settings != "") {
-        //        CIC_DEBUG_(dsc);
-        //        CIC_DEBUG_(": ");
-        //        CIC_DEBUG(settings);
-    } else {
-        //CIC_DEBUG_(F("ERROR during reading: "));
-        //CIC_DEBUG(dsc);
     }
 
     return settings;
@@ -560,43 +544,20 @@ String SPIFFSManager::getSettings(String dsc, String DIR, boolean inContent) {
 /**
  * Remove settings
  */
-void SPIFFSManager::deleteSettings(String dsc, String DIR) {
-
-    //    CIC_DEBUG_(F("\n\nDELETING: "));
-    //    CIC_DEBUG(dsc);
-    //    CIC_DEBUG(F("==========================================="));
-
+void SPIFFSManager::deleteSettings(String DIR) {
     FSDeleteFiles(DIR);
 }
 
 /** Save next settings to File System */
-void SPIFFSManager::saveSettings(String dsc, String DIR, String value) {
-
-    deleteSettings(dsc, DIR);
-
-    //    CIC_DEBUG_(F("\n\nSAVING: "));
-    //    CIC_DEBUG(dsc);
-    //    CIC_DEBUG(F("==========================================="));
-    //
-    //    CIC_DEBUG(F("Saving..."));
-
+void SPIFFSManager::saveSettings(String DIR, String value) {
+    deleteSettings(DIR);
     if (FSCreateFile(DIR, value)) {
-        //        CIC_DEBUG(F("Saved success!"));
     }
 }
 
 /** Save next settings to File System */
-void SPIFFSManager::saveSettings(String dsc, String DIR, String value, String content) {
-
-    deleteSettings(dsc, DIR);
-
-    //    CIC_DEBUG_(F("\n\nSAVING: "));
-    //    CIC_DEBUG(dsc);
-    //    CIC_DEBUG(F("==========================================="));
-    //
-    //    CIC_DEBUG(F("Saving..."));
-
+void SPIFFSManager::saveSettings(String DIR, String value, String content) {
+    deleteSettings(DIR);
     if (FSWriteToFile(DIR, value, content)) {
-        //        CIC_DEBUG(F("Saved success!"));
     }
 }

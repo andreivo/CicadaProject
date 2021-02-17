@@ -127,10 +127,10 @@ public:
      */
     float bytesConverter(float bytes, char prefix);
 
-    String getSettings(String dsc, String DIR, boolean inContent);
-    void deleteSettings(String dsc, String DIR);
-    void saveSettings(String dsc, String DIR, String value);
-    void saveSettings(String dsc, String DIR, String value, String content);
+    String getSettings(String DIR, boolean inContent);
+    void deleteSettings(String DIR);
+    void saveSettings(String DIR, String value);
+    void saveSettings(String DIR, String value, String content);
 };
 
 #endif
