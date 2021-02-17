@@ -188,10 +188,10 @@ The message body "measures" field also follows the JSON key-value standard. The 
 
 | Key-field          | Required | Description   |
 | :---               | :---:    | :---          |
-| sensorExternalCode | *        | Represents the unique DCP's identification. |
-| dataType           | *        | Represents the DCP's password to access AP wizard DCP and to the Integration Mediator accept data published. |
-| collectDateTime    | *        | Represents the date and time that DCP published the data. |
-| dataValue          | *        | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field "metadata" is present. |
+| sensorExternalCode | *        | Represents the unique Sensor code identification. |
+| dataType           | *        | Represents the Sensor data type. |
+| collectDateTime    | *        | Represents the date and time that Sensor data was collected. |
+| dataValue          | *        | Represents the data value was collected. |
 
 ### <ins>Metadata</ins>
 
@@ -199,7 +199,7 @@ The message body "metadata" field also follows the JSON key-value standard. The 
 
 | Key-field          | Required | Description   |
 | :---               | :---:    | :---          |
-| dataType           | *        | Represents the DCP's password to access AP wizard DCP and to the Integration Mediator accept data published. |
-| collectDateTime    | *        | Represents the date and time that DCP published the data. |
-| dataValue          | *        | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field "metadata" is present. |
+| dataType           | *        | Represents the system metadata data type. |
+| collectDateTime    | *        | Represents the date and time that metadata was collected. |
+| dataValue          | *        | Represents the metadata value was collected. |
 
