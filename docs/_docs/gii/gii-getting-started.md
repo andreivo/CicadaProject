@@ -94,7 +94,7 @@ public class Constants {
 
 ## Message Format
 
-The messages exchanged between Cicada DCP and the Integration Mediator follow a JSON pattern of key and value. The following pattern shows an example of an exchanged message:
+The messages exchanged between Cicada DCP and the Integration Mediator follow a JSON pattern of key-value. The following pattern shows an example of an exchanged message:
 
 ```json
 {
@@ -150,20 +150,20 @@ The messages exchanged between Cicada DCP and the Integration Mediator follow a 
       "dataValue": "3.14"
     },
     {
-      "dtT": "cqs",
-      "colDT": "2021-02-17 12:10:00Z",
-      "val": "100",
+      "dataType": "cqs",
+      "collectDateTime": "2021-02-17 12:10:00Z",
+      "dataValue": "100",
       "context": "{'cty':'WIFI','icc':'','lip':'192.168.0.160'}"
     },
     {
-      "dtT": "fmw",
-      "colDT": "2021-02-17 12:10:00Z",
-      "val": "0.0.1-alpha"
+      "dataType": "fmw",
+      "collectDateTime": "2021-02-17 12:10:00Z",
+      "dataValue": "0.0.1-alpha"
     },
     {
-      "dtT": "dfmw",
-      "colDT": "2021-02-17 12:10:00Z",
-      "val": "2021-01-01T10:10:00Z"
+      "dataType": "dfmw",
+      "collectDateTime": "2021-02-17 12:10:00Z",
+      "dataValue": "2021-01-01T10:10:00Z"
     }
   ]
 }
@@ -176,11 +176,23 @@ The description of the Message Body fields is described below:
 | tokenStation   | *        | Represents the unique DCP's identification. |
 | passwdStation  | *        | Represents the DCP's password to access AP wizard DCP and to the Integration Mediator accept data published. |
 | sentDateTime   | *        | Represents the date and time that DCP published the data. |
-| measures       | **       | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field metadata is present. |
-| metadata       | **       | Represents the **metadata** collection of the various sensors. This field is required but can be suppressed if the field measures is present.      |
+| measures       | **       | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field "metadata" is present. |
+| metadata       | **       | Represents the **metadata** collection of the system. This field is required but can be suppressed if the field "measures" is present. |
  
+The message body "measures" field also follows the JSON key-value standard. The following table shows the meanings of the fields of the "measures" section.
 
+| Key-field          | Required | Description   |
+| :---               | :---:    | :---          |
+| sensorExternalCode | *        | Represents the unique DCP's identification. |
+| dataType           | *        | Represents the DCP's password to access AP wizard DCP and to the Integration Mediator accept data published. |
+| collectDateTime    | *        | Represents the date and time that DCP published the data. |
+| dataValue          | *        | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field "metadata" is present. |
 
+The message body "metadata" field also follows the JSON key-value standard. The following table shows the meanings of the fields of the "metadata" section.
 
-
+| Key-field          | Required | Description   |
+| :---               | :---:    | :---          |
+| dataType           | *        | Represents the DCP's password to access AP wizard DCP and to the Integration Mediator accept data published. |
+| collectDateTime    | *        | Represents the date and time that DCP published the data. |
+| dataValue          | *        | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field "metadata" is present. |
 
