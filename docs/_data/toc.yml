@@ -10,8 +10,8 @@
           url: "docs/gi/gi-getting-started"
         - title: Arts
           url: "docs/gi/gi-arts"
-	- title: "STL Arts"
-          url: "docs/gi/gi-3darts"
+        - title: STL Arts
+          url: "docs/gi/gi-arts"
     - title: "Cicada Broker - Group II"
       url: "docs/gii/gii-getting-started"
       children:
