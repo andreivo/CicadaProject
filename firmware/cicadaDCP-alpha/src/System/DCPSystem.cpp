@@ -781,10 +781,10 @@ void DCPSystem::transmiteData() {
             cicadaMQTT.sendAllMessagesDataWifi();
         } else if (dcpSIM800.isConnected()) {
             cicadaMQTT.sendAllMessagesDataSim(dcpSIM800.getModem());
-            cicadaMQTT.updateNextSlot();
         } else if (!initCommunication(false)) {
             CIC_DEBUG(F("Communication failure. Operating without network!"));
         }
+        cicadaMQTT.updateNextSlot();
     }
     inTransmitionData = false;
 }
