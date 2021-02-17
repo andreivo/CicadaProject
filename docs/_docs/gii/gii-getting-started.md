@@ -94,6 +94,7 @@ public class Constants {
 
 ## Message Format
 
+The messages exchanged between Cicada DCP and the Integration Mediator follow a JSON pattern of key and value. The following pattern shows an example of an exchanged message:
 
 ```json
 {
@@ -167,6 +168,8 @@ public class Constants {
   ]
 }
 ```
+The message is divided into 3 parts; the first is the body of the message, followed by a collection of measures, and finally, a collection of metadata. 
+The description of the Message Body fields is described below:
 
 | Key-field    | Required | Description   |
 | :---         | :---:    | :---          |
