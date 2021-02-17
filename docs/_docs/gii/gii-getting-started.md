@@ -166,7 +166,13 @@ public class Constants {
     }
   ]
 }
-``` 
+```
+
+| Key-field    | Required | Description   |
+| :---         | :---:    | :---          |
+| git status   | *        | git status    |
+| git diff     |          | git diff      |
+ 
 
 
 
