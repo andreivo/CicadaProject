@@ -19,6 +19,7 @@ The Cicada Project is a collaboration between <a href="http://www.cemaden.gov.br
 Cemaden has an Observational network with more than 5000 Data Collection Platforms (DCPs) spread across the Brazilian territory. DCPs, in general, are imported equipment and require specialized labor; that is, it consumes a lot of financial resources to maintain its operation.
 
 The Cicada Project is a broad concept that can create the new management and operation model for the Cemaden observational network, based mainly on the decentralization of management authority under the DCPs that make up the network. This new concept creates a collaborative model that promotes the development of a private network of Cicada DCPs. To enable this decentralization, DCPs must follow a standard model and have the lowest possible cost of acquisition and operation, resulting in a significant reduction in the cost of maintenance and encouraging the expansion of the network.
+This new concept, combined with simple and robust architecture, makes the Cicada Project a smart city solution. 
 
 <p align="center">
 	<img src="assets/img/New_CONOPS_CEMADEN.jpg" align="center" height="auto" width="100%" style="max-width:700px">
