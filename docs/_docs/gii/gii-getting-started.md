@@ -169,6 +169,9 @@ The messages exchanged between Cicada DCP and the Integration Mediator follow a 
 }
 ```
 The message is divided into 3 parts; the first is the body of the message, followed by a collection of measures, and finally, a collection of metadata. 
+
+### <ins>Message Body</ins>
+
 The description of the Message Body fields is described below:
 
 | Key-field      | Required | Description   |
@@ -179,6 +182,8 @@ The description of the Message Body fields is described below:
 | measures       | **       | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field "metadata" is present. |
 | metadata       | **       | Represents the **metadata** collection of the system. This field is required but can be suppressed if the field "measures" is present. |
  
+### <ins>Measures</ins>
+
 The message body "measures" field also follows the JSON key-value standard. The following table shows the meanings of the fields of the "measures" section.
 
 | Key-field          | Required | Description   |
@@ -187,6 +192,8 @@ The message body "measures" field also follows the JSON key-value standard. The 
 | dataType           | *        | Represents the DCP's password to access AP wizard DCP and to the Integration Mediator accept data published. |
 | collectDateTime    | *        | Represents the date and time that DCP published the data. |
 | dataValue          | *        | Represents the **measures** collection of the various sensors. This field is required but can be suppressed if the field "metadata" is present. |
+
+### <ins>Metadata</ins>
 
 The message body "metadata" field also follows the JSON key-value standard. The following table shows the meanings of the fields of the "metadata" section.
 
