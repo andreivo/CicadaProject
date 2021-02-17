@@ -97,7 +97,8 @@ public class Constants {
 
 ```json
 {
-   "tokenStation":"3335685A", // Indicates the unique identification for the PCD.
+   /* Indicates the unique identification for the PCD. (Required field) */
+   "tokenStation":"3335685A", 
    "passwdStation":"PASSWD-DCP",
    "sentDateTime":"2020-12-09 18:01:56Z",
    "measures":[
