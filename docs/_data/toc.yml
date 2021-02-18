@@ -10,10 +10,12 @@
           url: "docs/gi/gi-getting-started"
         - title: Eletronical
           url: "docs/gi/gi-getting-started/gi-eletronical"
+        - title: Mechanical
+          url: "docs/gi/gi-getting-started/gi-mechanical"
         - title: Artistic images
-          url: "docs/gi/gi-arts"
+          url: "docs/gi/gi-getting-started/gi-arts"
         - title: Real images
-          url: "docs/gi/gi-real"
+          url: "docs/gi/gi-getting-started/gi-real"
     - title: "Cicada Broker - Group II"
       url: "docs/gii/gii-getting-started"
       children:
