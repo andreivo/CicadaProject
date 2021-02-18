@@ -8,6 +8,15 @@ description: Show the Cicada DCP Artistic Images
 
 # Cicada DCP Artistic Images
 
+## Electronic
+
+|                    |               | 
+| :---:              | :---:         |
+|<img src="../../../assets/img/arts/bottom.png" align="center" height="auto" width="auto" style="max-height:150px">|<img src="../../../assets/img/arts/top.png" align="center" height="auto" width="auto" style="max-height:150px">|
+|<a href="../../../assets/img/arts/bottom.png" target="_blank">Bottom</a>|<a href="../../../assets/img/arts/top.png" target="_blank">Top</a>|
+
+## Mechanical
+
 |                    |               |                    | 
 | :---:              | :---:         | :---:              |
 |<img src="../../../assets/img/arts/a1.png" align="center" height="auto" width="auto" style="max-height:150px">|<img src="../../../assets/img/arts/a2.png" align="center" height="auto" width="auto" style="max-height:150px">|<img src="../../../assets/img/arts/a3.png" align="center" height="auto" width="auto" style="max-height:150px">|
