@@ -1,12 +1,12 @@
 ---
-title: Cicada DCP Real images
+title: Cicada DCP Real Images
 tags: 
  - Project
  - DCP
-description: Show the Cicada DCP Real images
+description: Show the Cicada DCP Real Images
 ---
 
-# Cicada DCP Real images
+# Cicada DCP Real Images
 
 |                    |               |                    | 
 | :---:              | :---:         | :---:              |

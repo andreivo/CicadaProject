@@ -1,9 +1,9 @@
 ---
-title: Cicada DCP electronic part
+title: Cicada DCP Electronic Part
 tags: 
  - Project
  - DCP
-description: Describes the Cicada DCP electronic part
+description: Describes the Cicada DCP Electronic Part
 ---
 
-# Cicada DCP electronic part
+# Cicada DCP Electronic Part

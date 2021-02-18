@@ -1,12 +1,12 @@
 ---
-title: Cicada DCP Artistic images
+title: Cicada DCP Artistic Images
 tags: 
  - Project
  - DCP
-description: Show the Cicada DCP Artistic images
+description: Show the Cicada DCP Artistic Images
 ---
 
-# Cicada DCP Artistic images
+# Cicada DCP Artistic Images
 
 |                    |               |                    | 
 | :---:              | :---:         | :---:              |

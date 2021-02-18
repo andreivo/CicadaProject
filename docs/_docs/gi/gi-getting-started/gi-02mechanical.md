@@ -1,9 +1,9 @@
 ---
-title: Cicada DCP mechanical part
+title: Cicada DCP Mechanical Part
 tags: 
  - Project
  - DCP
-description: Describes the Cicada DCP mechanical part
+description: Describes the Cicada DCP Mechanical Part
 ---
 
-# Cicada DCP mechanical part
+# Cicada DCP Mechanical Part
