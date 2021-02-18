@@ -8,6 +8,12 @@
       children:
         - title: Getting Started
           url: "docs/gi/gi-getting-started"
+        - title: Eletronical
+          url: "docs/gi/gi-getting-started/gi-eletronical"
+	- title: Mechanical
+          url: "docs/gi/gi-getting-started/gi-mechanical"
+	- title: User Guide
+          url: "docs/gi/gi-getting-started/gi-userguide"
         - title: Artistic images
           url: "docs/gi/gi-arts"
         - title: Real images
