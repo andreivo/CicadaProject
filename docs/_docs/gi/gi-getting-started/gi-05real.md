@@ -3,10 +3,10 @@ title: Cicada DCP Real Images
 tags: 
  - Project
  - DCP
-description: Show the Cicada DCP Real Images
+description: Show the Cicada DCP's Real Images
 ---
 
-# Cicada DCP Real Images
+# Cicada DCP's Real Images
 
 ## Electronic
 

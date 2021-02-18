@@ -3,10 +3,10 @@ title: Cicada DCP Artistic Images
 tags: 
  - Project
  - DCP
-description: Show the Cicada DCP Artistic Images
+description: Show the Cicada DCP's Artistic Images
 ---
 
-# Cicada DCP Artistic Images
+# Cicada DCP's Artistic Images
 
 ## Electronic
 

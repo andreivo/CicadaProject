@@ -40,7 +40,7 @@ The project was divided into 3 groups to structure its development and allow res
 
 Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integrated into a Data Collection Platform that has requirement high reliability and freedom for adaptations. The Cicada DCP was designed for native interoperability with the Cicada Broker, and all project is open-source and documented.
 
-In practice, the Cicada DCP is a monoblock device with a built-in electronic system that allows the integration of sensors for monitoring the environment and actuators, e.g., alarm sirens. By default, Cicada DCP has humidity, temperature, and rainfall sensors, as shown in Fig. 3.
+In practice, the Cicada DCP is a monoblock device with an embeddable electronic system that allows the integration of sensors for monitoring the environment and actuators, e.g., alarm sirens. Cicada DCP has humidity, temperature, and rainfall sensors by default, as shown in Fig. 3.
 
 <p align="center">
 	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="40%" style="max-width:250px">
