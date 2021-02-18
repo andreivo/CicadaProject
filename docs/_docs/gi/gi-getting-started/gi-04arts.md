@@ -12,7 +12,7 @@ description: Show the Cicada DCP Artistic Images
 
 |                    |               | 
 | :---:              | :---:         |
-|<img src="../../../assets/img/arts/bottom.png" align="center" height="auto" width="auto" style="max-height:150px">|<img src="../../../assets/img/arts/top.png" align="center" height="auto" width="auto" style="max-height:150px">|
+|<img src="../../../assets/img/arts/bottom.png" align="center" height="auto" width="auto" style="max-height:250px">|<img src="../../../assets/img/arts/top.png" align="center" height="auto" width="auto" style="max-height:250px">|
 |<a href="../../../assets/img/arts/bottom.png" target="_blank">Bottom</a>|<a href="../../../assets/img/arts/top.png" target="_blank">Top</a>|
 
 ## Mechanical
