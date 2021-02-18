@@ -8,8 +8,8 @@
       children:
         - title: Getting Started
           url: "docs/gi/gi-getting-started"
-        - title: Eletronical
-          url: "docs/gi/gi-getting-started/gi-01eletronical"
+        - title: Electronic
+          url: "docs/gi/gi-getting-started/gi-01gi-01electronic"
         - title: Mechanical
           url: "docs/gi/gi-getting-started/gi-02mechanical"
         - title: "User Guide"

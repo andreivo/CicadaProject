@@ -1,9 +1,9 @@
 ---
-title: Cicada DCP
+title: Cicada DCP User Guide
 tags: 
  - Project
  - DCP
-description: Describes the Cicada DCP
+description: Cicada DCP User Guide
 ---
 
-# Cicada DCP
+# Cicada DCP User Guide
