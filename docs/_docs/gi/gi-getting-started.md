@@ -13,8 +13,8 @@ Cicada DCP is an equipment design with a low-cost Datalogger and Sensors integra
 In practice, the Cicada DCP is a monoblock device with an embeddable electronic system that allows the integration of sensors for monitoring the environment and actuators, e.g., alarm sirens. Cicada DCP has humidity, temperature, and rainfall sensors by default, as shown in Fig. 1.
 
 <p align="center">
-	<img src="assets/img/CicadaDCP.png" align="center" height="auto" width="40%" style="max-width:250px">
-	<img src="assets/img/CicadaDCPCut.png" align="center" height="auto" width="58%" style="max-width:350px">
+	<img src="../../assets/img/CicadaDCP.png" align="center" height="auto" width="40%" style="max-width:250px">
+	<img src="../../assets/img/CicadaDCPCut.png" align="center" height="auto" width="58%" style="max-width:350px">
 <br><br><b>Fig 1: Cicada DCP Body Design</b>
 </p>
 
