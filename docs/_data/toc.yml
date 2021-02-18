@@ -9,15 +9,15 @@
         - title: Getting Started
           url: "docs/gi/gi-getting-started"
         - title: Eletronical
-          url: "docs/gi/gi-getting-started/gi-eletronical"
+          url: "docs/gi/gi-getting-started/gi-01eletronical"
         - title: Mechanical
-          url: "docs/gi/gi-getting-started/gi-mechanical"
+          url: "docs/gi/gi-getting-started/gi-02mechanical"
         - title: "User Guide"
-          url: "docs/gi/gi-getting-started/gi-userguide"
+          url: "docs/gi/gi-getting-started/gi-03userguide"
         - title: Artistic images
-          url: "docs/gi/gi-getting-started/gi-arts"
+          url: "docs/gi/gi-getting-started/gi-04arts"
         - title: Real images
-          url: "docs/gi/gi-getting-started/gi-real"
+          url: "docs/gi/gi-getting-started/gi-05real"
     - title: "Cicada Broker - Group II"
       url: "docs/gii/gii-getting-started"
       children:
