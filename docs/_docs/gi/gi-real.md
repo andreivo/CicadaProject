@@ -1,5 +1,5 @@
 ---
-title: Cicada DCP Artistic images
+title: Cicada DCP Real images
 tags: 
  - Project
  - DCP

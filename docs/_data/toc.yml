@@ -8,8 +8,10 @@
       children:
         - title: Getting Started
           url: "docs/gi/gi-getting-started"
-        - title: Arts
+        - title: Artistic images
           url: "docs/gi/gi-arts"
+        - title: Real images
+          url: "docs/gi/gi-real"
     - title: "Cicada Broker - Group II"
       url: "docs/gii/gii-getting-started"
       children:
