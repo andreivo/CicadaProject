@@ -15,7 +15,7 @@ description: Show the Cicada DCP's Real Images
 |<img src="../../../assets/img/real/bottom.png" align="center" height="auto" width="auto" style="max-height:250px">|<img src="../../../assets/img/real/top.png" align="center" height="auto" width="auto" style="max-height:250px">|
 |<a href="../../../assets/img/real/bottom.png" target="_blank">Bottom</a>|<a href="../../../assets/img/real/top.png" target="_blank">Top</a>|
 
-## Mechanical
+## Structural
 
 |                    |               |                    | 
 | :---:              | :---:         | :---:              |
