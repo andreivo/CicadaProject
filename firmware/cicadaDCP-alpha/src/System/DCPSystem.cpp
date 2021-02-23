@@ -65,6 +65,8 @@ void setInDownload(boolean inDown) {
     inDownload = inDown;
 }
 
+time_t lastEpoch;
+
 /******************************************************************************/
 /******************************************************************************/
 
@@ -223,9 +225,11 @@ boolean DCPSystem::initCommunication(boolean startPromptOnFail) {
             return false;
         } else {
             cicadaRTC.setupRTCModule(dcpSIM800.getNetworkDate());
+            lastEpoch = cicadaRTC.nowEpoch();
         }
     } else {
         cicadaRTC.setupRTCModule(dcpWifi.getNetworkDate());
+        lastEpoch = cicadaRTC.nowEpoch();
     }
     cicadaLeds.redTurnOn();
     return true;
@@ -396,8 +400,22 @@ void DCPSystem::updateStatus() {
             } else {
                 cicadaLeds.blinkStatusError();
             }
+            updateTimeRTC();
         }
     }
+}
+
+void DCPSystem::updateTimeRTC() {
+    time_t ttNow = cicadaRTC.nowEpoch();
+    if (lastEpoch > ttNow) {
+        CIC_DEBUG_HEADER(F("UPDATE RTC"));
+        if (dcpWifi.isConnected()) {
+            cicadaRTC.setupRTCModule(dcpWifi.getNetworkDate());
+        } else if (dcpSIM800.isConnected()) {
+            cicadaRTC.setupRTCModule(dcpSIM800.getNetworkDate());
+        }
+    }
+    lastEpoch = cicadaRTC.nowEpoch();
 }
 
 void DCPSystem::readSensors() {

@@ -72,6 +72,21 @@ boolean DCPSDCard::setupSDCardModule() {
     pinMode(PIN_SDCARD_MISO, INPUT_PULLUP);
     pinMode(PIN_SDCARD_SCK, INPUT_PULLUP);
 
+    // SdCardFactory constructs and initializes the appropriate card.
+    SdCardFactory cardFactory;
+    // Pointer to generic SD card.
+    SdCard* m_card = nullptr;
+
+    // Select and initialize proper card driver.
+    m_card = cardFactory.newCard(SD_CONFIG);
+    if (!m_card || m_card->errorCode()) {
+        CIC_DEBUG(F("Card init failed."));
+        sdLeds.redTurnOn();
+        delay(1000);
+        ESP.restart();
+        return false;
+    }
+
     if (!sd.begin(SD_CONFIG)) {
         CIC_DEBUG(F("initialization failed!"));
         //sd.initErrorHalt();
@@ -106,7 +121,9 @@ void DCPSDCard::printDirectory(String path) {
     dir.flush();
     if (!dir.open(path.c_str())) {
         CIC_DEBUG(F("Error dir.open failed"));
-        printSDError(false);
+        if (!printSDError(false)) {
+            printSDError();
+        }
     }
     dir.rewindDirectory();
 
@@ -222,8 +239,12 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
             // Open root directory
             if (!dir.open("/")) {
                 CIC_DEBUG(F("Dir. open failed"));
-                printSDError(false);
+                if (!printSDError(false)) {
+                    printSDError();
+                }
             }
+
+            boolean needToSDFormat = false;
 
             dir.rewindDirectory();
             while (myFile.openNext(&dir, O_RDONLY)) {
@@ -240,6 +261,7 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
                             if (!dir.remove(fileName)) {
                                 CIC_DEBUG_("Delete file error: ");
                                 CIC_DEBUG(fileName);
+                                needToSDFormat = true;
                             } else {
                                 break;
                             }
@@ -260,7 +282,12 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
             boolean result = false;
             if (dir.getError()) {
                 CIC_DEBUG(F("Mqtt publish failed"));
-                printSDError(false);
+                dir.flush();
+                dir.close();
+                giveSDMutex("mqttPublishFiles");
+                if (!printSDError(false)) {
+                    printSDError();
+                }
                 result = false;
             } else {
                 result = true;
@@ -268,6 +295,11 @@ boolean DCPSDCard::mqttPublishFiles(boolean(*callback)(String msg, PubSubClient*
             dir.flush();
             dir.close();
             giveSDMutex("mqttPublishFiles");
+
+            if (needToSDFormat) {
+                formatSD(false);
+            }
+
             return result;
 
         } else {
@@ -446,9 +478,13 @@ void DCPSDCard::deleteOldFiles(String path) {
             // Open root directory
             if (!myDir.open(path.c_str())) {
                 CIC_DEBUG(F("Error dir. open failed"));
-                printSDError(false);
+                if (!printSDError(false)) {
+                    printSDError();
+                }
             }
             myDir.rewindDirectory();
+
+            boolean needToSDFormat = false;
 
             while (myFile.openNext(&myDir, O_RDONLY)) {
                 if (!myFile.isDirectory()) {
@@ -476,21 +512,34 @@ void DCPSDCard::deleteOldFiles(String path) {
                         } else {
                             CIC_DEBUG_(F("Delete file error: "));
                             CIC_DEBUG(fileName);
+                            needToSDFormat = true;
                         }
                     }
                 } else {
                     myFile.flush();
                     myFile.close();
                 }
+                myDir.flush();
             }
+
 
             if (myDir.getError()) {
                 CIC_DEBUG(F("deleteOldFiles: OpenNext failed"));
-                printSDError();
+                myDir.flush();
+                myDir.close();
+                giveSDMutex("deleteOldFiles");
+                if (!printSDError(false)) {
+                    printSDError();
+                }
             }
             myDir.flush();
             myDir.close();
             giveSDMutex("deleteOldFiles");
+
+            if (needToSDFormat) {
+                formatSD(false);
+            }
+
             break;
         } else {
 
@@ -520,9 +569,13 @@ boolean DCPSDCard::deleteUpdate() {
             // Open root directory
             if (!myDir.open(path.c_str())) {
                 CIC_DEBUG(F("Error dir.open failed"));
-                printSDError(false);
+                if (!printSDError(false)) {
+                    printSDError();
+                }
             }
             myDir.rewindDirectory();
+
+            boolean needToSDFormat = false;
 
             while (myFile.openNext(&myDir, O_RDONLY)) {
                 if (!myFile.isDirectory()) {
@@ -537,6 +590,7 @@ boolean DCPSDCard::deleteUpdate() {
                     } else {
                         CIC_DEBUG_(F("Delete file error: "));
                         CIC_DEBUG(fileName);
+                        needToSDFormat = true;
                         result = false;
                     }
 
@@ -548,11 +602,20 @@ boolean DCPSDCard::deleteUpdate() {
 
             if (myDir.getError()) {
                 CIC_DEBUG(F("deleteUpdate: OpenNext failed"));
-                printSDError();
+                myDir.flush();
+                myDir.close();
+                giveSDMutex("deleteUpdate");
+                if (!printSDError(false)) {
+                    printSDError();
+                }
             }
             myDir.flush();
             myDir.close();
             giveSDMutex("deleteUpdate");
+
+            if (needToSDFormat) {
+                formatSD(false);
+            }
             break;
         } else {
 
@@ -922,19 +985,37 @@ boolean DCPSDCard::printSDError(boolean restart) {
         CIC_DEBUG(String(int(sd.sdErrorCode())));
         CIC_DEBUG_(F("SD errorData = "));
         CIC_DEBUG(String(int(sd.sdErrorData())));
+    }
 
-        if (!sd.begin(SD_CONFIG)) {
-            CIC_DEBUG(F("re-initialization failed!"));
-            //sd.initErrorHalt();
-            if (restart) {
-                sdLeds.redTurnOn();
-                delay(1000);
-                ESP.restart();
-            }
-        } else {
-            cleanOlderFiles();
+    // SdCardFactory constructs and initializes the appropriate card.
+    SdCardFactory cardFactory;
+    // Pointer to generic SD card.
+    SdCard* m_card = nullptr;
+
+    // Select and initialize proper card driver.
+    m_card = cardFactory.newCard(SD_CONFIG);
+    if (!m_card || m_card->errorCode()) {
+        CIC_DEBUG(F("Card init failed."));
+        if (restart) {
+            sdLeds.redTurnOn();
+            delay(1000);
+            ESP.restart();
         }
     }
+
+    if (!sd.begin(SD_CONFIG)) {
+        CIC_DEBUG(F("re-initialization failed!"));
+        if (restart) {
+            sdLeds.redTurnOn();
+            delay(1000);
+            ESP.restart();
+        }
+        return false;
+    } else {
+        cleanOlderFiles();
+    }
+    return true;
+
 }
 
 /*******************************************************************************

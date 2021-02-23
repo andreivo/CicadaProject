@@ -101,6 +101,7 @@ private:
     boolean onTimeToSaveMetadata();
     boolean networkFailureBoot();
     void clearSerialInput();
+    void updateTimeRTC();
 
 };
 
