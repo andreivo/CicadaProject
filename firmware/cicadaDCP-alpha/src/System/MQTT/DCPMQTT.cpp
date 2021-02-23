@@ -111,7 +111,7 @@ void DCPMQTT::sendMessagesData() {
 
     if (connectMQTTServer()) {
         if (!mqttSdCard.mqttPublishFiles(publishMessage, clientPub, tknDCP, pwdDCP, TOPIC)) {
-            CIC_DEBUG_(F("Error on MQTT messages publication."));
+            CIC_DEBUG(F("Error on MQTT messages publication."));
         } else {
             CIC_DEBUG(F("Successful MQTT messages publication."));
         }
