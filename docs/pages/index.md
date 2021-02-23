@@ -56,7 +56,7 @@ In practice, the Cicada DCP is a monoblock device with an embeddable electronic 
 		   	return Math.min(420, height);
 		}
 
-		document.write("<iframe height=\'"+getHeightRender()+"\' width=\'95%\' frameborder=\'0\' src=\'https://render.githubusercontent.com/view/3d?url=https://raw.githubusercontent.com/andreivo/CicadaProject/main/mechanical/design/00-cicadadcp.stl\' title=\'00-cicadadcp.stl\'><\/iframe>")
+		document.write("<iframe height=\'"+getHeightRender()+"\' width=\'95%\' frameborder=\'0\' src=\'https://render.githubusercontent.com/view/3d?url=https://raw.githubusercontent.com/andreivo/CicadaProject/main/structural/design/00-cicadadcp.stl\' title=\'00-cicadadcp.stl\'><\/iframe>")
 	</script>
 <br><br><b>Fig 4: Cicada DCP 3d View</b>
 </p>

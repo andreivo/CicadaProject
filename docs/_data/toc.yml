@@ -10,8 +10,8 @@
           url: "docs/gi/gi-getting-started"
         - title: Electronic
           url: "docs/gi/gi-getting-started/gi-01electronic"
-        - title: Mechanical
-          url: "docs/gi/gi-getting-started/gi-02mechanical"
+        - title: Structural
+          url: "docs/gi/gi-getting-started/gi-02structural"
         - title: "User Guide"
           url: "docs/gi/gi-getting-started/gi-03userguide"
         - title: Artistic images
