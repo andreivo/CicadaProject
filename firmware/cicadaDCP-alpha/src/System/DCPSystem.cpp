@@ -147,7 +147,7 @@ void DCPSystem::readSerialCommands(xTaskHandle coreTask) {
  */
 void DCPSystem::preInitSystem() {
 
-    pinMode(PIN_AP_WIZARD, INPUT);
+    pinMode(PIN_AP_WIZARD, INPUT_PULLDOWN);
     pinMode(PIN_LED_RED, OUTPUT);
     pinMode(PIN_LED_GREEN, OUTPUT);
     pinMode(PIN_LED_BLUE, OUTPUT);

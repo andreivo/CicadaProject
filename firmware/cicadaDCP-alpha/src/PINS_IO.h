@@ -26,8 +26,10 @@
 
 //Modem SIM800
 #define PIN_MODEM_TURNON 23
-#define PIN_MODEM_RX 16
-#define PIN_MODEM_TX 17
+//#define PIN_MODEM_RX 16
+//#define PIN_MODEM_TX 17
+#define PIN_MODEM_RX 17
+#define PIN_MODEM_TX 16
 
 //SDCard
 #define PIN_SDCARD_CHIP_SELECT 21 // Pino serial - sdsc
