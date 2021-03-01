@@ -169,7 +169,10 @@ void DCPSystem::preInitSystem() {
     CIC_DEBUG_(F("\n\nCICADA DCP FIRMWARE (Version "));
     CIC_DEBUG_(getFwmVersion());
     CIC_DEBUG(F(")"));
+    cicadaLeds.greenBlink(2);
 
+
+    spiffsManager.initSPIFFS();
     cicadaLeds.greenBlink(2);
 
     //inicia o SDCard

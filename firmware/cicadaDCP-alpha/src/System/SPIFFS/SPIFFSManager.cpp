@@ -12,7 +12,25 @@
 #include "SPIFFSManager.h"
 #include <SPIFFS.h>
 
+DCPLeds spiffsLeds;
+
 SPIFFSManager::SPIFFSManager() {
+}
+
+boolean SPIFFSManager::initSPIFFS() {
+    // Mounts SPIFFS file system
+    if (!SPIFFS.begin()) {
+        //Format SPIFFS
+        if (!SPIFFS.begin(true)) {
+            CIC_DEBUG(F("FATAL: Error Initialize SPIFFS file system."));
+            spiffsLeds.redTurnOn();
+            delay(1000);
+            ESP.restart();
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -48,6 +66,7 @@ boolean SPIFFSManager::FSCreateFile(String directory, String filename) {
         //CIC_DEBUG(F("SUCCESS: File created."));
         f.close();
     } else {
+
         success = false;
         //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
@@ -88,6 +107,7 @@ boolean SPIFFSManager::FSCreateFile(String directory, int filename) {
         //CIC_DEBUG(F("SUCCESS: File created."));
         f.close();
     } else {
+
         success = false;
         //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
@@ -128,6 +148,7 @@ boolean SPIFFSManager::FSCreateFile(String directory, unsigned long filename) {
         //CIC_DEBUG(F("SUCCESS: File created."));
         f.close();
     } else {
+
         success = false;
         //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
@@ -181,6 +202,7 @@ boolean SPIFFSManager::FSWriteToFile(String directory, String filename, String c
 
         f.close();
     } else {
+
         success = false;
         //CIC_DEBUG(F("ERROR: Fail creating file."));
     }
@@ -216,6 +238,7 @@ String SPIFFSManager::FSReadToFile(String directory, String filename) {
     } else {
         //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
+
     return "";
 }
 
@@ -251,6 +274,7 @@ boolean SPIFFSManager::FSDeleteFiles(String directory) {
 
         if (!SPIFFS.remove(file.name())) {
             //            CIC_DEBUG(F("ERROR during file deletion!"));
+
             success = false;
         }
         file = dir.openNextFile();
@@ -292,6 +316,7 @@ boolean SPIFFSManager::FSDeleteFile(String directory, int filename) {
 
     // Remove file
     if (!SPIFFS.remove(filepath)) {
+
         success = false;
         //        CIC_DEBUG(F("ERROR: Fail deleting file."));
     }
@@ -372,8 +397,6 @@ float SPIFFSManager::FSReadFloat(String filepath) {
         //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
 
-
-
     return 0;
 }
 
@@ -448,7 +471,6 @@ String SPIFFSManager::FSReadString(String filepath) {
         //        CIC_DEBUG(F("EMPTY DIRECTORY."));
     }
 
-
     return "";
 }
 
@@ -472,6 +494,7 @@ void SPIFFSManager::FSPrintFileList() {
 
     int fc = 0;
     while (file) {
+
         ++fc;
         CIC_DEBUG_(String(fc));
         CIC_DEBUG_(" - ");
@@ -535,6 +558,7 @@ String SPIFFSManager::getSettings(String DIR, boolean inContent) {
 
     String settings = FSReadString(DIR);
     if (inContent) {
+
         settings = FSReadToFile(DIR, settings);
     }
 
@@ -545,6 +569,7 @@ String SPIFFSManager::getSettings(String DIR, boolean inContent) {
  * Remove settings
  */
 void SPIFFSManager::deleteSettings(String DIR) {
+
     FSDeleteFiles(DIR);
 }
 

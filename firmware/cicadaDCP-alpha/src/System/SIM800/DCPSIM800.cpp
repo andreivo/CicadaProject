@@ -153,6 +153,8 @@ boolean DCPSIM800::setupSIM800Module() {
             turnOff();
             CIC_DEBUG(F("The connection failed. A new connection will be made in 5 seconds."));
             delay(5000);
+            //Update Task Watchdog timer
+            esp_task_wdt_reset();
         }
     } else {
         CIC_DEBUG(F("No APN credentials for SIM card"));
