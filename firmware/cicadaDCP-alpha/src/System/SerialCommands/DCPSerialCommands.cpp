@@ -234,7 +234,7 @@ void DCPSerialCommands::nextslottimeComm() {
     serialDHT.printNextSlot();
     serialdcpRainGauge.printNextSlot();
     serialdcpVoltage.printNextVccInSlot();
-    serialdcpVoltage.printNextVccSolSlot();
+    serialdcpVoltage.printNextVccBatSlot();
     serialMQTT.printNextSlot();
 }
 
@@ -339,7 +339,7 @@ void DCPSerialCommands::sconfigComm() {
     Serial.println(F(" minutes"));
 
     Serial.println(F(""));
-    Serial.println(F("Input Battery Vcc"));
+    Serial.println(F("Input Vcc"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Code                       : "));
     Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEVIN, false));
@@ -350,14 +350,14 @@ void DCPSerialCommands::sconfigComm() {
     Serial.println(F(" minutes"));
 
     Serial.println(F(""));
-    Serial.println(F("Solar Cell Vcc"));
+    Serial.println(F("Battery Vcc"));
     Serial.println(F("----------------------------------------------------------"));
     Serial.print(F("Code                       : "));
-    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEVSO, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEVBA, false));
     Serial.print(F("Data Type                  : "));
-    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPEVSO, false));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPEVBA, false));
     Serial.print(F("Time slot to collection    : "));
-    Serial.print(serialSpiffs.getSettings(DIR_SENSOR_COLLTINTVSO, false));
+    Serial.print(serialSpiffs.getSettings(DIR_SENSOR_COLLTINTVBA, false));
     Serial.println(F(" minutes"));
 
     Serial.println(F(""));
@@ -734,12 +734,12 @@ void DCPSerialCommands::weatherComm(String serialCommand) {
             Serial.println(serialdcpRainGauge.printTipBucket());
         } else if (madatoryArg == "b") {
             //battery voltage
-            Serial.print("Battery voltage: ");
+            Serial.print("Input voltage: ");
             Serial.println(serialdcpVoltage.printVccIn());
         } else if (madatoryArg == "s") {
             //solar cell
-            Serial.print("Solar cell voltage: ");
-            Serial.println(serialdcpVoltage.printVccSol());
+            Serial.print("Battery voltage: ");
+            Serial.println(serialdcpVoltage.printVccBat());
 
         } else {
             Serial.print(F("ERROR! Argument not recognized: "));
@@ -762,11 +762,11 @@ void DCPSerialCommands::printSystemWeathers() {
     Serial.print("Rain Gauge Tip Bucket: ");
     Serial.println(serialdcpRainGauge.printTipBucket());
     //battery voltage
-    Serial.print("Battery voltage: ");
+    Serial.print("Input voltage: ");
     Serial.println(serialdcpVoltage.printVccIn());
     //solar cell
-    Serial.print("Solar cell voltage: ");
-    Serial.println(serialdcpVoltage.printVccSol());
+    Serial.print("Battery voltage: ");
+    Serial.println(serialdcpVoltage.printVccBat());
 }
 
 /******************************************************************************/

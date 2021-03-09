@@ -10,7 +10,7 @@
 #include "DCPSIM800.h"
 
 // Time to try
-#define SIM_CONN_COUNTER 10
+#define SIM_CONN_COUNTER 5
 // Delay to connect to WiFi (WIFI_CONN_DELAY X WIFI_CONN_COUNTER = time to access point mode)
 #define SIM_CONN_DELAY 500
 

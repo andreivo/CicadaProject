@@ -25,16 +25,16 @@ class DCPVoltage {
 public:
     DCPVoltage();
     void setupVccInSensor();
-    void setupVccSolSensor();
-    void initVccSensor(String _codeVccIn, String _typeVccIn, int timeSlotVccIn, String _codeVccSol, String _typeVccSol, int timeSlotVccSol);
+    void setupVccBatSensor();
+    void initVccSensor(String _codeVccIn, String _typeVccIn, int timeSlotVccIn, String _codeVccBat, String _typeVccBat, int timeSlotVccBat);
     void readVccIn();
-    void readVccSol();
+    void readVccBat();
     String printVccIn();
-    String printVccSol();
+    String printVccBat();
     void updateNextSlotIn();
-    void updateNextSlotSol();
+    void updateNextSlotBat();
     void printNextVccInSlot();
-    void printNextVccSolSlot();
+    void printNextVccBatSlot();
 private:
     int nextSlotTimeToRead(int TIME_TO_READ);
     String codeVccIn;
@@ -43,14 +43,14 @@ private:
     void nextVccInSlotTimeToRead();
     int nextSlotVccIn;
     boolean timeToReadVccIn();
-    String codeVccSol;
-    String typeVccSol;
+    String codeVccBat;
+    String typeVccBat;
     int TIME_TO_READ_VCCSOL = (10);
-    void nextVccSolSlotTimeToRead();
-    int nextSlotVccSol;
-    boolean timeToReadVccSol();
+    void nextVccBatSlotTimeToRead();
+    int nextSlotVccBat;
+    boolean timeToReadVccBat();
     void initVccInSensor(String _codeVccIn, String _typeVccIn, int timeSlotVccIn);
-    void initVccSolarCellSensor(String _codeVccSol, String _typeVccSol, int timeSlotVccSol);
+    void initVccBatarCellSensor(String _codeVccBat, String _typeVccBat, int timeSlotVccBat);
 };
 
 #endif

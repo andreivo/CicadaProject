@@ -70,8 +70,8 @@ time_t lastEpoch;
 /******************************************************************************/
 /******************************************************************************/
 
-const String FIRMWARE_VERSION = "0.0.1-alpha";
-const String FIRMWARE_DATE = "2021-01-01T10:10:00Z";
+const String FIRMWARE_VERSION = "0.0.2-alpha";
+const String FIRMWARE_DATE = "2021-03-08T14:00:00Z";
 
 String STATION_ID = "CicadaDCP";
 const String STATION_ID_PREFIX = "CicadaDCP-";
@@ -426,13 +426,13 @@ void DCPSystem::readSensors() {
         dcpDHT.readDHT();
         dcpRainGauge.readRG();
         dcpVoltage.readVccIn();
-        dcpVoltage.readVccSol();
+        dcpVoltage.readVccBat();
         storeMetadados();
     } else {
         dcpDHT.updateNextSlot();
         dcpRainGauge.updateNextSlot();
         dcpVoltage.updateNextSlotIn();
-        dcpVoltage.updateNextSlotSol();
+        dcpVoltage.updateNextSlotBat();
         updateNextSlotMetadados();
     }
 }
@@ -661,7 +661,7 @@ void DCPSystem::initSensorsConfig() {
     String codehum = spiffsManager.getSettings(DIR_SENSOR_CODEHUM, false);
     String codeplu = spiffsManager.getSettings(DIR_SENSOR_CODEPLUV, false);
     String codevin = spiffsManager.getSettings(DIR_SENSOR_CODEVIN, false);
-    String codevso = spiffsManager.getSettings(DIR_SENSOR_CODEVSO, false);
+    String codevba = spiffsManager.getSettings(DIR_SENSOR_CODEVBA, false);
 
     if (codetemp == "") {
         codetemp = "10";
@@ -687,17 +687,17 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_CODEVIN, codevin);
     }
 
-    if (codevso == "") {
-        codevso = "50";
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEVSO);
-        spiffsManager.FSCreateFile(DIR_SENSOR_CODEVSO, codevso);
+    if (codevba == "") {
+        codevba = "50";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_CODEVBA);
+        spiffsManager.FSCreateFile(DIR_SENSOR_CODEVBA, codevba);
     }
 
     String dttemp = spiffsManager.getSettings(DIR_SENSOR_DATATYPETEMP, false);
     String dthum = spiffsManager.getSettings(DIR_SENSOR_DATATYPEHUM, false);
     String dtplu = spiffsManager.getSettings(DIR_SENSOR_DATATYPEPLUV, false);
     String dtvin = spiffsManager.getSettings(DIR_SENSOR_DATATYPEVIN, false);
-    String dtvso = spiffsManager.getSettings(DIR_SENSOR_DATATYPEVSO, false);
+    String dtvba = spiffsManager.getSettings(DIR_SENSOR_DATATYPEVBA, false);
 
     if (dttemp == "") {
         dttemp = "temp";
@@ -723,16 +723,16 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEVIN, dtvin);
     }
 
-    if (dtvso == "") {
-        dtvso = "vccso";
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEVSO);
-        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEVSO, dtvso);
+    if (dtvba == "") {
+        dtvba = "vccba";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_DATATYPEVBA);
+        spiffsManager.FSCreateFile(DIR_SENSOR_DATATYPEVBA, dtvba);
     }
 
     String collDHT = spiffsManager.getSettings(DIR_SENSOR_COLLTINTDHT, false);
     String collplu = spiffsManager.getSettings(DIR_SENSOR_COLLTINTPLUV, false);
     String collvin = spiffsManager.getSettings(DIR_SENSOR_COLLTINTVIN, false);
-    String collvso = spiffsManager.getSettings(DIR_SENSOR_COLLTINTVSO, false);
+    String collvba = spiffsManager.getSettings(DIR_SENSOR_COLLTINTVBA, false);
 
     if (collDHT == "") {
         collDHT = "10";
@@ -752,11 +752,11 @@ void DCPSystem::initSensorsConfig() {
         spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTVIN, collvin);
     }
 
-    if (collvso == "") {
+    if (collvba == "") {
 
-        collvso = "10";
-        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTVSO);
-        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTVSO, collvso);
+        collvba = "10";
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_COLLTINTVBA);
+        spiffsManager.FSCreateFile(DIR_SENSOR_COLLTINTVBA, collvba);
     }
 
     // Initialize DHT Sensor
@@ -768,7 +768,7 @@ void DCPSystem::initSensorsConfig() {
     dcpRainGauge.initRGSensor(codeplu, dtplu, collplu.toInt());
 
     // Initialize VCC Sensor
-    dcpVoltage.initVccSensor(codevin, dtvin, collvin.toInt(), codevso, dtvso, collvso.toInt());
+    dcpVoltage.initVccSensor(codevin, dtvin, collvin.toInt(), codevba, dtvba, collvba.toInt());
 
     CIC_DEBUG(F("Finish sensor config"));
     CIC_DEBUG_(F("\n\n"));
@@ -823,7 +823,7 @@ void updateAllSlots() {
     dcpDHT.updateNextSlot();
     dcpRainGauge.updateNextSlot();
     dcpVoltage.updateNextSlotIn();
-    dcpVoltage.updateNextSlotSol();
+    dcpVoltage.updateNextSlotBat();
 }
 
 void DCPSystem::transmiteData() {

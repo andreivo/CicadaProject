@@ -22,6 +22,9 @@ void taskTransmitLoop(void * pvParameters ){
 void setup() { 
   // PreInitialization
   cicadaDcpSystem.preInitSystem();
+
+  //Check Wizard initialization
+  cicadaDcpSystem.checkAPWizard(coreTask);
   
   // Start comunication
   cicadaDcpSystem.initCommunication();

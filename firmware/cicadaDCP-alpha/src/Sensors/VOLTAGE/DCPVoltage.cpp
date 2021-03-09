@@ -24,15 +24,18 @@ void DCPVoltage::setupVccInSensor() {
 }
 
 /**
- * Setup Solar Cell Vcc Sensor
+ * Setup Battery Vcc Sensor
  */
-void DCPVoltage::setupVccSolSensor() {
-    CIC_DEBUG_HEADER(F("SETUP SOLAR CELL VCC READ SENSOR"));
+void DCPVoltage::setupVccBatSensor() {
+    CIC_DEBUG_HEADER(F("SETUP BATTERY VCC READ SENSOR"));
 }
 
-void DCPVoltage::initVccSensor(String _codeVccIn, String _typeVccIn, int timeSlotVccIn, String _codeVccSol, String _typeVccSol, int timeSlotVccSol) {
+void DCPVoltage::initVccSensor(String _codeVccIn, String _typeVccIn, int timeSlotVccIn, String _codeVccBat, String _typeVccBat, int timeSlotVccBat) {
+    pinMode(PIN_ADC_VCC_EN, OUTPUT);
+    digitalWrite(PIN_ADC_VCC_EN, HIGH);
+
     initVccInSensor(_codeVccIn, _typeVccIn, timeSlotVccIn);
-    initVccSolarCellSensor(_codeVccSol, _typeVccSol, timeSlotVccSol);
+    initVccBatarCellSensor(_codeVccBat, _typeVccBat, timeSlotVccBat);
 }
 
 /**
@@ -54,21 +57,21 @@ void DCPVoltage::initVccInSensor(String _codeVccIn, String _typeVccIn, int timeS
 }
 
 /**
- * Initialize Solar Cell Sensor
+ * Initialize Battery Sensor
  */
-void DCPVoltage::initVccSolarCellSensor(String _codeVccSol, String _typeVccSol, int timeSlotVccSol) {
-    CIC_DEBUG_HEADER(F("INIT SOLAR CELL VCC READ SENSOR"));
+void DCPVoltage::initVccBatarCellSensor(String _codeVccBat, String _typeVccBat, int timeSlotVccBat) {
+    CIC_DEBUG_HEADER(F("INIT BATTERY VCC READ SENSOR"));
 
-    codeVccSol = _codeVccSol;
-    typeVccSol = _typeVccSol;
+    codeVccBat = _codeVccBat;
+    typeVccBat = _typeVccBat;
 
-    TIME_TO_READ_VCCSOL = timeSlotVccSol;
+    TIME_TO_READ_VCCSOL = timeSlotVccBat;
 
-    CIC_DEBUG_(F("Slot Time Solar Cell Vcc read: "));
+    CIC_DEBUG_(F("Slot Time Battery Vcc read: "));
     CIC_DEBUG_(String(TIME_TO_READ_VCCSOL));
     CIC_DEBUG(F(" min."));
 
-    nextVccSolSlotTimeToRead();
+    nextVccBatSlotTimeToRead();
 }
 
 int DCPVoltage::nextSlotTimeToRead(int TIME_TO_READ) {
@@ -95,10 +98,10 @@ void DCPVoltage::nextVccInSlotTimeToRead() {
     CIC_DEBUG(F(" min."));
 }
 
-void DCPVoltage::nextVccSolSlotTimeToRead() {
-    nextSlotVccSol = nextSlotTimeToRead(TIME_TO_READ_VCCSOL);
-    CIC_DEBUG_(F("Next slot to read Solar Cell Vcc: "));
-    CIC_DEBUG_(String(nextSlotVccSol));
+void DCPVoltage::nextVccBatSlotTimeToRead() {
+    nextSlotVccBat = nextSlotTimeToRead(TIME_TO_READ_VCCSOL);
+    CIC_DEBUG_(F("Next slot to read Battery Vcc: "));
+    CIC_DEBUG_(String(nextSlotVccBat));
     CIC_DEBUG(F(" min."));
 }
 
@@ -107,15 +110,18 @@ boolean DCPVoltage::timeToReadVccIn() {
     return actualMinutes == nextSlotVccIn;
 }
 
-boolean DCPVoltage::timeToReadVccSol() {
+boolean DCPVoltage::timeToReadVccBat() {
     int actualMinutes = vccRTC.now("%M").toInt();
-    return actualMinutes == nextSlotVccSol;
+    return actualMinutes == nextSlotVccBat;
 }
 
 void DCPVoltage::readVccIn() {
     if (timeToReadVccIn()) {
         CIC_DEBUG_HEADER(F("READ INPUT VCC"));
+        digitalWrite(PIN_ADC_VCC_EN, LOW);
+        delay(100);
         int adcValue = analogRead(PIN_ADC_VCC_IN);
+        digitalWrite(PIN_ADC_VCC_EN, HIGH);
         float vccin = ADC2VOLTS(adcValue);
 
         String collectionDate = vccRTC.now("%Y-%m-%d %H:%M:%SZ");
@@ -130,32 +136,41 @@ void DCPVoltage::readVccIn() {
     }
 }
 
-void DCPVoltage::readVccSol() {
-    if (timeToReadVccSol()) {
-        CIC_DEBUG_HEADER(F("READ SOLAR CELL VCC"));
-        int adcValue = analogRead(PIN_ADC_VCC_SO);
+void DCPVoltage::readVccBat() {
+    if (timeToReadVccBat()) {
+        CIC_DEBUG_HEADER(F("READ BATTERY VCC"));
+        digitalWrite(PIN_ADC_VCC_EN, LOW);
+        delay(100);
+        int adcValue = analogRead(PIN_ADC_VCC_BA);
+        digitalWrite(PIN_ADC_VCC_EN, HIGH);
         float vccin = ADC2VOLTS(adcValue);
 
         String collectionDate = vccRTC.now("%Y-%m-%d %H:%M:%SZ");
-        String dataContent = vccSdCard.prepareData(codeVccSol, typeVccSol, collectionDate, String(vccin));
+        String dataContent = vccSdCard.prepareData(codeVccBat, typeVccBat, collectionDate, String(vccin));
         if (!vccSdCard.storeData("vso", dataContent)) {
-            CIC_DEBUG(F("Error store SOLAR CELL VCC Data!"));
+            CIC_DEBUG(F("Error store BATTERY VCC Data!"));
         } else {
-            CIC_DEBUG(F("Store SOLAR CELL VCC Data!"));
+            CIC_DEBUG(F("Store BATTERY VCC Data!"));
         }
 
-        nextVccSolSlotTimeToRead();
+        nextVccBatSlotTimeToRead();
     }
 }
 
 String DCPVoltage::printVccIn() {
+    digitalWrite(PIN_ADC_VCC_EN, LOW);
+    delay(100);
     int adcValue = analogRead(PIN_ADC_VCC_IN);
+    digitalWrite(PIN_ADC_VCC_EN, HIGH);
     float vccin = ADC2VOLTS(adcValue);
     return String(vccin) + "v";
 }
 
-String DCPVoltage::printVccSol() {
-    int adcValue = analogRead(PIN_ADC_VCC_SO);
+String DCPVoltage::printVccBat() {
+    digitalWrite(PIN_ADC_VCC_EN, LOW);
+    delay(100);
+    int adcValue = analogRead(PIN_ADC_VCC_BA);
+    digitalWrite(PIN_ADC_VCC_EN, HIGH);
     float vccin = ADC2VOLTS(adcValue);
     return String(vccin) + "v";
 }
@@ -166,9 +181,9 @@ void DCPVoltage::updateNextSlotIn() {
     }
 }
 
-void DCPVoltage::updateNextSlotSol() {
-    if (timeToReadVccSol()) {
-        nextVccSolSlotTimeToRead();
+void DCPVoltage::updateNextSlotBat() {
+    if (timeToReadVccBat()) {
+        nextVccBatSlotTimeToRead();
     }
 }
 
@@ -178,8 +193,8 @@ void DCPVoltage::printNextVccInSlot() {
     Serial.println(F(" Min."));
 }
 
-void DCPVoltage::printNextVccSolSlot() {
-    Serial.print(F("Next slot to read Solar Cell Vcc: "));
-    Serial.print(nextSlotVccSol);
+void DCPVoltage::printNextVccBatSlot() {
+    Serial.print(F("Next slot to read Battery Vcc: "));
+    Serial.print(nextSlotVccBat);
     Serial.println(F(" Min."));
 }
