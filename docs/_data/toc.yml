@@ -40,3 +40,5 @@
       url: "publications"
     - title: "News"
       url: "news"
+    - title: "Dashboard"
+      url: "dashboard"
