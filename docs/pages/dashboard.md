@@ -3,7 +3,6 @@ title: Dashboard
 permalink: /dashboard/
 ---
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +31,8 @@ permalink: /dashboard/
             var VARIABLE3 = '604123c80ff4c363f544e8ad';
 
             function getDataFromVariable(variable, token, callback) {
-                var url = 'https://things.ubidots.com/api/v1.6/variables/' + variable + '/values';
+                //var url = 'https://things.ubidots.com/api/v1.6/variables/' + variable + '/values';
+		var url = 'https://industrial.api.ubidots.com/api/v1.6/variables/' + variable + '/values';
                 var headers = {
                     'X-Auth-Token': token,
                     'Content-Type': 'application/json',		    
