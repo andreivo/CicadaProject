@@ -1,3 +1,8 @@
+---
+title: Dashboard
+permalink: /dashboard/
+---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
