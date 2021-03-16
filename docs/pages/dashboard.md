@@ -25,24 +25,25 @@ permalink: /dashboard/
 
     <script type="text/javascript" >
      window.onload = function() { 
-                var TOKEN = 'BBFF-Mx2qHkrUPmyGfoVPtCCW9ClVpxTVxs';
+	    const now = Date.now(); // Unix timestamp in milliseconds
+            const lastday = now - 86400000;
+            var TOKEN = 'BBFF-Mx2qHkrUPmyGfoVPtCCW9ClVpxTVxs';
             var VARIABLE1 = '5ffa1d904763e76722b6e03d';
             var VARIABLE2 = '603b8f424763e73fc51f6e09';
             var VARIABLE3 = '604123c80ff4c363f544e8ad';
 
             function getDataFromVariable(variable, token, callback) {
                 //var url = 'https://things.ubidots.com/api/v1.6/variables/' + variable + '/values';
-		var url = 'https://industrial.api.ubidots.com/api/v1.6/variables/' + variable + '/values';
+                var url = 'https://industrial.api.ubidots.com/api/v1.6/variables/' + variable + '/values?start=' + lastday;
                 var headers = {
                     'X-Auth-Token': token,
-                    'Content-Type': 'application/json',		    
+                    'Content-Type': 'application/jsonp'
                 };
 
                 $.ajax({
                     url: url,
-                    method: 'GET',		    
+                    method: 'GET',
                     headers: headers,
-		    crossDomain: true,
                     success: function (res) {
                         callback(res.results);
                     }
@@ -88,6 +89,8 @@ permalink: /dashboard/
                     return [unixtime, value.value];
                 });
 
+                const mapSort = new Map([...data.entries()].sort());
+
                 chart.series[0].setData(data);
             });
 
@@ -100,6 +103,8 @@ permalink: /dashboard/
                     unixtime = new Date(collTime).getTime();
                     return [unixtime, value.value];
                 });
+                
+                const mapSort = new Map([...data.entries()].sort());
 
                 chart.series[1].setData(data);
             });
@@ -114,9 +119,11 @@ permalink: /dashboard/
                     unixtime = new Date(collTime).getTime();
                     return [unixtime, value.value];
                 });
-
+                
+                const mapSort = new Map([...data.entries()].sort());
+                
                 chart.series[2].setData(data);
-            });
+            });                
 
      } 
     </script>
