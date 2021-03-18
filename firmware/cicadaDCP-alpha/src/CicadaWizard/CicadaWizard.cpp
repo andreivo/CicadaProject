@@ -504,9 +504,6 @@ void CicadaWizard::handleRoot() {
     // Get the previous Owner Phone
     String owphone = spiffsMan.getSettings(DIR_STATION_OWPHONE, true);
 
-    // Get the previous bucket configuration
-    String vol = spiffsMan.getSettings(DIR_STATION_BUCKET_VOL, false);
-
     // Get the previous Station Name
     String name = spiffsMan.getSettings(DIR_STATION_NAME, false);
 
@@ -543,7 +540,6 @@ void CicadaWizard::handleRoot() {
     form.replace("{owemail}", owemail);
     form.replace("{owphone}", owphone);
 
-    form.replace("{vol}", vol);
     form.replace("{name}", name);
     form.replace("{spass}", pass);
     form.replace("{lat}", lat);
@@ -604,11 +600,6 @@ void CicadaWizard::handleSaveCicadaStation() {
     spiffsMan.saveSettings(DIR_STATION_LATITUDE, lat);
     String lon = server->arg("lon");
     spiffsMan.saveSettings(DIR_STATION_LONGITUDE, lon);
-
-    // Save bucket volume on file system
-    String bucketVolume = server->arg("vol");
-    bucketVolume.replace(",", ".");
-    spiffsMan.saveSettings(DIR_STATION_BUCKET_VOL, bucketVolume);
 
     // Save time to next reset
     String ttr = server->arg("ttr");
@@ -678,6 +669,11 @@ void CicadaWizard::handleSensors() {
     String collvin = spiffsMan.getSettings(DIR_SENSOR_COLLTINTVIN, false);
     String collvba = spiffsMan.getSettings(DIR_SENSOR_COLLTINTVBA, false);
 
+    // Get the previous bucket configuration
+    String pluvol = spiffsMan.getSettings(DIR_SENSOR_PLUVIO_BUCKET_VOL, false);
+    // Get the previous area configuration
+    String pluarea = spiffsMan.getSettings(DIR_SENSOR_PLUVIO_AREA, false);
+
     // Setup the form
     String form = FPSTR(HTTP_FORM_CONFIG_SENSORS);
     form.replace("{codetemp}", codetemp);
@@ -696,6 +692,9 @@ void CicadaWizard::handleSensors() {
     form.replace("{collplu}", collplu);
     form.replace("{collvin}", collvin);
     form.replace("{collvba}", collvba);
+
+    form.replace("{pluvol}", pluvol);
+    form.replace("{pluarea}", pluarea);
 
     form.replace("{cicadalogo}", HTTP_CICADALOGO);
 
@@ -753,6 +752,17 @@ void CicadaWizard::handleSaveSensorsConfig() {
     spiffsMan.saveSettings(DIR_SENSOR_COLLTINTVIN, collvin);
     String collvba = server->arg("collvba");
     spiffsMan.saveSettings(DIR_SENSOR_COLLTINTVBA, collvba);
+
+    // Save bucket volume on file system
+    String bucketVolume = server->arg("pluvol");
+    bucketVolume.replace(",", ".");
+    spiffsMan.saveSettings(DIR_SENSOR_PLUVIO_BUCKET_VOL, bucketVolume);
+
+    // Save pluviometer area on file system
+    String pluvioArea = server->arg("pluarea");
+    pluvioArea.replace(",", ".");
+    spiffsMan.saveSettings(DIR_SENSOR_PLUVIO_AREA, pluvioArea);
+
 
     //Redirect Step 2
     handleMQTTSERVER();
@@ -1245,8 +1255,6 @@ void CicadaWizard::handleInfo() {
     String lat = spiffsMan.getSettings(DIR_STATION_LATITUDE, false);
     // Get the previous Longitude
     String lon = spiffsMan.getSettings(DIR_STATION_LONGITUDE, false);
-    // Get the previous bucket configuration
-    String vol = spiffsMan.getSettings(DIR_STATION_BUCKET_VOL, false);
     // Get the previous Send time interval
     String sti = spiffsMan.getSettings(DIR_STATION_SENDTIMEINTERVAL, false);
     page += F("<p style='font-size:0.8rem;'><b>Station Name:</b> ");
@@ -1260,9 +1268,6 @@ void CicadaWizard::handleInfo() {
     page += F("</p>");
     page += F("<p style='font-size:0.8rem;'><b>Longitude:</b> ");
     page += lon;
-    page += F("</p>");
-    page += F("<p style='font-size:0.8rem;'><b>Bucket calibration:</b> ");
-    page += vol;
     page += F("</p>");
     page += F("<p style='font-size:0.8rem;'><b>Send time interval:</b> ");
     page += sti;

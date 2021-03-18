@@ -15,6 +15,7 @@ DCPSDCard rgSdCard;
 portMUX_TYPE rgMux = portMUX_INITIALIZER_UNLOCKED;
 volatile int tipBucketCounter = 0;
 volatile uint32_t lastDebounceTimeout = 0;
+volatile float rainVolume = 0; // The rain accumulated volume
 
 void IRAM_ATTR handleBucketInterrupt() {
     portENTER_CRITICAL_ISR(&rgMux);
@@ -43,12 +44,13 @@ void DCPRainGauge::setupRGSensor() {
 /**
  * Initialize RG Sensor
  */
-void DCPRainGauge::initRGSensor(String _codeRG, String _typeRG, int timeSlotRG) {
+void DCPRainGauge::initRGSensor(String _codeRG, String _typeRG, int timeSlotRG, float _bucketVol, float _collectionArea) {
     CIC_DEBUG_HEADER(F("INIT RAIN GAUGE SENSOR"));
 
     codeRG = _codeRG;
     typeRG = _typeRG;
-
+    BUCKET_VOLUME = _bucketVol;
+    CONTRIBUTION_AREA = _collectionArea;
     TIME_TO_READ_RG = timeSlotRG;
 
     CIC_DEBUG_(F("Slot Time Rain Gauge: "));
@@ -93,7 +95,11 @@ void DCPRainGauge::readRG() {
 
         if (tbCounter > 0) {
             String collectionDate = rgRTC.now("%Y-%m-%d %H:%M:%SZ");
-            String dataContent = rgSdCard.prepareData(codeRG, typeRG, collectionDate, String(tbCounter));
+
+            rainVolume = tbCounter * BUCKET_VOLUME * 1000 / CONTRIBUTION_AREA;
+
+            String context = "\"{'tip':'" + String(tbCounter) + "','bkt':'" + String(BUCKET_VOLUME) + "','are':'" + String(CONTRIBUTION_AREA) + "'}\"";
+            String dataContent = rgSdCard.prepareData(codeRG, typeRG, collectionDate, String(rainVolume), context);
             if (!rgSdCard.storeData("rgs", dataContent)) {
                 CIC_DEBUG(F("Error store RAIN GAUGE Data!"));
             } else {

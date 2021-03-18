@@ -97,13 +97,14 @@ public class DataPackageNormalizer {
                 + " \"measures\":[{\"snsEC\":20,\"dtT\":\"pluv\",\"colDT\":\"2020-12-09 18:01:56Z\",\"val\":\"8\"}, \n"
                 + "               {\"snsEC\":21,\"dtT\":\"vccin\",\"colDT\":\"2020-12-09 18:01:56Z\",\"val\":\"12.58\"}, \n"
                 + "               {\"snsEC\":21,\"dtT\":\"temp\",\"colDT\":\"2020-12-09 18:01:56Z\",\"val\":\"24\"}, \n"
-                + "               {\"snsEC\":21,\"dtT\":\"hum\",\"colDT\":\"2020-12-09 18:01:56Z\",\"val\":\"70\"}]}";
+                + "               {\"snsEC\":21,\"dtT\":\"hum\",\"colDT\":\"2020-12-09 18:01:56Z\",\"val\":\"70\"}, \n"
+                + "               {\"snsEC\":30,\"dtT\":\"pluvio\",\"colDT\":\"2021-03-18 12:00:01Z\",\"val\":\"0.40\",\"context\":\"{tip:5,bkt:3.22,are:40500.00}\"}]}";
 
         System.out.println(data);
         DataProcessor dp = new DataProcessor();
         dp.process(data);
 
-        data = "{\"stationCode\":\"3335685A\", \n"
+        /*data = "{\"stationCode\":\"3335685A\", \n"
                 + " \"serverPasswd\":\"PASSWD-DCP\", \n"
                 + " \"transmissionDateTime\":\"2020-12-09 18:01:56Z\", \n"
                 + " \"metadata\":[{\"dtT\":\"la\",\"colDT\":\"2020-12-09 18:01:56Z\",\"val\":\"-23.7\"}, \n"
@@ -121,8 +122,7 @@ public class DataPackageNormalizer {
 
         System.out.println(data);
         dp = new DataProcessor();
-        dp.process(data);
-
+        dp.process(data);*/
 //        DataPackageNormalizer dpn = new DataPackageNormalizer(path);
 //        String normalizeDP = dpn.normalizeByOntology(data, DataPackage.class);
 //        System.out.println(normalizeDP);

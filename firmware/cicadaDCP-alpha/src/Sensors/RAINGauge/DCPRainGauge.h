@@ -21,7 +21,7 @@ class DCPRainGauge {
 public:
     DCPRainGauge();
     void setupRGSensor();
-    void initRGSensor(String _codeRG, String _typeRG, int timeSlotRG);
+    void initRGSensor(String _codeRG, String _typeRG, int timeSlotRG, float _bucketVol, float _collectionArea);
     void readRG();
     String printTipBucket();
     void updateNextSlot();
@@ -29,6 +29,8 @@ public:
 private:
     String codeRG;
     String typeRG;
+    float BUCKET_VOLUME;
+    float CONTRIBUTION_AREA;
     int TIME_TO_READ_RG = (10);
     void nextSlotTimeToRead();
     int nextSlotRG;

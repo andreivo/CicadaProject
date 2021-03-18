@@ -631,9 +631,13 @@ boolean DCPSDCard::fileExists(String file) {
     return sd.exists(file);
 }
 
-String DCPSDCard::prepareData(String sensorCode, String dataType, String collectionDate, String value) {
+String DCPSDCard::prepareData(String sensorCode, String dataType, String collectionDate, String value, String context) {
+    String cxt = "";
+    if (context != "") {
+        cxt = ",\"context\":" + context;
+    }
 
-    return "{\"snsEC\":" + sensorCode + ",\"dtT\":\"" + dataType + "\",\"colDT\":\"" + collectionDate + "\",\"val\":\"" + value + "\"}";
+    return "{\"snsEC\":" + sensorCode + ",\"dtT\":\"" + dataType + "\",\"colDT\":\"" + collectionDate + "\",\"val\":\"" + value + "\"" + cxt + "}";
 }
 
 boolean DCPSDCard::storeData(String sensor, String measures) {

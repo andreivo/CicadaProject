@@ -84,7 +84,8 @@ String STATION_NAME = "CicadaDCP";
 String STATION_PWD = "";
 String STATION_LONGITUDE = "";
 String STATION_LATITUDE = "";
-float CIC_STATION_BUCKET_VOLUME = 3.22; // Bucket Calibrated Volume in ml
+float CIC_SENSOR_BUCKET_VOLUME = 3.22; // Bucket Calibrated Volume in ml
+float CIC_SENSOR_PLUVIO_AREA = 225 * 180; // Pluviometer area mm²
 int CIC_STATION_STOREMETADATA = 10;
 
 
@@ -203,10 +204,6 @@ void DCPSystem::preInitSystem() {
 
     // Get Station Latitude and Longitude
     initStationCoordinates();
-    cicadaLeds.greenBlink(2);
-
-    // Get Station Calibrated Bucket Volume
-    initBucketVolume();
     cicadaLeds.greenBlink(2);
 
     // Get Time slot to store metadata
@@ -560,21 +557,46 @@ void DCPSystem::initStationCoordinates() {
 }
 
 /**
- * Initialize Station Bucket Volume
+ * Initialize Sensor Bucket Volume
  */
-void DCPSystem::initBucketVolume() {
-    CIC_DEBUG_HEADER(F("INIT BUCKET VOLUME"));
-    float vol = spiffsManager.FSReadFloat(DIR_STATION_BUCKET_VOL);
+void DCPSystem::initPluvioBucketVolume() {
+    CIC_DEBUG_HEADER(F("INIT PLUVIOMETER BUCKET VOLUME"));
+    float vol = spiffsManager.FSReadFloat(DIR_SENSOR_PLUVIO_BUCKET_VOL);
 
     if (vol) {
-        CIC_STATION_BUCKET_VOLUME = vol;
+        CIC_SENSOR_BUCKET_VOLUME = vol;
     } else {
-
-        CIC_DEBUG(F("STATION BUCKET VOLUME not found.\nUsing default value..."));
+        CIC_DEBUG(F("PLUVIOMETER BUCKET VOLUME not found.\nUsing default value..."));
+        String bucketVolume = String(CIC_SENSOR_BUCKET_VOLUME);
+        bucketVolume.replace(",", ".");
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_PLUVIO_BUCKET_VOL);
+        spiffsManager.FSCreateFile(DIR_SENSOR_PLUVIO_BUCKET_VOL, bucketVolume);
     }
 
-    CIC_DEBUG_(F("STATION BUCKET VOLUME: "));
-    CIC_DEBUG(String(CIC_STATION_BUCKET_VOLUME));
+    CIC_DEBUG_(F("PLUVIOMETER BUCKET VOLUME: "));
+    CIC_DEBUG(String(CIC_SENSOR_BUCKET_VOLUME));
+}
+
+/**
+ * Initialize Sensor Pluviometer collection area (mm²)
+ */
+void DCPSystem::initPluvioArea() {
+    CIC_DEBUG_HEADER(F("INIT PLUVIOMETER AREA (mm²)"));
+    float area = spiffsManager.FSReadFloat(DIR_SENSOR_PLUVIO_AREA);
+
+    if (area) {
+        CIC_SENSOR_PLUVIO_AREA = area;
+    } else {
+        CIC_DEBUG(F("PLUVIOMETER AREA not found.\nUsing default value..."));
+        String pluvioArea = String(CIC_SENSOR_PLUVIO_AREA);
+        pluvioArea.replace(",", ".");
+        spiffsManager.FSDeleteFiles(DIR_SENSOR_PLUVIO_AREA);
+        spiffsManager.FSCreateFile(DIR_SENSOR_PLUVIO_AREA, pluvioArea);
+    }
+
+    CIC_DEBUG_(F("PLUVIOMETER AREA: "));
+    CIC_DEBUG_(String(CIC_SENSOR_PLUVIO_AREA));
+    CIC_DEBUG(F("mm²"));
 }
 
 /**
@@ -762,10 +784,17 @@ void DCPSystem::initSensorsConfig() {
     // Initialize DHT Sensor
     dcpDHT.initDHTSensor(codetemp, dttemp, codehum, dthum, collDHT.toInt());
 
+    // Get Sensor Calibrated Bucket Volume
+    initPluvioBucketVolume();
+
+    // Get Sensor Pluvio area
+    initPluvioArea();
+
     //Setup Rain Gauge Sensor
     dcpRainGauge.setupRGSensor();
+
     // Initialize Rain Gauge Sensor
-    dcpRainGauge.initRGSensor(codeplu, dtplu, collplu.toInt());
+    dcpRainGauge.initRGSensor(codeplu, dtplu, collplu.toInt(), CIC_SENSOR_BUCKET_VOLUME, CIC_SENSOR_PLUVIO_AREA);
 
     // Initialize VCC Sensor
     dcpVoltage.initVccSensor(codevin, dtvin, collvin.toInt(), codevba, dtvba, collvba.toInt());
@@ -878,7 +907,7 @@ void DCPSystem::storeMetadados() {
         updateCommunicationStatus();
         CIC_DEBUG_HEADER(F("STORE METADATA"));
 
-        cicadaSDCard.storeMetadadosStation(STATION_OWNAME, STATION_OWEMAIL, STATION_OWPHONE, STATION_LATITUDE, STATION_LONGITUDE, String(CIC_STATION_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY, FIRMWARE_VERSION, FIRMWARE_DATE);
+        cicadaSDCard.storeMetadadosStation(STATION_OWNAME, STATION_OWEMAIL, STATION_OWPHONE, STATION_LATITUDE, STATION_LONGITUDE, String(CIC_SENSOR_BUCKET_VOLUME), COM_TYPE, SIM_ICCID, SIM_OPERA, COM_LOCAL_IP, COM_SIGNAL_QUALITTY, FIRMWARE_VERSION, FIRMWARE_DATE);
         nextSlotToSaveMetadata();
         cicadaSDCard.cleanOlderFiles();
     }

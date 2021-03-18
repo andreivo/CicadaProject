@@ -91,7 +91,7 @@ public:
     boolean mqttPublishFiles(boolean(*callback)(String msg, PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC), PubSubClient* _clientPub, String tknDCP, String pwdDCP, String TOPIC);
     void printContentFile(String filename);
     boolean deleteFile(String filename);
-    String prepareData(String sensorCode, String dataType, String collectionDate, String value);
+    String prepareData(String sensorCode, String dataType, String collectionDate, String value, String context = "");
     boolean storeData(String sensor, String measures);
     String prepareDataMetadata(String dataType, String collectionDate, String value, String context = "");
     boolean storeMetadadosStation(String oname, String oemail, String ophone, String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware);

@@ -10,7 +10,6 @@
 
 const String RESET_TIME = "7,0";
 const String DIR_STATION_ID = "/stt/id";
-const String DIR_STATION_BUCKET_VOL = "/stt/bucketvol";
 const String DIR_STATION_LATITUDE = "/stt/lat";
 const String DIR_STATION_LONGITUDE = "/stt/lon";
 const String DIR_STATION_SENDTIMEINTERVAL = "/stt/sti";
@@ -47,6 +46,9 @@ const String DIR_SENSOR_COLLTINTDHT = "/sen/colldht";
 const String DIR_SENSOR_COLLTINTPLUV = "/sen/collplu";
 const String DIR_SENSOR_COLLTINTVIN = "/sen/collvin";
 const String DIR_SENSOR_COLLTINTVBA = "/sen/collvba";
+
+const String DIR_SENSOR_PLUVIO_BUCKET_VOL = "/sen/pluviobucket";
+const String DIR_SENSOR_PLUVIO_AREA = "/sen/pluvioarea";
 
 const String DIR_FIRMWARE_VERSION = "/fmwver";
 const String DIR_MQTT_SERVER = "/mqtt/host";

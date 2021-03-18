@@ -294,8 +294,6 @@ void DCPSerialCommands::sconfigComm() {
     Serial.println(serialSpiffs.getSettings(DIR_STATION_LATITUDE, false));
     Serial.print(F("Longitude                  : "));
     Serial.println(serialSpiffs.getSettings(DIR_STATION_LONGITUDE, false));
-    Serial.print(F("Bucket Calibration         : "));
-    Serial.println(serialSpiffs.getSettings(DIR_STATION_BUCKET_VOL, false));
     Serial.print(F("Time slot to send          : "));
     Serial.print(serialSpiffs.getSettings(DIR_STATION_SENDTIMEINTERVAL, false));
     Serial.println(F(" minutes"));
@@ -334,6 +332,10 @@ void DCPSerialCommands::sconfigComm() {
     Serial.println(serialSpiffs.getSettings(DIR_SENSOR_CODEPLUV, false));
     Serial.print(F("Data Type      : "));
     Serial.println(serialSpiffs.getSettings(DIR_SENSOR_DATATYPEPLUV, false));
+    Serial.print(F("Bucket Calibration         : "));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_PLUVIO_BUCKET_VOL, false));
+    Serial.print(F("Collection area            :"));
+    Serial.println(serialSpiffs.getSettings(DIR_SENSOR_PLUVIO_AREA, false));
     Serial.print(F("Time slot to collection    : "));
     Serial.print(serialSpiffs.getSettings(DIR_SENSOR_COLLTINTPLUV, false));
     Serial.println(F(" minutes"));

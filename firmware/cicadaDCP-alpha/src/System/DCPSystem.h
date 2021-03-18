@@ -87,7 +87,8 @@ private:
     void initStationPWD();
     void initFirmwareVersion();
     void initStationCoordinates();
-    void initBucketVolume();
+    void initPluvioBucketVolume();
+    void initPluvioArea();
     void initSlotStoreMetadata();
     void initSensorsConfig();
     String getFwmVersion();

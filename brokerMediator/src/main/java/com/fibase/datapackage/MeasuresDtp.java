@@ -23,6 +23,7 @@ public class MeasuresDtp {
     private String dataType;
     private LocalDateTime collectDateTime;
     private String dataValue;
+    private String context;
 
     public MeasuresDtp() {
     }
@@ -66,4 +67,11 @@ public class MeasuresDtp {
         this.dataType = dataType;
     }
 
+    public String getContext() {
+        return context;
+    }
+
+    public void setContext(String context) {
+        this.context = context;
+    }
 }
