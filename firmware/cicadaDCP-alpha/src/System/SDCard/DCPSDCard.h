@@ -94,7 +94,7 @@ public:
     String prepareData(String sensorCode, String dataType, String collectionDate, String value, String context = "");
     boolean storeData(String sensor, String measures);
     String prepareDataMetadata(String dataType, String collectionDate, String value, String context = "");
-    boolean storeMetadadosStation(String oname, String oemail, String ophone, String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware);
+    boolean storeMetadadosStation(String oname, String oemail, String ophone, String la, String lo, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware);
     void deleteOldFiles(String path = "/");
     void cleanOlderFiles();
     boolean fileExists(String file);

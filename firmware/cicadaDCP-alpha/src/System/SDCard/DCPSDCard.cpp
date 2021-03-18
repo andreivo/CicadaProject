@@ -660,7 +660,7 @@ String DCPSDCard::prepareDataMetadata(String dataType, String collectionDate, St
     return "{\"dtT\":\"" + dataType + "\",\"colDT\":\"" + collectionDate + "\",\"val\":\"" + value + "\"" + cxt + "}";
 }
 
-boolean DCPSDCard::storeMetadadosStation(String oname, String oemail, String ophone, String la, String lo, String bucket, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware) {
+boolean DCPSDCard::storeMetadadosStation(String oname, String oemail, String ophone, String la, String lo, String comType, String simICCID, String simOpera, String comLocalIP, String comSQ, String firmware, String dateFirmware) {
     CIC_DEBUG(F("Store Metadata!"));
 
     time_t tt = sdRTC.nowEpoch();
@@ -689,10 +689,6 @@ boolean DCPSDCard::storeMetadadosStation(String oname, String oemail, String oph
     content = "\"metadata\":[" + dataContent + "]";
     writeFile(filename, content);
 
-    //part 2
-    dataContent = prepareDataMetadata("bkt", collectionDate, bucket);
-    content = "\"metadata\":[" + dataContent + "]";
-    writeFile(filename, content);
 
     //part 3
     String context = "\"{'cty':'" + comType + "','icc':'" + simICCID + "','lip':'" + comLocalIP + "'}\"";
